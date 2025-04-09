@@ -17,6 +17,11 @@ class Element {
         self.attributes = attributes
         self.children = children
     }
+    
+    func add(element: Element) {
+        children.append(element)
+        
+    }
 
     func render() -> String {
         let attributesString = attributes.map { "\($0.key)=\"\($0.value)\"" }.joined(separator: " ")
@@ -27,6 +32,16 @@ class Element {
         
         return "\(openingTag)\(childrenString)\(closingTag)"
     }
+}
+
+class Doc: Element{
+    
+    init() {
+        super.init(tagName: "!DOCTYPE")
+    }
+    
+    
+    
 }
 
 class HTMLDocument {

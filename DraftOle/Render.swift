@@ -41,5 +41,10 @@ struct Renderer {
         }
     }
     
+    
+    func addSample() -> Int {
+        return 11
+    }
+    
 }
 

@@ -20,18 +20,53 @@
 
 /* Begin PBXFileReference section */
 		1B0DC7D72DA229E6004484BC /* DraftOle */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = DraftOle; sourceTree = BUILT_PRODUCTS_DIR; };
+		1B5339612DA694DF0089E76F /* DraftOleTest.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DraftOleTest.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		1B5339A42DA6959F0089E76F /* Exceptions for "DraftOle" folder in "DraftOle" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Test/RenderTest.swift,
+			);
+			target = 1B0DC7D62DA229E6004484BC /* DraftOle */;
+		};
+		1B5339A82DA6987E0089E76F /* Exceptions for "DraftOle" folder in "DraftOleTest" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Render.swift,
+				Test/RenderTest.swift,
+			);
+			target = 1B5339602DA694DF0089E76F /* DraftOleTest */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		1B0DC7D92DA229E6004484BC /* DraftOle */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				1B5339A42DA6959F0089E76F /* Exceptions for "DraftOle" folder in "DraftOle" target */,
+				1B5339A82DA6987E0089E76F /* Exceptions for "DraftOle" folder in "DraftOleTest" target */,
+			);
 			path = DraftOle;
+			sourceTree = "<group>";
+		};
+		1B5339622DA694DF0089E76F /* DraftOleTest */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = DraftOleTest;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		1B0DC7D42DA229E6004484BC /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1B53395E2DA694DF0089E76F /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -45,6 +80,7 @@
 			isa = PBXGroup;
 			children = (
 				1B0DC7D92DA229E6004484BC /* DraftOle */,
+				1B5339622DA694DF0089E76F /* DraftOleTest */,
 				1B0DC7D82DA229E6004484BC /* Products */,
 			);
 			sourceTree = "<group>";
@@ -53,6 +89,7 @@
 			isa = PBXGroup;
 			children = (
 				1B0DC7D72DA229E6004484BC /* DraftOle */,
+				1B5339612DA694DF0089E76F /* DraftOleTest.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -82,6 +119,28 @@
 			productReference = 1B0DC7D72DA229E6004484BC /* DraftOle */;
 			productType = "com.apple.product-type.tool";
 		};
+		1B5339602DA694DF0089E76F /* DraftOleTest */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1B5339672DA694DF0089E76F /* Build configuration list for PBXNativeTarget "DraftOleTest" */;
+			buildPhases = (
+				1B53395D2DA694DF0089E76F /* Sources */,
+				1B53395E2DA694DF0089E76F /* Frameworks */,
+				1B53395F2DA694DF0089E76F /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				1B5339622DA694DF0089E76F /* DraftOleTest */,
+			);
+			name = DraftOleTest;
+			packageProductDependencies = (
+			);
+			productName = DraftOleTest;
+			productReference = 1B5339612DA694DF0089E76F /* DraftOleTest.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -93,6 +152,9 @@
 				LastUpgradeCheck = 1630;
 				TargetAttributes = {
 					1B0DC7D62DA229E6004484BC = {
+						CreatedOnToolsVersion = 16.3;
+					};
+					1B5339602DA694DF0089E76F = {
 						CreatedOnToolsVersion = 16.3;
 					};
 				};
@@ -112,12 +174,30 @@
 			projectRoot = "";
 			targets = (
 				1B0DC7D62DA229E6004484BC /* DraftOle */,
+				1B5339602DA694DF0089E76F /* DraftOleTest */,
 			);
 		};
 /* End PBXProject section */
 
+/* Begin PBXResourcesBuildPhase section */
+		1B53395F2DA694DF0089E76F /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		1B0DC7D32DA229E6004484BC /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1B53395D2DA694DF0089E76F /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -269,6 +349,36 @@
 			};
 			name = Release;
 		};
+		1B5339652DA694DF0089E76F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = YW5D2A6T9H;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = zaseeta.com.DraftOleTest;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		1B5339662DA694DF0089E76F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = YW5D2A6T9H;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = zaseeta.com.DraftOleTest;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -286,6 +396,15 @@
 			buildConfigurations = (
 				1B0DC7DF2DA229E6004484BC /* Debug */,
 				1B0DC7E02DA229E6004484BC /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1B5339672DA694DF0089E76F /* Build configuration list for PBXNativeTarget "DraftOleTest" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1B5339652DA694DF0089E76F /* Debug */,
+				1B5339662DA694DF0089E76F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

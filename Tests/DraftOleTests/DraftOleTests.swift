@@ -1,6 +1,11 @@
-import Testing
+// import Testing
+import XCTest
+
 @testable import DraftOle
 
-@Test func example() async throws {
-    // Write your test here and use APIs like `#expect(...)` to check expected conditions.
+final class DraftOleTests: XCTestCase {
+    func test_firstTest() {
+        XCTAssertEqual(1, 1)
+    }
+
 }

@@ -1,0 +1,22 @@
+{
+    "configurations": [
+        {
+            "type": "lldb",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:DraftOle}",
+            "name": "Debug draftole",
+            "program": "${workspaceFolder:DraftOle}/.build/debug/draftole",
+            "preLaunchTask": "swift: Build Debug draftole"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:DraftOle}",
+            "name": "Release draftole",
+            "program": "${workspaceFolder:DraftOle}/.build/release/draftole",
+            "preLaunchTask": "swift: Build Release draftole"
+        }
+    ]
+}

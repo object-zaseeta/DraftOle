@@ -5,17 +5,34 @@ import PackageDescription
 
 let package = Package(
     name: "DraftOle",
+    platforms: [
+        .macOS(.v12)
+    ],
     products: [
-        // Products define the executables and libraries a package produces, making them visible to other packages.
         .library(
             name: "DraftOle",
-            targets: ["DraftOle"]),
+            targets: ["DraftOle"]
+        ),
+        .executable(
+            name: "draftole",  // コマンド名として使われる
+            targets: ["draftOle-cli"]
+        ),
+    ],
+    dependencies: [
+        .package(url: "https://github.com/apple/swift-argument-parser", from: "1.2.0")
     ],
     targets: [
-        // Targets are the basic building blocks of a package, defining a module or a test suite.
-        // Targets can depend on other targets in this package and products from dependencies.
         .target(
-            name: "DraftOle"),
+            name: "DraftOle",
+            dependencies: []
+        ),
+        .executableTarget(
+            name: "draftOle-cli",
+            dependencies: [
+                "DraftOle",
+                .product(name: "ArgumentParser", package: "swift-argument-parser"),
+            ]
+        ),
         .testTarget(
             name: "DraftOleTests",
             dependencies: ["DraftOle"]

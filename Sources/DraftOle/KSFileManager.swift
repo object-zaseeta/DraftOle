@@ -1,6 +1,6 @@
 import Foundation
 
-public struct DraftOle {
+public struct KSFileManager {
     let outputDirectory: URL
 
     public init(outputDirectory: URL? = nil) {

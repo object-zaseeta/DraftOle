@@ -2,16 +2,11 @@
 #
 # gitignore contributors: remember to update Global/Xcode.gitignore, Objective-C.gitignore & Swift.gitignore
 
+Sample/
+backup/
+
 #repomix 
 repomix-output.xml
-
-# Xcode workspace (if you want to ignore it completely)
-*.xcworkspace/
-*.xcworkspace
-
-# Xcode user data
-xcuserdata/
-*.xcuserstate
 
 # Derived data and build folder
 DerivedData/

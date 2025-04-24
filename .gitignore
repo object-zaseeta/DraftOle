@@ -4,8 +4,13 @@
 
 Sample/
 backup/
+.swiftpm/
 
-#repomix 
+# Xcode user state files
+*.xcuserstate
+*.xcuserdatad/
+
+#repomix
 repomix-output.xml
 
 # Derived data and build folder
@@ -47,7 +52,7 @@ playground.xcworkspace
 # Pods/
 #
 # Add this line if you want to avoid checking in source code from the Xcode workspace
-# *.xcworkspace
+ *.xcworkspace
 
 # Carthage
 #

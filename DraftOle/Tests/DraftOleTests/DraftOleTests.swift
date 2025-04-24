@@ -10,6 +10,9 @@ struct DraftOleTests {
         #expect( cal.add(1, 1) == 2 )
     
     }
+    @Test func test_export() {
+        
+    }
 
 }
 

@@ -8,6 +8,14 @@
 import Foundation
 import DraftOle
 
+struct Exam {
+    var ole = DraftOle()
+    mutating func export_test () {
+        self.ole.export()
+    }
+    
+}
+
 struct KsCalculator {
     
     func ksAdd() -> Int {

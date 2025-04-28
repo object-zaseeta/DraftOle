@@ -10,9 +10,11 @@ import DraftOle
 
 struct Exam {
     var ole = DraftOle()
-    mutating func export_test () {
+    
+    mutating func export () {
         self.ole.export()
     }
+    
     
 }
 

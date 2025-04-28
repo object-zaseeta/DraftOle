@@ -13,7 +13,7 @@ public struct DraftOle: Builderable {
     public init(outputDirectory: URL? = nil) {
         let baseDir = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
         let finalOutput = outputDirectory ?? baseDir.appendingPathComponent(CONST.ExportFolder)
-        Oslog.info.info("output directory is \(finalOutput)")
+        KSLogger.info(category: .Application, "output directory is \(finalOutput)")
         
         self.outputDirectory = finalOutput
         self.ksFileManager = KSFileManager(outputDirectory: finalOutput)        

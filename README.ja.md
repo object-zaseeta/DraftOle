@@ -50,9 +50,9 @@ button.renderCss();
 ## セットアップ
 
 ```bash
-npm install
-npm run build
-npm run test
+pnpm install
+pnpm build
+pnpm test
 ```
 
 ## ライセンス

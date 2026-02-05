@@ -1,0 +1,56 @@
+{
+  "name": "draft-ole",
+  "version": "0.1.0",
+  "description": "A DSL library that generates HTML, CSS, and JavaScript all from TypeScript",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "scripts": {
+    "build": "tsup",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "eslint src/ tests/",
+    "format": "prettier --write src/ tests/"
+  },
+  "keywords": [
+    "html",
+    "css",
+    "dsl",
+    "static-site-generator",
+    "type-safe",
+    "scoped-css",
+    "zero-runtime"
+  ],
+  "author": "object-zaseeta",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/object-zaseeta/DraftOle.git"
+  },
+  "bugs": {
+    "url": "https://github.com/object-zaseeta/DraftOle/issues"
+  },
+  "homepage": "https://github.com/object-zaseeta/DraftOle#readme",
+  "pnpm": {
+    "onlyBuiltDependencies": ["esbuild"]
+  },
+  "packageManager": "pnpm@10.28.2",
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^8.54.0",
+    "@typescript-eslint/parser": "^8.54.0",
+    "eslint": "^9.39.2",
+    "eslint-config-prettier": "^10.1.8",
+    "prettier": "^3.8.1",
+    "tsup": "^8.5.1",
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.18"
+  }
+}

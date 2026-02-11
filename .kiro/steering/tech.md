@@ -10,7 +10,7 @@ Swift版のProtocol-oriented designをTypeScriptのInterface/Classに移植。
 - **Language**: TypeScript 5.x
 - **Runtime**: Node.js 18+
 - **Build**: tsup (esbuildベース)
-- **Package Manager**: npm
+- **Package Manager**: pnpm
 
 ## Key Libraries
 
@@ -37,15 +37,15 @@ Swift版のProtocol-oriented designをTypeScriptのInterface/Classに移植。
 
 ### Required Tools
 - Node.js 18+ (LTS)
-- npm 9+
+- pnpm 10+
 
 ### Common Commands
 ```bash
-# Install: npm install
-# Build: npm run build
-# Test: npm run test
-# Lint: npm run lint
-# Format: npm run format
+# Install: pnpm install
+# Build: pnpm build
+# Test: pnpm test
+# Lint: pnpm lint
+# Format: pnpm format
 ```
 
 ## Key Technical Decisions
@@ -55,6 +55,7 @@ Swift版のProtocol-oriented designをTypeScriptのInterface/Classに移植。
 | タグ構造 | Interface + Class | Swift Protocol階層の直接的なマッピング |
 | ビルド | tsup | esbuildベースで高速、設定シンプル |
 | テスト | Vitest | TypeScript native、Jest互換 |
+| Lint | ESLint (Flat Config) | eslint.config.js で設定 |
 | 出力 | ESM + CJS | 幅広い互換性 |
 
 ## Output Format

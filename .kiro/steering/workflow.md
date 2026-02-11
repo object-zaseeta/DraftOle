@@ -85,21 +85,19 @@ npm run test
 ## Common Commands
 
 ```bash
-# 開発
-npm run dev          # 開発サーバー（watch mode）
-npm run build        # ビルド
+# ビルド
+pnpm build        # ビルド（tsup）
 
 # 品質チェック
-npm run lint         # ESLint
-npm run lint:fix     # ESLint + 自動修正
-npm run format       # Prettier
-npm run typecheck    # tsc --noEmit
+pnpm lint         # ESLint
+pnpm format       # Prettier
 
 # テスト
-npm run test         # Vitest
-npm run test:watch   # Vitest watch mode
-npm run test:coverage # カバレッジ付き
+pnpm test         # Vitest（単体実行）
+pnpm test:watch   # Vitest watch mode
 ```
+
+**Note**: `lint:fix`, `typecheck`, `test:coverage` 等は必要に応じて package.json に追加可能。
 
 ## Exceptions
 
@@ -108,6 +106,37 @@ npm run test:coverage # カバレッジ付き
 - ドキュメントのみの変更
 - 設定ファイルのみの変更
 - .kiro/ 内のみの変更
+
+## tasks.md フォーマット規則
+
+各タスクは以下の形式で記述する：
+
+```markdown
+- [ ] {番号}. {タスク名}
+  - {詳細説明（複数行可）}
+  - _Requirements: {対応する要件ID（カンマ区切り）}_
+```
+
+**例**:
+```markdown
+- [ ] 1. プロジェクト初期化
+  - npm package として初期化
+  - package.json に必要なメタデータを設定
+  - .gitignore を作成
+  - _Requirements: FR-1_
+
+- [x] 2. TypeScript設定とビルド確認
+  - tsconfig.json を作成（strict mode有効化）
+  - `npm run build` の成功を確認
+  - _Requirements: FR-2, FR-5_
+```
+
+**ルール**:
+- 各タスクは `- [ ]` で開始（完了時は `- [x]`）
+- タスク番号は連番
+- 詳細説明は字下げしてリスト形式
+- 最終行に `_Requirements: ID1, ID2, ..._` を必ず記載
+- 要件IDは requirements.md の該当セクション（FR-1, NFR-1 等）を参照
 
 ---
 _Workflow ensures code quality through systematic checks_

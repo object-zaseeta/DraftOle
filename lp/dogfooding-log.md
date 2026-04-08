@@ -85,3 +85,21 @@ ID属性ベースのCSS出力ヘルパー `sid()` + `collectIdCss()` を実装�
 3. **After ブロックは問題なし** — HTMLタグを含まないTypeScriptコードはエスケープ不要のため、正しく表示される。`Text()` + テンプレートリテラルの組み合わせはHTML要素を含まないコードには適している
 4. **`pre`, `code` ファクトリの入れ子** — `pre(code(Text(...)))` のネストは直感的に動作した。ファクトリ関数の可変引数パターンが子要素の自動追加に対応している
 5. **CSS APIは安定** — `style.visual.setOverflow('auto')` や `style.font.setFontFamily()` は前回同様に正常動作。プロパティ名の命名は一度覚えれば一貫性がある
+
+---
+
+## Task 5: フッターCTAセクション
+
+### 実行結果
+
+- `<footer id="footer">` セクションを追加。`node --experimental-strip-types lp/lp-builder.ts` で正常実行
+- `lp/output/index.html` に `<footer id="footer">` とメッセージ（`#footer-msg`）、CTAボタン（`#footer-cta`）、コピーライト（`#copyright`）が生成された
+- `lp/output/style.css` に `#footer`, `#footer-msg`, `#footer-cta`, `#copyright` のCSSブロックが生成された
+
+### 発見事項
+
+1. **CTAボタンのコード重複（設計課題）** — ヒーローセクションの `heroCta` とフッターの `footerCta` はほぼ同一のスタイル設定（`inline-block`, `padding: 16px 40px`, `background: #3b82f6`, `color: #fff`, `font-size: 18px`, `font-weight: 600`, `border-radius: 8px`, `text-decoration: none`）。8行のスタイル設定が完全にコピペされている。DraftOleにスタイルプリセットやコンポーネントテンプレート機能があれば `const ctaStyle = createPreset(...)` のように共通化できる。現状はヘルパー関数で回避可能だが、ライブラリレベルのサポートが望ましい
+2. **LP全体の構造が完成** — Hero → Features → Code Example → Footer の4セクション構成。全セクションが正常にHTML/CSS出力され、`sid()` + `collectIdCss()` の回避策で一貫したスタイリングが実現できた
+3. **`footer()` ファクトリは問題なし** — セマンティックHTML要素 `<footer>` が正しく生成された。`section()` と同様のパターンで使える
+4. **ファイルサイズの成長** — `lp-builder.ts` は約280行に成長。セクション追加ごとに50〜70行のボイラープレートが増える。コンポーネント抽象化なしでは大規模ページの構築は現実的でない。Task 3 の発見事項と合わせ、コンポーネントテンプレート機能の必要性が再確認された
+5. **全体を通じたAPI安定性** — 5タスクを通じて `css.styleManager.style.*` APIは一貫して動作。プロパティ名の命名に慣れれば、予測可能な挙動。ただし冗長性（5段階ドットチェーン）は最後まで気になるポイント

@@ -250,6 +250,34 @@ codeRow.addChildren([beforeBlock, afterBlock]);
 codeSection.addChildren([codeTitle, codeRow]);
 wrapper.addChild(codeSection);
 
+// ── Footer CTA Section ──
+const footerSection = sid(footer(), 'footer');
+footerSection.css.styleManager.style.spacing.setPadding('80px 0 40px');
+footerSection.css.styleManager.style.text.setTextAlign('center');
+
+const footerMsg = sid(p(Text('TypeScript ひとつで、Webを作ろう。')), 'footer-msg');
+footerMsg.css.styleManager.style.font.setFontSize('24px');
+footerMsg.css.styleManager.style.font.setColor('#ffffff');
+footerMsg.css.styleManager.style.spacing.setMarginBottom('32px');
+
+const footerCta = sid(a({ href: '#' }, Text('Get Started')), 'footer-cta');
+footerCta.css.styleManager.style.position.setDisplay('inline-block');
+footerCta.css.styleManager.style.spacing.setPadding('16px 40px');
+footerCta.css.styleManager.style.backgroundColor.setBackgroundColor('#3b82f6');
+footerCta.css.styleManager.style.font.setColor('#ffffff');
+footerCta.css.styleManager.style.font.setFontSize('18px');
+footerCta.css.styleManager.style.font.setFontWeight('600');
+footerCta.css.styleManager.style.border.setBorderRadius('8px');
+footerCta.css.styleManager.style.text.setTextDecoration('none');
+
+const copyright = sid(p(Text('© 2026 DraftOle')), 'copyright');
+copyright.css.styleManager.style.font.setFontSize('14px');
+copyright.css.styleManager.style.font.setColor('#666666');
+copyright.css.styleManager.style.spacing.setMarginTop('48px');
+
+footerSection.addChildren([footerMsg, footerCta, copyright]);
+wrapper.addChild(footerSection);
+
 bodyEl.addChild(wrapper);
 
 htmlEl.addChildren([headEl, bodyEl]);

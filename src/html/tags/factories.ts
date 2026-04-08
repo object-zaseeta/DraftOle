@@ -165,7 +165,7 @@ function parseAttributeMap(map: AttributeMap): HtmlAttribute[] {
  */
 function toChild(arg: ChildArg): HTMLTagProtocol {
   if (typeof arg === 'string') {
-    return new TextType(arg);
+    return new TextType(arg, { escape: true });
   }
   return arg;
 }
@@ -801,5 +801,5 @@ export function wbr(): SelfClosingType { return makeSelfClosingTag(TAG_TYPES.wbr
  * before passing to this function to prevent XSS attacks.
  */
 export function Text(content: string): TextType {
-  return new TextType(content);
+  return new TextType(content, { escape: true });
 }

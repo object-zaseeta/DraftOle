@@ -248,10 +248,10 @@ describe('Task 5.1: タグファクトリ関数', () => {
       expect(result.content).toBe('');
     });
 
-    it('Text()は特殊文字を含む文字列でもTextTypeを返す', () => {
+    it('Text()は特殊文字をエスケープしたTextTypeを返す (DF-3)', () => {
       const result = Text('Hello <b>World</b> & "Friends"');
       expect(result).toBeInstanceOf(TextType);
-      expect(result.content).toBe('Hello <b>World</b> & "Friends"');
+      expect(result.content).toBe('Hello &lt;b&gt;World&lt;/b&gt; &amp; &quot;Friends&quot;');
     });
   });
 

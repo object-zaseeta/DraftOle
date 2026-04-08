@@ -13,6 +13,7 @@
  */
 import { HtmlTag } from './html-tag.js';
 import type { HTMLTagProtocol, HtmlAttributeShape } from '../protocols/html-tag-protocol.js';
+import { escapeHtml } from '../attributes/html-attribute.js';
 
 /**
  * Represents a text node in the HTML document tree.
@@ -67,27 +68,28 @@ import type { HTMLTagProtocol, HtmlAttributeShape } from '../protocols/html-tag-
  */
 export class TextType extends HtmlTag {
   /**
-   * The text content of this node.
-   *
-   * @remarks
-   * This content is rendered without HTML escaping.
+   * The text content of this node (after escape processing).
    */
   readonly content: string;
 
   /**
    * Creates a new TextType node.
    *
-   * @param content - The text content (rendered without HTML escaping)
+   * @param content - The text content
+   * @param options - Options. `escape: true` enables HTML escaping (default: false for backward compat)
    *
    * @example
    * ```typescript
    * const text = new TextType('Hello World');
    * console.log(text.render()); // "Hello World"
+   *
+   * const safe = new TextType('<script>alert("XSS")</script>', { escape: true });
+   * console.log(safe.render()); // "&lt;script&gt;..."
    * ```
    */
-  constructor(content: string) {
+  constructor(content: string, options?: { escape?: boolean }) {
     super('text');
-    this.content = content;
+    this.content = options?.escape ? escapeHtml(content) : content;
   }
 
   /**

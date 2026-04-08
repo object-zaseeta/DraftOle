@@ -78,12 +78,7 @@ P4: 宣言的API / SSG / Webアプリ
 > **出典**: `lp/dogfooding-log.md`（2026-04-08 LP構築実験で発見）
 > **目標**: DraftOleを回避策なしで実用可能にする
 
-### [x] DF-1: collectCssStyleString() 子再帰修正（2026-04-08完了）
-- **対象**: `src/html/elements/html-tag.ts:313-315`
-- **現状**: `collectCssStyleString()` は `this._css.render()` のみ返し、子要素に再帰しない。`collectJsContent()` は再帰している
-- **改善**: `collectJsContent()` と同様に子要素を再帰走査し、全子孫のCSSを収集する
-- **影響**: Root.collectCssStyleString() は既に子を走査するが、孫以降はHtmlTag側の再帰が必要
-- **工数**: 1時間
+### [x] DF-1: → done.md にアーカイブ済み（2026-04-08完了）
 
 ### [ ] DF-2: スコープCSSクラスのHTML自動付与
 - **対象**: `src/html/elements/html-tag.ts`（protoRender）, `src/css/manager/css-manager.ts`

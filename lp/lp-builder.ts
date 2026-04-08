@@ -5,6 +5,54 @@ import {
   FileExporter,
 } from '../dist/index.js';
 
+// ── Design Tokens ──
+
+const color = {
+  bg:       '#0a0a0a',
+  surface:  '#1a1a1a',
+  accent:   '#3b82f6',
+  codeBg:   '#0d1b2a',
+  text:     '#ffffff',
+  muted:    '#a0a0a0',
+  subtle:   '#666666',
+  codeFg:   '#c0c0c0',
+  codeAccent: '#7dd3fc',
+} as const;
+
+const font = {
+  family:     "'Inter', 'Noto Sans JP', sans-serif",
+  mono:       "'Fira Code', monospace",
+  hero:       '48px',
+  heading:    '32px',
+  subheading: '24px',
+  body:       '20px',
+  cta:        '18px',
+  small:      '14px',
+  bold:       '700',
+  semibold:   '600',
+} as const;
+
+const space = {
+  section:    '80px 0',
+  heroY:      '120px 0 80px',
+  footerY:    '80px 0 40px',
+  card:       '32px',
+  block:      '24px',
+  button:     '16px 40px',
+  pageX:      '0 24px',
+  gapL:       '32px',
+  gapM:       '24px',
+} as const;
+
+const radius = {
+  card:   '12px',
+  button: '8px',
+} as const;
+
+const layout = {
+  maxWidth: '1200px',
+} as const;
+
 // ── Document ──
 const root = new Root();
 
@@ -19,51 +67,50 @@ const page = html({ lang: 'ja' },
       // ── Hero Section ──
       section(
         h1(Text('HTML, CSS, JS — TypeScript ひとつで。'))
-          .fontSize('48px').fontWeight('700').color('#ffffff')
+          .fontSize(font.hero).fontWeight(font.bold).color(color.text)
           .margin('0 0 24px 0'),
         p(Text('型安全なDSLでWebページを丸ごと生成'))
-          .fontSize('20px').color('#a0a0a0')
+          .fontSize(font.body).color(color.muted)
           .margin('0 0 40px 0'),
         a({ href: '#' }, Text('Get Started'))
-          .display('inline-block').padding('16px 40px')
-          .background('#3b82f6').color('#ffffff')
-          .fontSize('18px').fontWeight('600')
-          .cornerRadius('8px').textDecoration('none'),
-      ).padding('120px 0 80px').textAlign('center'),
+          .display('inline-block').padding(space.button)
+          .background(color.accent).color(color.text)
+          .fontSize(font.cta).fontWeight(font.semibold)
+          .cornerRadius(radius.button).textDecoration('none'),
+      ).padding(space.heroY).textAlign('center'),
 
       // ── Features Section ──
       section(
         h2(Text('なぜ DraftOle？'))
-          .fontSize('32px').fontWeight('700').color('#ffffff')
+          .fontSize(font.heading).fontWeight(font.bold).color(color.text)
           .textAlign('center').margin('0 0 48px 0'),
         div(
           div(
-            h2(Text('三位一体')).fontSize('24px').fontWeight('600').color('#ffffff').margin('0 0 12px 0'),
+            h2(Text('三位一体')).fontSize(font.subheading).fontWeight(font.semibold).color(color.text).margin('0 0 12px 0'),
             p(Text('HTML・CSS・JSを1つのTypeScriptファイルで記述。もう3ファイルを行き来する必要はありません。'))
-              .color('#a0a0a0').lineHeight('1.6'),
-          ).flexGrow('1').padding('32px').background('#1a1a1a').cornerRadius('12px'),
+              .color(color.muted).lineHeight('1.6'),
+          ).flexGrow('1').padding(space.card).background(color.surface).cornerRadius(radius.card),
           div(
-            h2(Text('型安全')).fontSize('24px').fontWeight('600').color('#ffffff').margin('0 0 12px 0'),
+            h2(Text('型安全')).fontSize(font.subheading).fontWeight(font.semibold).color(color.text).margin('0 0 12px 0'),
             p(Text('146以上のCSSプロパティすべてに型補完が効きます。タイポや無効な値をコンパイル時にキャッチ。'))
-              .color('#a0a0a0').lineHeight('1.6'),
-          ).flexGrow('1').padding('32px').background('#1a1a1a').cornerRadius('12px'),
+              .color(color.muted).lineHeight('1.6'),
+          ).flexGrow('1').padding(space.card).background(color.surface).cornerRadius(radius.card),
           div(
-            h2(Text('ゼロランタイム')).fontSize('24px').fontWeight('600').color('#ffffff').margin('0 0 12px 0'),
+            h2(Text('ゼロランタイム')).fontSize(font.subheading).fontWeight(font.semibold).color(color.text).margin('0 0 12px 0'),
             p(Text('出力は純粋なHTML/CSS/JS。ランタイム依存なし。どこにでもデプロイできます。'))
-              .color('#a0a0a0').lineHeight('1.6'),
-          ).flexGrow('1').padding('32px').background('#1a1a1a').cornerRadius('12px'),
-        ).display('flex').gap('32px'),
-      ).padding('80px 0'),
+              .color(color.muted).lineHeight('1.6'),
+          ).flexGrow('1').padding(space.card).background(color.surface).cornerRadius(radius.card),
+        ).display('flex').gap(space.gapL),
+      ).padding(space.section),
 
       // ── Code Example Section ──
       section(
         h2(Text('Before → After'))
-          .fontSize('32px').fontWeight('700').color('#ffffff')
+          .fontSize(font.heading).fontWeight(font.bold).color(color.text)
           .textAlign('center').margin('0 0 48px 0'),
         div(
-          // Before
           div(
-            p(Text('従来の方法（3ファイル）')).fontSize('14px').color('#666666').margin('0 0 16px 0'),
+            p(Text('従来の方法（3ファイル）')).fontSize(font.small).color(color.subtle).margin('0 0 16px 0'),
             pre(code(new TextType(
 `<!-- index.html -->
 <div class="card">
@@ -83,11 +130,10 @@ document.getElementById('btn')
   .addEventListener('click', () => {
     alert('Clicked!');
   });`
-            ))).fontSize('14px').color('#c0c0c0').fontFamily("'Fira Code', monospace"),
-          ).flexGrow('1').background('#1a1a1a').cornerRadius('12px').padding('24px').overflow('auto'),
-          // After
+            ))).fontSize(font.small).color(color.codeFg).fontFamily(font.mono),
+          ).flexGrow('1').background(color.surface).cornerRadius(radius.card).padding(space.block).overflow('auto'),
           div(
-            p(Text('DraftOle（1ファイル）')).fontSize('14px').color('#3b82f6').margin('0 0 16px 0'),
+            p(Text('DraftOle（1ファイル）')).fontSize(font.small).color(color.accent).margin('0 0 16px 0'),
             pre(code(new TextType(
 `const card = div(
   h2(Text('Hello')),
@@ -98,27 +144,27 @@ document.getElementById('btn')
 .cornerRadius('12px');
 
 card.jqm.click('handleClick');`
-            ))).fontSize('14px').color('#7dd3fc').fontFamily("'Fira Code', monospace"),
-          ).flexGrow('1').background('#0d1b2a').cornerRadius('12px').padding('24px').overflow('auto'),
-        ).display('flex').gap('24px'),
-      ).padding('80px 0'),
+            ))).fontSize(font.small).color(color.codeAccent).fontFamily(font.mono),
+          ).flexGrow('1').background(color.codeBg).cornerRadius(radius.card).padding(space.block).overflow('auto'),
+        ).display('flex').gap(space.gapM),
+      ).padding(space.section),
 
       // ── Footer CTA ──
       footer(
         p(Text('TypeScript ひとつで、Webを作ろう。'))
-          .fontSize('24px').color('#ffffff').margin('0 0 32px 0'),
+          .fontSize(font.subheading).color(color.text).margin('0 0 32px 0'),
         a({ href: '#' }, Text('Get Started'))
-          .display('inline-block').padding('16px 40px')
-          .background('#3b82f6').color('#ffffff')
-          .fontSize('18px').fontWeight('600')
-          .cornerRadius('8px').textDecoration('none'),
+          .display('inline-block').padding(space.button)
+          .background(color.accent).color(color.text)
+          .fontSize(font.cta).fontWeight(font.semibold)
+          .cornerRadius(radius.button).textDecoration('none'),
         p(Text('© 2026 DraftOle'))
-          .fontSize('14px').color('#666666').margin('48px 0 0 0'),
-      ).padding('80px 0 40px').textAlign('center'),
+          .fontSize(font.small).color(color.subtle).margin('48px 0 0 0'),
+      ).padding(space.footerY).textAlign('center'),
 
-    ).maxWidth('1200px').margin('0 auto').padding('0 24px'),  // wrapper
-  ).background('#0a0a0a').color('#ffffff')
-   .fontFamily("'Inter', 'Noto Sans JP', sans-serif")
+    ).maxWidth(layout.maxWidth).margin('0 auto').padding(space.pageX),
+  ).background(color.bg).color(color.text)
+   .fontFamily(font.family)
    .margin('0').padding('0'),
 );
 

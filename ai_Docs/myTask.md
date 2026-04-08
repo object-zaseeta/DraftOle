@@ -37,7 +37,7 @@
 | **P1** | DX改善 | DX-2 | `Text.raw()` 静的メソッド追加（エスケープなしテキスト） | [ ] |
 | **P2** | DF修正 | DF-6 | `<!DOCTYPE html>` 出力オプション | [ ] |
 | **P2** | DF修正 | DF-7 | `setFlex()` CSSショートハンド追加 | [ ] |
-| **P2** | DF修正 | DF-8 | コンポーネントテンプレート/プリセット機能 | [ ] |
+| **P1** | DX改善 | DF-8 | コンポーネント分割パターン（関数ベース） | [ ] |
 | **P2** | 機能拡張 | 6.5 | CSS変数機能の実装 | [ ] |
 | **P2** | 機能拡張 | 6.6 | radial-gradient 実装 | [ ] |
 | **P2** | 機能拡張 | 6.7 | examples/基本例追加 | [ ] |
@@ -152,6 +152,30 @@ P4: 宣言的API / SSG / Webアプリ
 - **現状**: エスケープなしテキストには `new TextType('...')` を使う必要がある。ユーザーにクラス直接利用を強いる
 - **改善**: `Text.raw('<b>bold</b>')` でエスケープなしTextTypeを返す静的メソッドを追加
 - **工数**: 30分
+
+### [ ] DF-8: コンポーネント分割パターン（関数ベース）
+- **対象**: ドキュメント + LP実装例の分割
+- **現状**: 1ファイルに全セクションがフラットに並ぶ（LP: 160行）。Reactのようなファイル分割パターンがない
+- **改善**: 関数コンポーネントパターンを確立し、LP を分割してデモする
+  - `lp/tokens.ts` — デザイントークン（color, font, space, radius）
+  - `lp/components/hero.ts` — Hero セクション
+  - `lp/components/features.ts` — Features セクション
+  - `lp/components/code-example.ts` — Code 比較セクション
+  - `lp/components/footer-cta.ts` — Footer CTA
+  - `lp/components/cta-button.ts` — 共通CTAボタン（再利用コンポーネント）
+  - `lp/lp-builder.ts` — エントリポイント（組み立てのみ）
+- **パターン**: Reactの関数コンポーネントに相当
+  ```typescript
+  // components/hero.ts
+  export const Hero = () =>
+    section(
+      h1('HTML, CSS, JS — TypeScript ひとつで。')
+        .fontSize(font.hero).fontWeight(font.bold).color(color.text),
+      CtaButton('Get Started'),
+    ).padding(space.heroY).textAlign('center');
+  ```
+- **ゴール**: DraftOleでのコンポーネント分割がReactと同等に自然であることを実証
+- **工数**: 2時間
 
 ---
 

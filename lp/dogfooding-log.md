@@ -50,3 +50,20 @@ ID属性ベースのCSS出力ヘルパー `sid()` + `collectIdCss()` を実装�
 - `HtmlTag.collectCssStyleString()` の子再帰
 - スコープクラスのHTML自動付与
 - ファクトリ関数でのtagPath自動設定
+
+---
+
+## Task 3: 特徴3カラムセクション
+
+### 実行結果
+
+- 3カラムのFeatureセクションを追加。`node --experimental-strip-types lp/lp-builder.ts` で正常実行
+- `lp/output/index.html` に `<section id="features">` と3つのカード（`#f1`, `#f2`, `#f3`）が生成された
+- `lp/output/style.css` に `#features`, `#features-title`, `#features-row`, `#f1`〜`#f3-desc` のCSSブロックが生成された
+
+### 発見事項
+
+1. **反復パターンが冗長** — 3枚のカードはほぼ同一のスタイル設定（`setFlexGrow('1')`, `setPadding('32px')`, `setBackgroundColor('#1a1a1a')`, `setBorderRadius('12px')`）。ヘルパー関数やループで抽象化すべきだが、DraftOle自体にはコンポーネントテンプレート機能がまだない。これはライブラリの重要な改善ポイント
+2. **Flexbox APIの使い勝手** — `setGap('32px')` は直感的に動作した。ただし `setFlex('1')` は存在せず `setFlexGrow('1')` を使う必要があった。CSSショートハンド `flex: 1` に対応する `setFlex()` メソッドがないのは不便。`flex: 1` は `flex-grow: 1; flex-shrink: 1; flex-basis: 0%` の省略形なので、3つ個別に設定するか `setFlexGrow` だけで近似するしかない
+3. **`h2` ファクトリの追加インポート** — `h1` はインポート済みだったが `h2` は未インポート。ファクトリ関数は要素ごとに個別インポートが必要。`import * as tags from '...'` のようなバレルエクスポートがあると便利
+4. **CSS出力は正常** — `sid()` + `collectIdCss()` の回避策は引き続き機能。要素数が増えても問題なくID単位でCSSが収集された

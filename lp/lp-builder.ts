@@ -1,7 +1,7 @@
 import {
   Root, PairType, TextType, Text, HtmlTag, HtmlAttribute,
   html, head, body, title, meta,
-  div, h1, p, a, section,
+  div, h1, h2, p, a, section,
   FileExporter,
 } from '../dist/index.js';
 
@@ -79,6 +79,83 @@ heroCta.css.styleManager.style.text.setTextDecoration('none');
 
 heroSection.addChildren([heroTitle, heroSub, heroCta]);
 wrapper.addChild(heroSection);
+
+// ── Features Section ──
+const featuresSection = sid(section(), 'features');
+featuresSection.css.styleManager.style.spacing.setPadding('80px 0');
+
+const featuresTitle = sid(h2(Text('なぜ DraftOle？')), 'features-title');
+featuresTitle.css.styleManager.style.font.setFontSize('32px');
+featuresTitle.css.styleManager.style.font.setFontWeight('700');
+featuresTitle.css.styleManager.style.font.setColor('#ffffff');
+featuresTitle.css.styleManager.style.text.setTextAlign('center');
+featuresTitle.css.styleManager.style.spacing.setMarginBottom('48px');
+
+const featuresRow = sid(div(), 'features-row');
+featuresRow.css.styleManager.style.position.setDisplay('flex');
+featuresRow.css.styleManager.style.flex.setGap('32px');
+
+// Feature 1: 三位一体
+const feature1 = sid(div(), 'f1');
+feature1.css.styleManager.style.flex.setFlexGrow('1');
+feature1.css.styleManager.style.spacing.setPadding('32px');
+feature1.css.styleManager.style.backgroundColor.setBackgroundColor('#1a1a1a');
+feature1.css.styleManager.style.border.setBorderRadius('12px');
+
+const f1Title = sid(h2(Text('三位一体')), 'f1-title');
+f1Title.css.styleManager.style.font.setFontSize('24px');
+f1Title.css.styleManager.style.font.setFontWeight('600');
+f1Title.css.styleManager.style.font.setColor('#ffffff');
+f1Title.css.styleManager.style.spacing.setMarginBottom('12px');
+
+const f1Desc = sid(p(Text('HTML・CSS・JSを1つのTypeScriptファイルで記述。もう3ファイルを行き来する必要はありません。')), 'f1-desc');
+f1Desc.css.styleManager.style.font.setColor('#a0a0a0');
+f1Desc.css.styleManager.style.font.setLineHeight('1.6');
+
+feature1.addChildren([f1Title, f1Desc]);
+
+// Feature 2: 型安全
+const feature2 = sid(div(), 'f2');
+feature2.css.styleManager.style.flex.setFlexGrow('1');
+feature2.css.styleManager.style.spacing.setPadding('32px');
+feature2.css.styleManager.style.backgroundColor.setBackgroundColor('#1a1a1a');
+feature2.css.styleManager.style.border.setBorderRadius('12px');
+
+const f2Title = sid(h2(Text('型安全')), 'f2-title');
+f2Title.css.styleManager.style.font.setFontSize('24px');
+f2Title.css.styleManager.style.font.setFontWeight('600');
+f2Title.css.styleManager.style.font.setColor('#ffffff');
+f2Title.css.styleManager.style.spacing.setMarginBottom('12px');
+
+const f2Desc = sid(p(Text('146以上のCSSプロパティすべてに型補完が効きます。タイポや無効な値をコンパイル時にキャッチ。')), 'f2-desc');
+f2Desc.css.styleManager.style.font.setColor('#a0a0a0');
+f2Desc.css.styleManager.style.font.setLineHeight('1.6');
+
+feature2.addChildren([f2Title, f2Desc]);
+
+// Feature 3: ゼロランタイム
+const feature3 = sid(div(), 'f3');
+feature3.css.styleManager.style.flex.setFlexGrow('1');
+feature3.css.styleManager.style.spacing.setPadding('32px');
+feature3.css.styleManager.style.backgroundColor.setBackgroundColor('#1a1a1a');
+feature3.css.styleManager.style.border.setBorderRadius('12px');
+
+const f3Title = sid(h2(Text('ゼロランタイム')), 'f3-title');
+f3Title.css.styleManager.style.font.setFontSize('24px');
+f3Title.css.styleManager.style.font.setFontWeight('600');
+f3Title.css.styleManager.style.font.setColor('#ffffff');
+f3Title.css.styleManager.style.spacing.setMarginBottom('12px');
+
+const f3Desc = sid(p(Text('出力は純粋なHTML/CSS/JS。ランタイム依存なし。どこにでもデプロイできます。')), 'f3-desc');
+f3Desc.css.styleManager.style.font.setColor('#a0a0a0');
+f3Desc.css.styleManager.style.font.setLineHeight('1.6');
+
+feature3.addChildren([f3Title, f3Desc]);
+
+featuresRow.addChildren([feature1, feature2, feature3]);
+featuresSection.addChildren([featuresTitle, featuresRow]);
+wrapper.addChild(featuresSection);
+
 bodyEl.addChild(wrapper);
 
 htmlEl.addChildren([headEl, bodyEl]);

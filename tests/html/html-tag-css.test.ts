@@ -76,6 +76,67 @@ describe('HtmlTag CSS コンポジション統合', () => {
     });
   });
 
+  // ── collectCssStyleString() 子要素再帰 (DF-1) ──
+
+  describe('collectCssStyleString() 子要素再帰', () => {
+    it('子要素のCSSを再帰的に収集する', () => {
+      const parent = new TestTag('div');
+      const child = new TestTag('p');
+      child.css.styleManager.style.font.setColor('#333');
+      parent.addChild(child);
+
+      const result = parent.collectCssStyleString();
+      expect(result).toContain('color: #333');
+    });
+
+    it('自身と子要素の両方のCSSを収集する', () => {
+      const parent = new TestTag('div');
+      parent.css.styleManager.style.spacing.setPadding('10px');
+      const child = new TestTag('p');
+      child.css.styleManager.style.font.setColor('#333');
+      parent.addChild(child);
+
+      const result = parent.collectCssStyleString();
+      expect(result).toContain('padding: 10px');
+      expect(result).toContain('color: #333');
+    });
+
+    it('孫要素のCSSも再帰的に収集する', () => {
+      const grandparent = new TestTag('div');
+      const parent = new TestTag('section');
+      const child = new TestTag('p');
+      child.css.styleManager.style.font.setFontSize('16px');
+      parent.addChild(child);
+      grandparent.addChild(parent);
+
+      const result = grandparent.collectCssStyleString();
+      expect(result).toContain('font-size: 16px');
+    });
+
+    it('CSS未設定の子要素はスキップする', () => {
+      const parent = new TestTag('div');
+      parent.css.styleManager.style.spacing.setPadding('10px');
+      const emptyChild = new TestTag('span');
+      parent.addChild(emptyChild);
+
+      const result = parent.collectCssStyleString();
+      expect(result).toContain('padding: 10px');
+    });
+
+    it('複数子要素のCSSを結合する', () => {
+      const parent = new TestTag('div');
+      const child1 = new TestTag('p');
+      child1.css.styleManager.style.font.setColor('#111');
+      const child2 = new TestTag('span');
+      child2.css.styleManager.style.font.setColor('#222');
+      parent.addChildren([child1, child2]);
+
+      const result = parent.collectCssStyleString();
+      expect(result).toContain('color: #111');
+      expect(result).toContain('color: #222');
+    });
+  });
+
   // ── CssManagerType インターフェース準拠（後方互換） ──
 
   describe('CssManagerType 後方互換', () => {

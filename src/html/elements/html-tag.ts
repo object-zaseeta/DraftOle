@@ -304,14 +304,31 @@ export abstract class HtmlTag implements HTMLTagProtocol, CssManagerType, JQuery
   // ── CSS/JS (コンポジションパターン委譲) ──
 
   /**
-   * Collects CSS style strings from this element.
+   * Recursively collects CSS style strings from this element and its descendants.
    *
-   * Delegates to the internal {@link CssManagerInstance}.
+   * Collects this element's CSS via {@link CssManagerInstance}, then recurses
+   * into child elements to collect their CSS as well.
    *
-   * @returns CSS style string
+   * @returns Concatenated CSS string from this element and all descendants
    */
   collectCssStyleString(): string {
-    return this._css.render();
+    const parts: string[] = [];
+
+    const ownCss = this._css.render();
+    if (ownCss.length > 0) {
+      parts.push(ownCss);
+    }
+
+    for (const child of this._children) {
+      if (child instanceof HtmlTag) {
+        const childCss = child.collectCssStyleString();
+        if (childCss.length > 0) {
+          parts.push(childCss);
+        }
+      }
+    }
+
+    return parts.join('\n');
   }
 
   /**

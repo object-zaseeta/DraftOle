@@ -144,8 +144,8 @@ describe('Task 9.3: Factory Hybrid API Integration', () => {
 
       expect(parentCss).toContain('font-size: 16px');
       expect(childCss).toContain('font-size: 12px');
-      // 親と子のCSSは独立している
-      expect(parentCss).not.toContain('font-size: 12px');
+      // collectCssStyleString() は子要素のCSSも再帰的に収集する (DF-1)
+      expect(parentCss).toContain('font-size: 12px');
     });
   });
 
@@ -308,13 +308,15 @@ describe('Task 9.3: Factory Hybrid API Integration', () => {
 
       outer.addChild(inner);
 
-      // 各要素のCSSは独立している
+      // collectCssStyleString() は子要素のCSSも再帰的に収集する (DF-1)
       const outerCss = outer.collectCssStyleString();
       const innerCss = inner.collectCssStyleString();
 
       expect(outerCss).toContain('font-size: 18px');
       expect(outerCss).toContain('margin: 30px');
-      expect(outerCss).not.toContain('padding: 10px');
+      // 親は子のCSSも含む（再帰収集）
+      expect(outerCss).toContain('padding: 10px');
+      expect(outerCss).toContain('font-size: 14px');
 
       expect(innerCss).toContain('font-size: 14px');
       expect(innerCss).toContain('padding: 10px');

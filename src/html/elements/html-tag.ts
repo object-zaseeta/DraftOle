@@ -118,6 +118,38 @@ export abstract class HtmlTag implements HTMLTagProtocol, CssManagerType, JQuery
     return this._css;
   }
 
+  /**
+   * Shortcut to HtmlStyle (3-level chain: element.style.font.setFontSize()).
+   * Equivalent to element.css.styleManager.style.
+   */
+  get style() {
+    return this._css.styleManager.style;
+  }
+
+  // ── Fluent CSS メソッド (D-3.1) ──
+  // SwiftUIライクな1段階チェーン: element.padding('24px').background('#fff')
+
+  padding(v: string): this { this.style.spacing.setPadding(v); return this; }
+  margin(v: string): this { this.style.spacing.setMargin(v); return this; }
+  background(v: string): this { this.style.backgroundColor.setBackgroundColor(v); return this; }
+  color(v: string): this { this.style.font.setColor(v); return this; }
+  fontSize(v: string): this { this.style.font.setFontSize(v); return this; }
+  fontWeight(v: string): this { this.style.font.setFontWeight(v); return this; }
+  fontFamily(v: string): this { this.style.font.setFontFamily(v); return this; }
+  lineHeight(v: string): this { this.style.font.setLineHeight(v); return this; }
+  cornerRadius(v: string): this { this.style.border.setBorderRadius(v); return this; }
+  display(v: string): this { this.style.position.setDisplay(v); return this; }
+  width(v: string): this { this.style.position.setWidth(v); return this; }
+  height(v: string): this { this.style.position.setHeight(v); return this; }
+  maxWidth(v: string): this { this.style.position.setMaxWidth(v); return this; }
+  textAlign(v: string): this { this.style.text.setTextAlign(v); return this; }
+  textDecoration(v: string): this { this.style.text.setTextDecoration(v); return this; }
+  overflow(v: string): this { this.style.visual.setOverflow(v); return this; }
+  opacity(v: string): this { this.style.visual.setOpacity(v); return this; }
+  boxShadow(v: string): this { this.style.visual.setBoxShadow(v); return this; }
+  gap(v: string): this { this.style.flex.setGap(v); return this; }
+  flexGrow(v: string): this { this.style.flex.setFlexGrow(v); return this; }
+
   // ── JS コンポジション ──
 
   /**

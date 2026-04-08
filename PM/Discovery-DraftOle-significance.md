@@ -329,39 +329,149 @@ Phase D: エコシステム参入
 
 ---
 
-## 総合判断（Phase 5 更新）
+## Phase 6: DraftOleの本質 —「Web版SwiftUI」（2026-04-08）
+
+### ネイティブアプリ開発との構造的対比
+
+ネイティブアプリ開発（SwiftUI, Jetpack Compose, Flutter）の特徴:
+- **1言語で完結** — UIも、スタイルも、動作も同じ言語で書く
+- **HTML/CSS/JSの分離が存在しない**
+- 型安全、宣言的、コンポーネントベース
+
+```swift
+// SwiftUI — Swift 1言語で全て
+VStack(spacing: 16) {
+    Text("Hello").font(.title).foregroundColor(.white)
+    Button("Click") { count += 1 }
+        .padding(16).background(Color.blue).cornerRadius(8)
+}
+```
+
+```typescript
+// DraftOle — TypeScript 1言語で全て
+const card = div(
+    h2(Text('Hello')),
+    button(Text('Click'))
+);
+card.css.styleManager.style.spacing.setPadding('16px');
+card.css.styleManager.style.backgroundColor.setBackgroundColor('#3b82f6');
+card.jqm.click('handleClick');
+```
+
+### Web開発の現状は「3言語混在」
+
+React/Vue/SvelteですらJSX内にHTMLの構文、CSS-in-JSやTailwindでCSSの概念、JSでロジックと、**本質的に3言語の知識を要求する**。DraftOleはTypeScriptの知識だけで完結する。
+
+| アプローチ | 1言語完結 | Web対応 |
+|-----------|:---:|:---:|
+| SwiftUI | ✓ | × (iOS/macOSのみ) |
+| Jetpack Compose | ✓ | × (Androidのみ) |
+| Flutter | ✓ | △ (Web限定的) |
+| React + JSX + CSS-in-JS | **×** (3言語混在) | ✓ |
+| **DraftOle** | **✓** | **✓** |
+
+**Web向けで「1言語完結」を実現しているのはDraftOleだけ。**
+
+### プロジェクトの本質の再定義
+
+| 以前の理解 | 修正後 |
+|-----------|--------|
+| HTML/CSS/JS生成ツール | **Webをネイティブアプリのように書くDSL** |
+| 競合: テンプレートエンジン、SSG | **競合: React/Vue/Svelte（同じ問題を別の方法で解いている）** |
+| ニッチな用途 | **Webの書き方そのものを変える野心** |
+| 「型安全なHugo/Jekyll」 | **「Web版SwiftUI」** |
+
+### SwiftUIとのDXギャップ（現状の課題）
+
+「Web版SwiftUI」を名乗るには、SwiftUIに匹敵するDXが必要:
+
+| SwiftUI | DraftOle（現状） | ギャップ |
+|---------|-----------------|:---:|
+| `.padding(24)` | `.css.styleManager.style.spacing.setPadding('24px')` | **大** |
+| `@State var count = 0` | なし（リアクティビティなし） | 大 |
+| `struct MyView: View` | なし（コンポーネント定義なし） | 大 |
+| 宣言的構文 | 手続き的（`addChild`） | 中 |
+| Xcode Preview | なし | 中 |
+
+**DX改善（DF-5: CSSショートハンド）の重要度がP1→P0に上がる。** SwiftUIライクな体験が売りなら、APIの簡潔さは本質であり付加機能ではない。
+
+### 目指すべきDX
+
+```typescript
+// 現在
+card.css.styleManager.style.spacing.setPadding('24px');
+card.css.styleManager.style.backgroundColor.setBackgroundColor('#3b82f6');
+card.css.styleManager.style.border.setBorderRadius('8px');
+
+// 目標（SwiftUIライク）
+card.style.padding('24px').background('#3b82f6').cornerRadius('8px');
+```
+
+### Phase 1-5 で積み上げた議論との統合
+
+```
+Phase 1: 「意義が見えない」
+  → 本質を「HTML生成ツール」と捉えていたから見えなかった
+
+Phase 2: ドッグフーディングで詰まった
+  → DXがSwiftUIレベルに達していないから
+
+Phase 3: 「市場フィットが弱い」
+  → 「ツール」として見ていた。「パラダイム」として見れば位置づけが変わる
+
+Phase 4: 「スコーピング × シンプルさ」
+  → SwiftUIが当たり前に持つ特性。正しい方向
+
+Phase 5: HTMX統合
+  → リアクティビティの欠如を補う現実的な道
+
+Phase 6: 「Web版SwiftUI」
+  → 全ての議論を貫く本質。DraftOleのビジョンそのもの
+```
+
+---
+
+## 総合判断（Phase 6 更新）
+
+### ビジョン
+
+**DraftOle = Web版SwiftUI**
+
+SwiftUIがiOS開発を「1言語で宣言的に」変えたように、
+DraftOleはWeb開発を「TypeScript 1言語で宣言的に」変える。
 
 ### DraftOleの技術的差別化
 
+- ✅ **Web向けで唯一の「1言語完結」** — React/VueですらHTML+CSS+JSの3言語知識が必要
 - ✅ 「HTML+CSS+JS三位一体」を型安全なTS DSLで実現 — 他にない
 - ✅ フレームワーク不要、ゼロランタイム — 独自の立ち位置
 - ✅ **CSSスコーピングとシンプルさの両立** — フレームワークもHTMX派も達成していない
-- ✅ **HTMX統合による動的Webアプリへの拡張** — 型安全なサーバーサイドHTML生成器としての道
+- ✅ **HTMX統合による動的Webアプリへの拡張** — リアクティビティの補完
 
-### DraftOleの市場的課題
+### DraftOleの課題
 
-- ⚠️ ~~Webアプリ開発には向かない~~ → HTMX統合で動的アプリも視野に入る
-- ❌ ターゲットユーザーが未定義 → 「HTMX開発者」が有力候補
-- ❌ 独自APIの学習コスト（ただしReact+Tailwindの学習コストよりは低い）
-- ❌ エコシステムが存在しない → HTMXエコシステムへの参入が現実的な道
+- ⚠️ **DXがSwiftUIレベルに達していない** — 5段階ドットチェーンは致命的。DF-5をP0に格上げ
 - ⚠️ P0課題（スコープCSS）が未修正 — ポジションの根幹が動いていない
+- ❌ リアクティビティなし → HTMX統合で補完
+- ❌ コンポーネント定義なし → 将来課題
+- ❌ エコシステムが存在しない → HTMXエコシステムへの参入が現実的な道
 
 ### 結論
 
-**DraftOleには明確なポジションと成長路線がある。**
+**DraftOleは「Web版SwiftUI」というビジョンを持つ。開発を続ける価値がある。**
 
-1. **ポジション**: CSSスコーピング × シンプルさ の両立（誰も占めていない）
-2. **成長路線**: 静的ページ → HTMX統合 → 動的Webアプリ
-3. **ターゲット**: HTMX開発者（型安全なHTML生成とCSSスコーピングを求める層）
-4. **前提条件**: P0修正が全ての出発点
+1. **ビジョン**: Webをネイティブアプリのように、TypeScript 1言語で書く
+2. **ポジション**: 1言語完結 × CSSスコーピング × シンプルさ（誰も占めていない）
+3. **成長路線**: DX改善 → 静的ページ完成 → HTMX統合 → 動的Webアプリ
+4. **前提条件**: P0修正（CSS再帰 + スコープCSS + DXショートハンド）
 
-### 次のアクション
+### 次のアクション（優先度順）
 
-1. **P0修正（DF-1, DF-2）** — ポジションの根幹。これが動かないと何も始まらない
-2. **回避策なしでLP再構築** — 「シンプルさ」を本当に実感できるか検証
-3. **HTMX属性の型定義** — hx-get, hx-post, hx-swap 等をAttributeMapに追加
-4. **HTMX + DraftOle デモ** — Todoアプリで「Reactなしの動的Webアプリ」を実証
-5. **ポジショニングの発信** — 「HTMX + DraftOle = Reactの機能性を、Reactの複雑さなしで」
+1. **P0: DF-5 DXショートハンド** — `card.style.padding('24px')` レベルのAPIを実現。ビジョンの根幹
+2. **P0: DF-1, DF-2 CSS修正** — スコープCSSを動作させる
+3. **回避策なしでLP再構築** — SwiftUIライクなDXで書けるか検証
+4. **HTMX属性の型定義** — 動的Webアプリへの第一歩
+5. **HTMX + DraftOle デモ** — 「Web版SwiftUI」のビジョンを実証
 
 ### 続けない場合
 

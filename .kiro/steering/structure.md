@@ -22,6 +22,7 @@ DraftOle_TS/
 │   │   ├── elements/      # タグ実装（Root, PairType, SelfClosingType, TextType）
 │   │   ├── attributes/    # 属性管理（29属性キー）
 │   │   ├── tags/          # タグファクトリ関数（56タグ）
+│   │   ├── types/         # 型定義（TagFactoryTypes, ProtocolGuard）
 │   │   ├── utils/         # HTMLフォーマッター
 │   │   └── errors/        # HTML固有エラー
 │   ├── css/               # ✅ Phase 3完了（スタイル生成）
@@ -117,18 +118,15 @@ DraftOle_TS/
 
 ## Key Files
 
-### Current Entry Point (Phase 1)
-- `src/index.ts` - utilsモジュールのAPIをエクスポート
+### Entry Point
+- `src/index.ts` - 全モジュール（utils, html, css, js, publisher）のPublic APIをエクスポート
 
-### Core Interfaces (Phase 1完了)
-- `src/utils/renderable.ts` - Renderable interface
-- `src/utils/exportable.ts` - Exportable interface
-- `src/utils/ole-testable.ts` - OleTestable & ViewPortSizeProvider
-
-### Future Modules (Phase 2以降)
-- `src/html/protocols/` - HTMLTagProtocol等のインターフェース
-- `src/html/tags/` - div(), p(), span()等のファクトリ関数
-- `src/css/manager/` - CSS生成とスコープ管理
+### Module Entrypoints
+- `src/html/index.ts` - HTMLタグ生成・属性・プロトコル
+- `src/css/index.ts` - CSS管理・スタイル・レイアウト
+- `src/js/jquery-manager.ts` - jQuery風イベント・DOM操作
+- `src/publisher/file-exporter.ts` - HTML/CSS/JSファイル出力
+- `src/utils/` - 共通インターフェース・エラー・ユーティリティ
 
 ---
 _Map modules to their purpose, not every file_

@@ -5,7 +5,7 @@
 タスク完了時の標準ワークフロー。コード品質を維持しながら、クリーンなコードベースを保つ。
 
 ```
-Task完了 → Commit → Lint → Format → Test → Commit（修正あれば）
+Task完了 → Commit → Lint → Test → Commit（修正あれば）
 ```
 
 ### Step 1: Task完了とCommit
@@ -21,7 +21,7 @@ Task完了 → Commit → Lint → Format → Test → Commit（修正あれば�
 コード品質チェックを実行する。
 
 ```bash
-npm run lint
+pnpm lint
 ```
 
 **検出対象**:
@@ -30,27 +30,19 @@ npm run lint
 - コードスタイル違反
 - 潜在的なバグパターン
 
-### Step 3: Prettier実行
-
-フォーマットを統一する。
-
-```bash
-npm run format
-```
-
-### Step 4: Test実行
+### Step 3: Test実行
 
 ユニットテストを実行して問題がないことを確認する。
 
 ```bash
-npm run test
+pnpm test
 ```
 
 **確認項目**:
 - 全テストがパスすること
 - カバレッジが低下していないこと
 
-### Step 5: 修正のCommit
+### Step 4: 修正のCommit
 
 修正があれば、`/buildInPublic:Commit` で別コミットとして記録する。
 
@@ -73,9 +65,9 @@ npm run test
     ↓
 タスク完了 → /buildInPublic:Commit
     ↓
-npm run lint && npm run format
+pnpm lint
     ↓
-npm run test
+pnpm test
     ↓
 修正あれば → /buildInPublic:Commit
     ↓
@@ -90,14 +82,14 @@ pnpm build        # ビルド（tsup）
 
 # 品質チェック
 pnpm lint         # ESLint
-pnpm format       # Prettier
+pnpm typecheck    # TypeScript型チェック
 
 # テスト
 pnpm test         # Vitest（単体実行）
 pnpm test:watch   # Vitest watch mode
 ```
 
-**Note**: `lint:fix`, `typecheck`, `test:coverage` 等は必要に応じて package.json に追加可能。
+**Note**: `lint:fix`, `format`, `test:coverage` 等は必要に応じて package.json に追加可能。
 
 ## Exceptions
 

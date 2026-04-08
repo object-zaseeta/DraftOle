@@ -15,7 +15,7 @@ Swift版のProtocol-oriented designをTypeScriptのInterface/Classに移植。
 ## Key Libraries
 
 - **Production**: なし（依存ゼロを目指す）
-- **Development**: tsup, vitest, eslint, prettier, typedoc
+- **Development**: tsup, vitest, eslint, eslint-config-prettier, typedoc
 
 ## Development Standards
 

@@ -21,13 +21,21 @@
 
 | 優先度 | カテゴリ | タスクID | 内容 | 状態 |
 |:------:|---------|---------|------|:----:|
+| **P0** | DF修正 | DF-1 | collectCssStyleString() 子再帰修正 | [x] |
+| **P0** | DF修正 | DF-2 | スコープCSSクラスのHTML自動付与 | [ ] |
 | **P0** | MVP Demo | 6.1 | examples/mvp-demo.ts 作成 | [ ] |
 | **P0** | MVP Demo | 6.2 | 統合テスト追加 | [ ] |
 | **P0** | MVP Demo | 6.3 | examples/README.md 作成 | [ ] |
 | **P0** | MVP Demo | 6.4 | package.json スクリプト追加 | [ ] |
+| **P1** | DF修正 | DF-3 | Text() HTMLエスケープのデフォルト化 | [ ] |
+| **P1** | DF修正 | DF-4 | `<pre>` 内レンダラーインデント抑制 | [ ] |
+| **P1** | DF修正 | DF-5 | CSS APIショートハンド（5段階→3段階チェーン） | [ ] |
 | **P1** | CFA構造改善 | CFA-A.1 | html-tag.ts 具象依存除去 | [ ] |
 | **P1** | CFA構造改善 | CFA-A.2 | protocol 依存反転 | [ ] |
 | **P1** | CFA構造改善 | CFA-A.3 | Composition Root 導入 | [ ] |
+| **P2** | DF修正 | DF-6 | `<!DOCTYPE html>` 出力オプション | [ ] |
+| **P2** | DF修正 | DF-7 | `setFlex()` CSSショートハンド追加 | [ ] |
+| **P2** | DF修正 | DF-8 | コンポーネントテンプレート/プリセット機能 | [ ] |
 | **P2** | 機能拡張 | 6.5 | CSS変数機能の実装 | [ ] |
 | **P2** | 機能拡張 | 6.6 | radial-gradient 実装 | [ ] |
 | **P2** | 機能拡張 | 6.7 | examples/基本例追加 | [ ] |
@@ -52,16 +60,36 @@
 ### 🎯 クリティカルパス
 
 ```
-P0: Task 6.1 → 6.2 → 6.3 / 6.4
+P0: DF-1（CSS再帰）+ DF-2（スコープCSS付与）→ Task 6.1〜6.4（MVP Demo）
          ↓
-P1: CFA-A.1 + CFA-A.2 → CFA-A.3
+P1: DF-3〜5（DX改善）/ CFA-A.1〜A.3（構造改善）
          ↓
-P2: CFA-B.1〜B.4（並列可）/ Task 6.5〜6.7（並列可）
+P2: DF-6〜8 / CFA-B.1〜B.4（並列可）/ Task 6.5〜6.7（並列可）
          ↓
 P3: CFA-C.1〜C.2 / MVP-2.3〜2.5
          ↓
 P4: 宣言的API / SSG / Webアプリ
 ```
+
+---
+
+## P0: 最優先 — ドッグフーディング発見課題（DF修正）
+
+> **出典**: `lp/dogfooding-log.md`（2026-04-08 LP構築実験で発見）
+> **目標**: DraftOleを回避策なしで実用可能にする
+
+### [x] DF-1: collectCssStyleString() 子再帰修正（2026-04-08完了）
+- **対象**: `src/html/elements/html-tag.ts:313-315`
+- **現状**: `collectCssStyleString()` は `this._css.render()` のみ返し、子要素に再帰しない。`collectJsContent()` は再帰している
+- **改善**: `collectJsContent()` と同様に子要素を再帰走査し、全子孫のCSSを収集する
+- **影響**: Root.collectCssStyleString() は既に子を走査するが、孫以降はHtmlTag側の再帰が必要
+- **工数**: 1時間
+
+### [ ] DF-2: スコープCSSクラスのHTML自動付与
+- **対象**: `src/html/elements/html-tag.ts`（protoRender）, `src/css/manager/css-manager.ts`
+- **現状**: `renderCss()` で `._hash { ... }` を生成するが、HTMLレンダリング時にそのクラスが要素のclass属性に付与されない。tagPath未設定で全要素が同一ハッシュになる問題もあり
+- **改善**: (a) ファクトリ関数でtagPathを自動設定、(b) protoRender時にスコープクラスをclass属性に自動追加
+- **工数**: 3-4時間
 
 ---
 
@@ -104,6 +132,30 @@ P4: 宣言的API / SSG / Webアプリ
 
 ---
 
+## P1: 高優先度 — ドッグフーディングDX改善
+
+> **出典**: `lp/dogfooding-log.md`（2026-04-08）
+
+### [ ] DF-3: Text() HTMLエスケープのデフォルト化
+- **対象**: `src/html/elements/text-type.ts`
+- **現状**: `Text()` は `<`, `>`, `&` をエスケープしない。`<pre><code>` 内のHTMLコード例が壊れる
+- **改善**: デフォルトでHTMLエスケープ。`escapeHtml` は既にexportされているので利用可能。opt-outオプション（raw text）も必要
+- **工数**: 1-2時間
+
+### [ ] DF-4: `<pre>` 内レンダラーインデント抑制
+- **対象**: `src/html/utils/html-formatter.ts`
+- **現状**: HTMLFormatterが全要素にインデントを追加。`<pre>` 内の整形済みテキストに不要な空白が混入
+- **改善**: `<pre>` タグ内の子要素にはインデントを追加しない
+- **工数**: 1-2時間
+
+### [ ] DF-5: CSS APIショートハンド（5段階→3段階チェーン）
+- **対象**: `src/html/elements/html-tag.ts`, 新規 `src/html/elements/style-proxy.ts`
+- **現状**: `element.css.styleManager.style.font.setFontSize('48px')` は5段階のドットチェーン
+- **改善**: `element.style.font.setFontSize('48px')` で済むように `style` ゲッターを HtmlTag に追加
+- **工数**: 1時間
+
+---
+
 ## P1: 高優先度 — CFA構造改善（依存方向修正 + DI導入）
 
 > **出典**: `ai_Docs/cfa-report.md`（2026-02-11 診断）
@@ -142,6 +194,26 @@ P4: 宣言的API / SSG / Webアプリ
 ---
 
 ## P2: 中優先度 — 機能拡張 + ファイル分割
+
+### ドッグフーディング由来タスク
+
+#### [ ] DF-6: `<!DOCTYPE html>` 出力オプション
+- **対象**: `src/html/elements/root.ts`
+- **現状**: Root.render() は DOCTYPE 宣言を出力しない
+- **改善**: Root にオプション（例: `doctype: true`）を追加、render() の先頭に `<!DOCTYPE html>\n` を出力
+- **工数**: 30分
+
+#### [ ] DF-7: `setFlex()` CSSショートハンド追加
+- **対象**: `src/css/style/flex/css-flex.ts`
+- **現状**: `flex: 1` を設定するには `setFlexGrow('1')` + `setFlexShrink('1')` + `setFlexBasis('0%')` が必要
+- **改善**: `setFlex('1')` で `flex-grow: 1; flex-shrink: 1; flex-basis: 0%` を一括設定
+- **工数**: 30分
+
+#### [ ] DF-8: コンポーネントテンプレート/プリセット機能
+- **対象**: 新規設計
+- **現状**: 同一スタイルのボタンやカードを作る際にコード重複が多い（LP で CTAボタン8行×2箇所）
+- **改善**: スタイルプリセット or コンポーネントファクトリの仕組みを検討
+- **工数**: 要設計（spec作成推奨）
 
 ### 機能拡張タスク
 

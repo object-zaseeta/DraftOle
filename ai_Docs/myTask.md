@@ -22,14 +22,14 @@
 | 優先度 | カテゴリ | タスクID | 内容 | 状態 |
 |:------:|---------|---------|------|:----:|
 | **P0** | DF修正 | DF-1 | collectCssStyleString() 子再帰修正 | [x] |
-| **P0** | DF修正 | DF-2 | スコープCSSクラスのHTML自動付与 | [ ] |
+| **P0** | DF修正 | DF-2 | スコープCSSクラスのHTML自動付与 | [x] |
 | **P0** | MVP Demo | 6.1 | examples/mvp-demo.ts 作成 | [ ] |
 | **P0** | MVP Demo | 6.2 | 統合テスト追加 | [ ] |
 | **P0** | MVP Demo | 6.3 | examples/README.md 作成 | [ ] |
 | **P0** | MVP Demo | 6.4 | package.json スクリプト追加 | [ ] |
-| **P1** | DF修正 | DF-3 | Text() HTMLエスケープのデフォルト化 | [ ] |
-| **P1** | DF修正 | DF-4 | `<pre>` 内レンダラーインデント抑制 | [ ] |
-| **P1** | DF修正 | DF-5 | CSS APIショートハンド（5段階→3段階チェーン） | [ ] |
+| **P1** | DF修正 | DF-3 | Text() HTMLエスケープのデフォルト化 | [x] |
+| **P1** | DF修正 | DF-4 | `<pre>` 内レンダラーインデント抑制 | [x] |
+| **P1** | DF修正 | DF-5 | CSS APIショートハンド（5段階→3段階チェーン） | [x] |
 | **P1** | CFA構造改善 | CFA-A.1 | html-tag.ts 具象依存除去 | [ ] |
 | **P1** | CFA構造改善 | CFA-A.2 | protocol 依存反転 | [ ] |
 | **P1** | CFA構造改善 | CFA-A.3 | Composition Root 導入 | [ ] |
@@ -80,11 +80,7 @@ P4: 宣言的API / SSG / Webアプリ
 
 ### [x] DF-1: → done.md にアーカイブ済み（2026-04-08完了）
 
-### [ ] DF-2: スコープCSSクラスのHTML自動付与
-- **対象**: `src/html/elements/html-tag.ts`（protoRender）, `src/css/manager/css-manager.ts`
-- **現状**: `renderCss()` で `._hash { ... }` を生成するが、HTMLレンダリング時にそのクラスが要素のclass属性に付与されない。tagPath未設定で全要素が同一ハッシュになる問題もあり
-- **改善**: (a) ファクトリ関数でtagPathを自動設定、(b) protoRender時にスコープクラスをclass属性に自動追加
-- **工数**: 3-4時間
+### [x] DF-2: → done.md にアーカイブ対象（2026-04-08完了、コミット: cd372e1）
 
 ---
 
@@ -131,23 +127,9 @@ P4: 宣言的API / SSG / Webアプリ
 
 > **出典**: `lp/dogfooding-log.md`（2026-04-08）
 
-### [ ] DF-3: Text() HTMLエスケープのデフォルト化
-- **対象**: `src/html/elements/text-type.ts`
-- **現状**: `Text()` は `<`, `>`, `&` をエスケープしない。`<pre><code>` 内のHTMLコード例が壊れる
-- **改善**: デフォルトでHTMLエスケープ。`escapeHtml` は既にexportされているので利用可能。opt-outオプション（raw text）も必要
-- **工数**: 1-2時間
-
-### [ ] DF-4: `<pre>` 内レンダラーインデント抑制
-- **対象**: `src/html/utils/html-formatter.ts`
-- **現状**: HTMLFormatterが全要素にインデントを追加。`<pre>` 内の整形済みテキストに不要な空白が混入
-- **改善**: `<pre>` タグ内の子要素にはインデントを追加しない
-- **工数**: 1-2時間
-
-### [ ] DF-5: CSS APIショートハンド（5段階→3段階チェーン）
-- **対象**: `src/html/elements/html-tag.ts`, 新規 `src/html/elements/style-proxy.ts`
-- **現状**: `element.css.styleManager.style.font.setFontSize('48px')` は5段階のドットチェーン
-- **改善**: `element.style.font.setFontSize('48px')` で済むように `style` ゲッターを HtmlTag に追加
-- **工数**: 1時間
+### [x] DF-3: → done.md にアーカイブ対象（2026-04-08完了、コミット: 309e7fa）
+### [x] DF-4: → done.md にアーカイブ対象（2026-04-08完了、コミット: 20d422c）
+### [x] DF-5: → D-3.1 Fluent CSSメソッドで解消（2026-04-08完了、コミット: 7f93512）
 
 ---
 

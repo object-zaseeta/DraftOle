@@ -38,6 +38,11 @@
 | **P2** | DF修正 | DF-6 | `<!DOCTYPE html>` 出力オプション | [ ] |
 | **P2** | DF修正 | DF-7 | `setFlex()` CSSショートハンド追加 | [ ] |
 | **P1** | DX改善 | DF-8 | コンポーネント分割パターン（関数ベース） | [ ] |
+| **P0** | セキュリティ | SEC-1 | 属性値サニタイズ（href の javascript: 検出・拒否） | [ ] |
+| **P1** | セキュリティ | SEC-2 | CSS値サニタイズ（url(), expression() 検出・拒否） | [ ] |
+| **P1** | セキュリティ | SEC-3 | 危険APIの命名改善（TextType → unsafeRaw 等） | [ ] |
+| **P1** | セキュリティ | SEC-4 | HTMX統合時のCSRFトークン機構 | [ ] |
+| **P2** | セキュリティ | SEC-5 | CSP対応（nonce生成、style-src制御） | [ ] |
 | **P2** | 機能拡張 | 6.5 | CSS変数機能の実装 | [ ] |
 | **P2** | 機能拡張 | 6.6 | radial-gradient 実装 | [ ] |
 | **P2** | 機能拡張 | 6.7 | examples/基本例追加 | [ ] |
@@ -175,6 +180,43 @@ P4: 宣言的API / SSG / Webアプリ
     ).padding(space.heroY).textAlign('center');
   ```
 - **ゴール**: DraftOleでのコンポーネント分割がReactと同等に自然であることを実証
+- **工数**: 2時間
+
+---
+
+## P0/P1: セキュリティ — Webアプリスコープ対応
+
+> **出典**: Webアプリ拡張（HTMX統合）を視野に入れたセキュリティ評価（2026-04-08）
+> **目標**: ユーザー入力を含むHTML生成時のXSS・インジェクション対策
+
+### [ ] SEC-1: 属性値サニタイズ（P0）
+- **対象**: `src/html/attributes/html-attribute.ts`（renderAttribute）, ファクトリ関数の属性マップ処理
+- **現状**: `href`, `src`, `action` 等の属性値に `javascript:`, `data:` スキームが挿入可能。XSSの攻撃面
+- **改善**: URL属性（href, src, action, formaction）に対して危険なスキーム（`javascript:`, `vbscript:`, `data:`）を検出・拒否。許可スキーム（http, https, mailto, tel, #, /）をホワイトリスト化
+- **工数**: 2時間
+
+### [ ] SEC-2: CSS値サニタイズ（P1）
+- **対象**: Fluent CSSメソッド全体、CSSプロパティクラスの setter
+- **現状**: `div().background(userInput)` で `url('https://evil.com/steal')` や `expression()` を注入可能
+- **改善**: CSS値に `url()`, `expression()`, `-moz-binding` 等の危険パターンを検出・警告。`background-image` で外部URLを使う場合は明示的API（`backgroundImage.url()`）を要求
+- **工数**: 2-3時間
+
+### [ ] SEC-3: 危険APIの命名改善（P1）
+- **対象**: `TextType` コンストラクタ, `Text.raw()`（DX-2で追加予定）
+- **現状**: `new TextType(userInput)` はエスケープなしでHTMLを出力するが、名前から危険性が伝わらない
+- **改善**: DX-2 で追加する `Text.raw()` を `Text.unsafeRaw()` に命名。ドキュメントにセキュリティ警告を明記
+- **工数**: 30分
+
+### [ ] SEC-4: HTMX統合時のCSRFトークン機構（P1）
+- **対象**: 将来のHTMX統合モジュール
+- **現状**: 未実装。HTMX統合時にPOST/PUT/DELETEリクエストにCSRFトークンが必要
+- **改善**: `meta({ name: 'csrf-token', content: token })` の自動挿入、HTMX の `hx-headers` でのトークン送信パターンを提供
+- **工数**: 2時間（HTMX統合時に実装）
+
+### [ ] SEC-5: CSP対応（P2）
+- **対象**: FileExporter, Root
+- **現状**: インラインスタイル・スクリプトに対するCSP対応なし
+- **改善**: nonce生成機能、`<style nonce="...">` / `<script nonce="...">` の自動付与
 - **工数**: 2時間
 
 ---

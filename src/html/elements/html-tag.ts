@@ -18,6 +18,8 @@ import type { CssManagerType } from '../protocols/css-manager-type.js';
 import type { JQueryManagerProtocol } from '../protocols/jquery-manager-protocol.js';
 import type { CssManagerInstance } from '../../css/manager/css-manager-instance-type.js';
 import { CssManager } from '../../css/manager/css-manager.js';
+import { generateScopedClassName } from '../../css/utils/scoped-css-generator.js';
+import { HtmlAttribute } from '../attributes/html-attribute.js';
 import type { TagType } from '../tags/tag-type.js';
 import { SELF_CLOSING_TAGS } from '../tags/tag-type.js';
 import { HTMLFormatter } from '../utils/html-formatter.js';
@@ -193,7 +195,29 @@ export abstract class HtmlTag implements HTMLTagProtocol, CssManagerType, JQuery
    */
   addChild(child: HTMLTagProtocol): this {
     this._children.push(child);
+    // DF-2: 子要素の tagPath を自動設定（スコープCSS用）
+    if (child instanceof HtmlTag) {
+      const index = this._children.length - 1;
+      const parentPath = this._css.tagPath || this.tagType;
+      const childPath = `${parentPath}>${child.tagType}[${index}]`;
+      child._css.updateTagPath(childPath);
+      // 孫にも再帰的に伝播
+      child._propagateTagPaths();
+    }
     return this;
+  }
+
+  /** @internal */
+  _propagateTagPaths(): void {
+    for (let i = 0; i < this._children.length; i++) {
+      const child = this._children[i];
+      if (child instanceof HtmlTag) {
+        const parentPath = this._css.tagPath || this.tagType;
+        const childPath = `${parentPath}>${child.tagType}[${i}]`;
+        child._css.updateTagPath(childPath);
+        child._propagateTagPaths();
+      }
+    }
   }
 
   /**
@@ -213,7 +237,7 @@ export abstract class HtmlTag implements HTMLTagProtocol, CssManagerType, JQuery
    */
   addChildren(children: ReadonlyArray<HTMLTagProtocol>): this {
     for (const child of children) {
-      this._children.push(child);
+      this.addChild(child);
     }
     return this;
   }
@@ -283,7 +307,6 @@ export abstract class HtmlTag implements HTMLTagProtocol, CssManagerType, JQuery
    */
   protoRender(): string {
     const tagName = this.tagType;
-    const attrs = this.renderAttributes();
 
     // root: 子要素の protoRender() を連結（Root自身のタグは出力しない）
     if (tagName === 'root') {
@@ -295,6 +318,15 @@ export abstract class HtmlTag implements HTMLTagProtocol, CssManagerType, JQuery
     if (tagName === 'text') {
       return '';
     }
+
+    // DF-2: CSSが設定されている場合、スコープクラスをclass属性に自動付与
+    const hasCss = this._css.render().length > 0;
+    if (hasCss && this._css.tagPath) {
+      const scopeClass = generateScopedClassName(this._css.tagPath);
+      this.addHtmlAttribute(HtmlAttribute.className(scopeClass));
+    }
+
+    const attrs = this.renderAttributes();
 
     // selfClosing: <tag attrs>
     if (SELF_CLOSING_TAGS.has(tagName)) {
@@ -346,7 +378,8 @@ export abstract class HtmlTag implements HTMLTagProtocol, CssManagerType, JQuery
   collectCssStyleString(): string {
     const parts: string[] = [];
 
-    const ownCss = this._css.render();
+    // DF-2: スコープ付きCSS出力（tagPath が設定されている場合）
+    const ownCss = this._css.renderCss();
     if (ownCss.length > 0) {
       parts.push(ownCss);
     }

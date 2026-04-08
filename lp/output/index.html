@@ -29,6 +29,65 @@
                     </div>
                 </div>
             </section>
-        </div>
-    </body>
-</html>
+            <section id="code-example">
+                <h2 id="code-title">Before → After</h2>
+                <div id="code-row">
+                    <div id="before">
+                        <p id="before-label">従来の方法（3ファイル）</p>
+                        <pre id="before-code">
+                            <code>
+                                <!-- index.html -->
+                                    
+
+                                    <div class="card">
+                                        
+  
+                                        <h2>Hello</h2>
+                                        
+  
+                                        <button id="btn">Click</button>
+                                        
+
+                                    </div>
+                                    
+
+/* style.css */
+.card {
+  padding: 24px;
+  background: #1a1a1a;
+  border-radius: 12px;
+}
+
+// script.js
+document.getElementById('btn')
+  .addEventListener('click', () => {
+    alert('Clicked!');
+  });
+                                </code>
+                            </pre>
+                        </div>
+                        <div id="after">
+                            <p id="after-label">DraftOle（1ファイル）</p>
+                            <pre id="after-code">
+                                <code>import { div, h2, button, Text } from 'draft-ole';
+
+const card = div(
+  h2(Text('Hello')),
+  button(Text('Click'))
+);
+
+card.css.styleManager.style.spacing
+  .setPadding('24px');
+card.css.styleManager.style.backgroundColor
+  .setBackgroundColor('#1a1a1a');
+card.css.styleManager.style.border
+  .setBorderRadius('12px');
+
+card.jqm.click('handleClick');</code>
+                            </pre>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </body>
+    </html>

@@ -1,7 +1,7 @@
 import {
   Root, PairType, TextType, Text, HtmlTag, HtmlAttribute,
   html, head, body, title, meta,
-  div, h1, h2, p, a, section,
+  div, h1, h2, p, a, section, pre, code, footer,
   FileExporter,
 } from '../dist/index.js';
 
@@ -155,6 +155,100 @@ feature3.addChildren([f3Title, f3Desc]);
 featuresRow.addChildren([feature1, feature2, feature3]);
 featuresSection.addChildren([featuresTitle, featuresRow]);
 wrapper.addChild(featuresSection);
+
+// ── Code Example Section ──
+const codeSection = sid(section(), 'code-example');
+codeSection.css.styleManager.style.spacing.setPadding('80px 0');
+
+const codeTitle = sid(h2(Text('Before → After')), 'code-title');
+codeTitle.css.styleManager.style.font.setFontSize('32px');
+codeTitle.css.styleManager.style.font.setFontWeight('700');
+codeTitle.css.styleManager.style.font.setColor('#ffffff');
+codeTitle.css.styleManager.style.text.setTextAlign('center');
+codeTitle.css.styleManager.style.spacing.setMarginBottom('48px');
+
+const codeRow = sid(div(), 'code-row');
+codeRow.css.styleManager.style.position.setDisplay('flex');
+codeRow.css.styleManager.style.flex.setGap('24px');
+
+// Before: 従来の3ファイル
+const beforeBlock = sid(div(), 'before');
+beforeBlock.css.styleManager.style.flex.setFlexGrow('1');
+beforeBlock.css.styleManager.style.backgroundColor.setBackgroundColor('#1a1a1a');
+beforeBlock.css.styleManager.style.border.setBorderRadius('12px');
+beforeBlock.css.styleManager.style.spacing.setPadding('24px');
+beforeBlock.css.styleManager.style.visual.setOverflow('auto');
+
+const beforeLabel = sid(p(Text('従来の方法（3ファイル）')), 'before-label');
+beforeLabel.css.styleManager.style.font.setFontSize('14px');
+beforeLabel.css.styleManager.style.font.setColor('#666666');
+beforeLabel.css.styleManager.style.spacing.setMarginBottom('16px');
+
+const beforeCode = sid(pre(code(Text(
+`<!-- index.html -->
+<div class="card">
+  <h2>Hello</h2>
+  <button id="btn">Click</button>
+</div>
+
+/* style.css */
+.card {
+  padding: 24px;
+  background: #1a1a1a;
+  border-radius: 12px;
+}
+
+// script.js
+document.getElementById('btn')
+  .addEventListener('click', () => {
+    alert('Clicked!');
+  });`
+))), 'before-code');
+beforeCode.css.styleManager.style.font.setFontSize('14px');
+beforeCode.css.styleManager.style.font.setColor('#c0c0c0');
+beforeCode.css.styleManager.style.font.setFontFamily("'Fira Code', monospace");
+
+beforeBlock.addChildren([beforeLabel, beforeCode]);
+
+// After: DraftOle
+const afterBlock = sid(div(), 'after');
+afterBlock.css.styleManager.style.flex.setFlexGrow('1');
+afterBlock.css.styleManager.style.backgroundColor.setBackgroundColor('#0d1b2a');
+afterBlock.css.styleManager.style.border.setBorderRadius('12px');
+afterBlock.css.styleManager.style.spacing.setPadding('24px');
+afterBlock.css.styleManager.style.visual.setOverflow('auto');
+
+const afterLabel = sid(p(Text('DraftOle（1ファイル）')), 'after-label');
+afterLabel.css.styleManager.style.font.setFontSize('14px');
+afterLabel.css.styleManager.style.font.setColor('#3b82f6');
+afterLabel.css.styleManager.style.spacing.setMarginBottom('16px');
+
+const afterCode = sid(pre(code(Text(
+`import { div, h2, button, Text } from 'draft-ole';
+
+const card = div(
+  h2(Text('Hello')),
+  button(Text('Click'))
+);
+
+card.css.styleManager.style.spacing
+  .setPadding('24px');
+card.css.styleManager.style.backgroundColor
+  .setBackgroundColor('#1a1a1a');
+card.css.styleManager.style.border
+  .setBorderRadius('12px');
+
+card.jqm.click('handleClick');`
+))), 'after-code');
+afterCode.css.styleManager.style.font.setFontSize('14px');
+afterCode.css.styleManager.style.font.setColor('#7dd3fc');
+afterCode.css.styleManager.style.font.setFontFamily("'Fira Code', monospace");
+
+afterBlock.addChildren([afterLabel, afterCode]);
+
+codeRow.addChildren([beforeBlock, afterBlock]);
+codeSection.addChildren([codeTitle, codeRow]);
+wrapper.addChild(codeSection);
 
 bodyEl.addChild(wrapper);
 

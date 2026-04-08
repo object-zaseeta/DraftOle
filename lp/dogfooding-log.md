@@ -67,3 +67,21 @@ ID属性ベースのCSS出力ヘルパー `sid()` + `collectIdCss()` を実装�
 2. **Flexbox APIの使い勝手** — `setGap('32px')` は直感的に動作した。ただし `setFlex('1')` は存在せず `setFlexGrow('1')` を使う必要があった。CSSショートハンド `flex: 1` に対応する `setFlex()` メソッドがないのは不便。`flex: 1` は `flex-grow: 1; flex-shrink: 1; flex-basis: 0%` の省略形なので、3つ個別に設定するか `setFlexGrow` だけで近似するしかない
 3. **`h2` ファクトリの追加インポート** — `h1` はインポート済みだったが `h2` は未インポート。ファクトリ関数は要素ごとに個別インポートが必要。`import * as tags from '...'` のようなバレルエクスポートがあると便利
 4. **CSS出力は正常** — `sid()` + `collectIdCss()` の回避策は引き続き機能。要素数が増えても問題なくID単位でCSSが収集された
+
+---
+
+## Task 4: コード例セクション
+
+### 実行結果
+
+- Before/After のコード比較セクションを追加。`node --experimental-strip-types lp/lp-builder.ts` で正常実行
+- `lp/output/index.html` に `<section id="code-example">` と2つの `<div>` ブロック（`#before`, `#after`）が生成された
+- `lp/output/style.css` に `#code-example`, `#code-title`, `#code-row`, `#before`, `#after` 等のCSSブロックが生成された
+
+### 発見事項
+
+1. **HTMLエスケープが行われない（致命的）** — `Text()` ファクトリはテキスト内の `<`, `>` をHTMLエンティティ（`&lt;`, `&gt;`）にエスケープしない。Before ブロックの `<div class="card">` や `<h2>Hello</h2>` がそのままHTMLとして解釈され、実際のDOM要素として描画される。`<!-- index.html -->` もHTMLコメントとして消える。コード例を表示するには、ライブラリ側にエスケープ機能が必要、または手動で `&lt;` `&gt;` を記述する回避策が必要
+2. **`<pre><code>` のマルチラインテキスト** — テンプレートリテラル（バッククォート）で渡した複数行テキストは `Text()` で正しく保持される。ただしレンダラーが各行にHTMLインデントを追加するため、`<pre>` 内の整形済みテキストに不要な空白が入る。`<pre>` 要素は空白をそのまま表示するため、レンダラーのインデントが視覚的なズレを生む
+3. **After ブロックは問題なし** — HTMLタグを含まないTypeScriptコードはエスケープ不要のため、正しく表示される。`Text()` + テンプレートリテラルの組み合わせはHTML要素を含まないコードには適している
+4. **`pre`, `code` ファクトリの入れ子** — `pre(code(Text(...)))` のネストは直感的に動作した。ファクトリ関数の可変引数パターンが子要素の自動追加に対応している
+5. **CSS APIは安定** — `style.visual.setOverflow('auto')` や `style.font.setFontFamily()` は前回同様に正常動作。プロパティ名の命名は一度覚えれば一貫性がある

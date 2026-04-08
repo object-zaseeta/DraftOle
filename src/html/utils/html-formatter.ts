@@ -72,10 +72,37 @@ export class HTMLFormatter {
     const lines: string[] = [];
     let level = 0;
     let buffer = '';
+    let preDepth = 0; // DF-4: <pre> ネスト深度（0 = pre外）
 
     for (let i = 0; i < tokens.length; i++) {
       const token = tokens[i];
       if (token === undefined) continue;
+
+      // DF-4: <pre> 内はインデントせずそのまま出力
+      if (preDepth > 0) {
+        if (isClosingTag(token) && getTagName(token) === 'pre') {
+          preDepth--;
+          if (preDepth === 0) {
+            // pre終了タグ自体は前のコンテンツに連結
+            lines[lines.length - 1] += token;
+            level--;
+            continue;
+          }
+        } else if (isOpeningTag(token) && getTagName(token) === 'pre') {
+          preDepth++;
+        }
+        // pre内のコンテンツを最後の行に連結（インデントなし）
+        lines[lines.length - 1] += token;
+        continue;
+      }
+
+      // <pre> 開始を検出
+      if (isOpeningTag(token) && getTagName(token) === 'pre') {
+        lines.push(' '.repeat(INDENT_SPACES * level) + token);
+        level++;
+        preDepth = 1;
+        continue;
+      }
 
       if (isClosingTag(token)) {
         // 終了タグ: バッファにある内容を先に出力し、レベルを下げる

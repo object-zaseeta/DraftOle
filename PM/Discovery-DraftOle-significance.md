@@ -431,7 +431,107 @@ Phase 6: 「Web版SwiftUI」
 
 ---
 
-## 総合判断（Phase 6 更新）
+## Phase 7: 手続き的API vs 宣言的API（2026-04-08）
+
+### 現状の認識
+
+DraftOleの現在のAPIはSwiftUI的（宣言的）ではなく、**Swift/UIKit的（手続き的）**:
+
+```typescript
+// 現在のDraftOle（手続き的 = UIKit的）
+const card = div();
+const title = h2(Text('Hello'));
+title.css.styleManager.style.font.setFontSize('24px');
+title.css.styleManager.style.font.setFontWeight('700');
+card.addChild(title);
+card.css.styleManager.style.spacing.setPadding('24px');
+```
+
+```typescript
+// 目標のDraftOle（宣言的 = SwiftUI的）
+const card = div(
+    h2(Text('Hello'))
+        .fontSize('24px')
+        .fontWeight('700'),
+)
+.padding('24px');
+```
+
+### 宣言的APIが圧倒的に好まれる理由
+
+| 観点 | 手続き的（現在） | 宣言的（目標） |
+|------|:---:|:---:|
+| 行数（同じUI） | 12行 | 8行 |
+| 構造の見通し | UIツリーとスタイルが分離。往復読み | 構造とスタイルが一体。上から下に読める |
+| TS開発者の馴染み | △ | ✓（jQuery/D3のチェーンに近い） |
+| SwiftUI/Compose開発者 | △ | ✓（ほぼ同じ体験） |
+
+### 設計方針: 両方提供する（レイヤー構造）
+
+SwiftUI自身も内部は手続き的。宣言的APIは手続き的基盤の上に構築されている。
+
+```
+Layer 1: 手続き的API（現在のDraftOle）← 基盤として維持。既存テスト不変
+Layer 2: 宣言的API（SwiftUI的チェーン）← Layer 1 に委譲するだけ
+```
+
+```typescript
+// Layer 2 の実装イメージ
+class HtmlTag {
+    // Layer 1（既存）
+    css: CssManagerInstance;
+    addChild(child: HtmlTag): this;
+
+    // Layer 2（追加）— Layer 1 に委譲
+    padding(v: string): this {
+        this.css.styleManager.style.spacing.setPadding(v);
+        return this;
+    }
+    background(v: string): this {
+        this.css.styleManager.style.backgroundColor.setBackgroundColor(v);
+        return this;
+    }
+    cornerRadius(v: string): this {
+        this.css.styleManager.style.border.setBorderRadius(v);
+        return this;
+    }
+}
+```
+
+### myTask.md 既存計画との関係
+
+以下のタスクはすでに計画されていたが P4（将来）に分類されていた:
+
+| タスクID | 内容 | 旧優先度 | 新優先度 |
+|---------|------|:---:|:---:|
+| D-3.1 | Fluent CSSメソッド（`.fontSize(24).color('#333')`） | P4 | **P0** |
+| D-3.2 | レイアウトショートカット（`.flex({ direction: 'column' })`） | P4 | **P0** |
+| D-1.2 | addChild戻り値変更（チェーン可能に） | P4 | **P0** |
+
+**「Web版SwiftUI」ビジョンにおいて、宣言的APIはオプションではなく本質。P0に格上げ。**
+
+---
+
+## Phase 7b: 技術的課題の全体像（2026-04-08）
+
+「Web版SwiftUI」をTypeScriptで実現するにあたり、HTMX統合も含めた技術的課題:
+
+### 課題一覧
+
+| # | 課題 | 影響度 | 解決策 | 着手時期 |
+|---|------|:---:|--------|:---:|
+| 1 | DSL構文（Swift @ViewBuilder 相当なし） | 中 | ファクトリ可変引数で近似（既に対応済み） | 済 |
+| 2 | リアクティビティなし | **高** | HTMX統合で委譲。自前実装は非推奨 | Phase B |
+| 3 | メソッドチェーンの型推論 | 低 | `this` 戻り値パターン（既存CSSクラスで実績あり） | DF-5 / D-3.1 |
+| 4 | HTMX属性の型定義 | 低 | AttributeMap に hx-* 型追加 | Phase B |
+| 5 | jQuery と HTMX の競合 | 中 | HTMX モード切替。jQuery出力を抑制 | Phase B |
+| 6 | SSR パフォーマンス | 低 | 初期は無視。将来キャッシュ等で対応 | Phase D |
+
+**致命的なブロッカーはない。** 最大の課題（リアクティビティ）はHTMX統合で回避可能。DX課題（メソッドチェーン）はTypeScript既存機能で解決可能。
+
+---
+
+## 総合判断（Phase 7 更新）
 
 ### ビジョン
 
@@ -450,28 +550,29 @@ DraftOleはWeb開発を「TypeScript 1言語で宣言的に」変える。
 
 ### DraftOleの課題
 
-- ⚠️ **DXがSwiftUIレベルに達していない** — 5段階ドットチェーンは致命的。DF-5をP0に格上げ
-- ⚠️ P0課題（スコープCSS）が未修正 — ポジションの根幹が動いていない
-- ❌ リアクティビティなし → HTMX統合で補完
+- ⚠️ **宣言的API（Layer 2）が未実装** — 手続き的APIのみ。SwiftUIを名乗れない
+- ⚠️ P0課題（スコープCSS: DF-1, DF-2）が未修正 — ポジションの根幹が動いていない
+- ❌ リアクティビティなし → HTMX統合で補完（致命的ブロッカーではない）
 - ❌ コンポーネント定義なし → 将来課題
 - ❌ エコシステムが存在しない → HTMXエコシステムへの参入が現実的な道
 
 ### 結論
 
 **DraftOleは「Web版SwiftUI」というビジョンを持つ。開発を続ける価値がある。**
+**致命的な技術的ブロッカーはない。**
 
 1. **ビジョン**: Webをネイティブアプリのように、TypeScript 1言語で書く
 2. **ポジション**: 1言語完結 × CSSスコーピング × シンプルさ（誰も占めていない）
-3. **成長路線**: DX改善 → 静的ページ完成 → HTMX統合 → 動的Webアプリ
-4. **前提条件**: P0修正（CSS再帰 + スコープCSS + DXショートハンド）
+3. **設計方針**: 手続き的API（Layer 1）の上に宣言的API（Layer 2）を積む
+4. **成長路線**: 宣言的API → CSS修正 → 静的ページ完成 → HTMX統合 → 動的Webアプリ
 
 ### 次のアクション（優先度順）
 
-1. **P0: DF-5 DXショートハンド** — `card.style.padding('24px')` レベルのAPIを実現。ビジョンの根幹
-2. **P0: DF-1, DF-2 CSS修正** — スコープCSSを動作させる
-3. **回避策なしでLP再構築** — SwiftUIライクなDXで書けるか検証
-4. **HTMX属性の型定義** — 動的Webアプリへの第一歩
-5. **HTMX + DraftOle デモ** — 「Web版SwiftUI」のビジョンを実証
+1. **P0: D-3.1 Fluent CSSメソッド** — `.padding('24px').background('#3b82f6')` を実現。ビジョンの核心
+2. **P0: D-1.2 addChild戻り値変更** — メソッドチェーンの基盤
+3. **P0: DF-1, DF-2 CSS修正** — スコープCSSを動作させる
+4. **宣言的APIでLP再構築** — SwiftUIライクなDXで書けるか検証
+5. **HTMX属性の型定義 + デモ** — 動的Webアプリへの第一歩
 
 ### 続けない場合
 

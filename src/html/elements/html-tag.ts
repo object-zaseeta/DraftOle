@@ -18,6 +18,7 @@ import type { CssManagerType } from '../protocols/css-manager-type.js';
 import type { JQueryManagerProtocol } from '../protocols/jquery-manager-protocol.js';
 import type { CssManagerInstance } from '../../css/manager/css-manager-instance-type.js';
 import { CssManager } from '../../css/manager/css-manager.js';
+import { HtmlStyle } from '../../css/style/html-style.js';
 import { generateScopedClassName } from '../../css/utils/scoped-css-generator.js';
 import { HtmlAttribute } from '../attributes/html-attribute.js';
 import type { TagType } from '../tags/tag-type.js';
@@ -124,8 +125,8 @@ export abstract class HtmlTag implements HTMLTagProtocol, CssManagerType, JQuery
    * Shortcut to HtmlStyle (3-level chain: element.style.font.setFontSize()).
    * Equivalent to element.css.styleManager.style.
    */
-  get style() {
-    return this._css.styleManager.style;
+  get style(): HtmlStyle {
+    return this._css.styleManager.style as HtmlStyle;
   }
 
   // ── Fluent CSS メソッド (D-3.1) ──

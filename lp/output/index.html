@@ -5,51 +5,40 @@
         <title>DraftOle — TypeScript DSL for Web</title>
     <link rel="stylesheet" href="style.css">
 </head>
-    <body id="body">
-        <div id="wrapper">
-            <section id="hero">
-                <h1 id="hero-title">HTML, CSS, JS — TypeScript ひとつで。</h1>
-                <p id="hero-sub">型安全なDSLでWebページを丸ごと生成</p>
-                <a href="#" id="hero-cta">Get Started</a>
+    <body class="_ce899239">
+        <div class="_b6069902">
+            <section class="_4924607d">
+                <h1 class="_99323ddc">HTML, CSS, JS — TypeScript ひとつで。</h1>
+                <p class="_b7161a14">型安全なDSLでWebページを丸ごと生成</p>
+                <a href="#" class="_b70de086">Get Started</a>
             </section>
-            <section id="features">
-                <h2 id="features-title">なぜ DraftOle？</h2>
-                <div id="features-row">
-                    <div id="f1">
-                        <h2 id="f1-title">三位一体</h2>
-                        <p id="f1-desc">HTML・CSS・JSを1つのTypeScriptファイルで記述。もう3ファイルを行き来する必要はありません。</p>
+            <section class="_4924609e">
+                <h2 class="_85749f1e">なぜ DraftOle？</h2>
+                <div class="_2ea6a3e8">
+                    <div class="_13a70fd1">
+                        <h2 class="_0ed8a891">三位一体</h2>
+                        <p class="_5d8f7de8">HTML・CSS・JSを1つのTypeScriptファイルで記述。もう3ファイルを行き来する必要はありません。</p>
                     </div>
-                    <div id="f2">
-                        <h2 id="f2-title">型安全</h2>
-                        <p id="f2-desc">146以上のCSSプロパティすべてに型補完が効きます。タイポや無効な値をコンパイル時にキャッチ。</p>
+                    <div class="_13a70ff2">
+                        <h2 class="_fb1a7d72">型安全</h2>
+                        <p class="_aa89baa9">146以上のCSSプロパティすべてに型補完が効きます。タイポや無効な値をコンパイル時にキャッチ。</p>
                     </div>
-                    <div id="f3">
-                        <h2 id="f3-title">ゼロランタイム</h2>
-                        <p id="f3-desc">出力は純粋なHTML/CSS/JS。ランタイム依存なし。どこにでもデプロイできます。</p>
+                    <div class="_13a71013">
+                        <h2 class="_e75c5253">ゼロランタイム</h2>
+                        <p class="_f783f76a">出力は純粋なHTML/CSS/JS。ランタイム依存なし。どこにでもデプロイできます。</p>
                     </div>
                 </div>
             </section>
-            <section id="code-example">
-                <h2 id="code-title">Before → After</h2>
-                <div id="code-row">
-                    <div id="before">
-                        <p id="before-label">従来の方法（3ファイル）</p>
-                        <pre id="before-code">
-                            <code>
-                                <!-- index.html -->
-                                    
-
-                                    <div class="card">
-                                        
-  
-                                        <h2>Hello</h2>
-                                        
-  
-                                        <button id="btn">Click</button>
-                                        
-
-                                    </div>
-                                    
+            <section class="_492460bf">
+                <h2 class="_71b673ff">Before → After</h2>
+                <div class="_a32314e9">
+                    <div class="_1fdc35b2">
+                        <p class="_ae9c7848">従来の方法（3ファイル）</p>
+                        <pre class="_c958ec20"><code><!-- index.html -->
+<div class="card">
+  <h2>Hello</h2>
+  <button id="btn">Click</button>
+</div>
 
 /* style.css */
 .card {
@@ -62,37 +51,27 @@
 document.getElementById('btn')
   .addEventListener('click', () => {
     alert('Clicked!');
-  });
-                                </code>
-                            </pre>
-                        </div>
-                        <div id="after">
-                            <p id="after-label">DraftOle（1ファイル）</p>
-                            <pre id="after-code">
-                                <code>import { div, h2, button, Text } from 'draft-ole';
-
-const card = div(
+  });</code></pre>
+                    </div>
+                    <div class="_1fdc35d3">
+                        <p class="_fb96b509">DraftOle（1ファイル）</p>
+                        <pre class="_3dd55d21"><code>const card = div(
   h2(Text('Hello')),
   button(Text('Click'))
-);
+)
+.padding('24px')
+.background('#1a1a1a')
+.cornerRadius('12px');
 
-card.css.styleManager.style.spacing
-  .setPadding('24px');
-card.css.styleManager.style.backgroundColor
-  .setBackgroundColor('#1a1a1a');
-card.css.styleManager.style.border
-  .setBorderRadius('12px');
-
-card.jqm.click('handleClick');</code>
-                            </pre>
-                        </div>
+card.jqm.click('handleClick');</code></pre>
                     </div>
-                </section>
-                <footer id="footer">
-                    <p id="footer-msg">TypeScript ひとつで、Webを作ろう。</p>
-                    <a href="#" id="footer-cta">Get Started</a>
-                    <p id="copyright">© 2026 DraftOle</p>
-                </footer>
-            </div>
-        </body>
-    </html>
+                </div>
+            </section>
+            <footer class="_33bd363a">
+                <p class="_945b0dd0">TypeScript ひとつで、Webを作ろう。</p>
+                <a href="#" class="_9452d442">Get Started</a>
+                <p class="_945b0e12">© 2026 DraftOle</p>
+            </footer>
+        </div>
+    </body>
+</html>

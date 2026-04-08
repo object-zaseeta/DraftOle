@@ -48,3 +48,47 @@ table {
   border-collapse: collapse;
   border-spacing: 0;
 }
+
+
+#body {
+color: #ffffff;
+font-family: 'Inter', 'Noto Sans JP', sans-serif;
+background-color: #0a0a0a;
+margin: 0;
+padding: 0;
+}
+
+#wrapper {
+margin: 0 auto;
+padding: 0 24px;
+max-width: 1200px;
+}
+
+#hero {
+text-align: center;
+padding: 120px 0 80px;
+}
+
+#hero-title {
+color: #ffffff;
+font-size: 48px;
+font-weight: 700;
+margin-bottom: 24px;
+}
+
+#hero-sub {
+color: #a0a0a0;
+font-size: 20px;
+margin-bottom: 40px;
+}
+
+#hero-cta {
+color: #ffffff;
+font-size: 18px;
+font-weight: 600;
+background-color: #3b82f6;
+text-decoration: none;
+padding: 16px 40px;
+border-radius: 8px;
+display: inline-block;
+}

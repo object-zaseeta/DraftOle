@@ -49,6 +49,41 @@ import {
  *
  * @see {@link HtmlAttribute.renderAttribute} for usage in attribute rendering
  */
+/**
+ * URL attributes that should be sanitized against dangerous schemes.
+ * @internal
+ */
+const URL_ATTRIBUTES = new Set(['href', 'src', 'action', 'formaction']);
+
+/**
+ * Dangerous URI schemes that can execute code.
+ * @internal
+ */
+const DANGEROUS_SCHEME_PATTERN = /^\s*(javascript|vbscript|data)\s*:/i;
+
+/**
+ * Sanitizes a URL attribute value by rejecting dangerous schemes.
+ *
+ * Replaces `javascript:`, `vbscript:`, and `data:` scheme URLs with
+ * an empty string to prevent XSS attacks via attribute injection.
+ *
+ * @param key - The attribute key
+ * @param value - The attribute value
+ * @returns The sanitized value (empty string if dangerous scheme detected)
+ *
+ * @example
+ * ```typescript
+ * sanitizeUrlAttribute('href', 'javascript:alert(1)'); // Returns: ''
+ * sanitizeUrlAttribute('href', 'https://example.com'); // Returns: 'https://example.com'
+ * sanitizeUrlAttribute('id', 'javascript:foo');        // Returns: 'javascript:foo' (not a URL attr)
+ * ```
+ */
+export function sanitizeUrlAttribute(key: string, value: string): string {
+  if (!URL_ATTRIBUTES.has(key)) return value;
+  if (DANGEROUS_SCHEME_PATTERN.test(value)) return '';
+  return value;
+}
+
 export function escapeHtml(value: string): string {
   return value
     .replace(/&/g, '&amp;')
@@ -363,8 +398,10 @@ export class HtmlAttribute implements HtmlAttributeShape {
     switch (this.attributeValue.type) {
       case 'boolean':
         return this.key;
-      case 'keyValue':
-        return `${this.key}="${escapeHtml(this.attributeValue.value)}"`;
+      case 'keyValue': {
+        const sanitized = sanitizeUrlAttribute(this.key, this.attributeValue.value);
+        return `${this.key}="${escapeHtml(sanitized)}"`;
+      }
       case 'custom':
         return `data-${this.attributeValue.name}="${escapeHtml(this.attributeValue.value)}"`;
     }

@@ -6,7 +6,7 @@
  *
  * Requirements: 3.3, 3.4, 3.5, 3.6
  */
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, afterEach } from 'vitest';
 import { CSSSpacing } from '../../../../src/css/style/spacing/css-spacing.js';
 import type { HlUnit } from '../../../../src/utils/unit-style.js';
 
@@ -358,5 +358,41 @@ describe('CSSSpacing', () => {
       const result = sut.render();
       expect(typeof result).toBe('string');
     });
+  });
+});
+
+describe('DEVモード重複検知', () => {
+  const originalEnv = process.env.DRAFT_OLE_DEV;
+
+  afterEach(() => {
+    if (originalEnv === undefined) {
+      delete process.env.DRAFT_OLE_DEV;
+    } else {
+      process.env.DRAFT_OLE_DEV = originalEnv;
+    }
+  });
+
+  it('DEV=true で setMargin を2回呼ぶと throw', () => {
+    process.env.DRAFT_OLE_DEV = 'true';
+    const sut = new CSSSpacing();
+    sut.setMargin('0 auto');
+    expect(() => sut.setMargin('0')).toThrow('CSS property "margin" was set twice');
+  });
+
+  it('DEV=true で setMarginTop と setMarginTopUnit の混在で throw', () => {
+    process.env.DRAFT_OLE_DEV = 'true';
+    const sut = new CSSSpacing();
+    sut.setMarginTop('10px');
+    expect(() => sut.setMarginTopUnit({ value: 20, unit: 'px' })).toThrow(
+      'CSS property "margin-top" was set twice',
+    );
+  });
+
+  it('DEV未設定で setMargin を2回呼んでも上書きされるだけ', () => {
+    delete process.env.DRAFT_OLE_DEV;
+    const sut = new CSSSpacing();
+    sut.setMargin('0 auto');
+    sut.setMargin('0');
+    expect(sut.render()).toBe('margin: 0;');
   });
 });

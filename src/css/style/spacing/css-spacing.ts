@@ -12,6 +12,7 @@ import { CSSPropertyKey } from '../style-keys.js';
 import { renderCssProperties } from '../../utils/css-sanitizer.js';
 import type { HlUnit } from '../../../utils/unit-style.js';
 import { hlUnitToCssString } from '../../../utils/unit-style.js';
+import { guardDuplicateCssProperty } from '../../../utils/dev-guard.js';
 
 /**
  * CSS 余白プロパティ（margin / padding）を管理するクラス。
@@ -46,30 +47,35 @@ export class CSSSpacing implements Renderable {
 
   /** margin-top を設定する */
   setMarginTop(value: string): this {
+    guardDuplicateCssProperty(this._marginTop, 'margin-top');
     this._marginTop = value;
     return this;
   }
 
   /** margin-right を設定する */
   setMarginRight(value: string): this {
+    guardDuplicateCssProperty(this._marginRight, 'margin-right');
     this._marginRight = value;
     return this;
   }
 
   /** margin-bottom を設定する */
   setMarginBottom(value: string): this {
+    guardDuplicateCssProperty(this._marginBottom, 'margin-bottom');
     this._marginBottom = value;
     return this;
   }
 
   /** margin-left を設定する */
   setMarginLeft(value: string): this {
+    guardDuplicateCssProperty(this._marginLeft, 'margin-left');
     this._marginLeft = value;
     return this;
   }
 
   /** margin 一括指定を設定する */
   setMargin(value: string): this {
+    guardDuplicateCssProperty(this._margin, 'margin');
     this._margin = value;
     return this;
   }
@@ -78,30 +84,35 @@ export class CSSSpacing implements Renderable {
 
   /** padding-top を設定する */
   setPaddingTop(value: string): this {
+    guardDuplicateCssProperty(this._paddingTop, 'padding-top');
     this._paddingTop = value;
     return this;
   }
 
   /** padding-right を設定する */
   setPaddingRight(value: string): this {
+    guardDuplicateCssProperty(this._paddingRight, 'padding-right');
     this._paddingRight = value;
     return this;
   }
 
   /** padding-bottom を設定する */
   setPaddingBottom(value: string): this {
+    guardDuplicateCssProperty(this._paddingBottom, 'padding-bottom');
     this._paddingBottom = value;
     return this;
   }
 
   /** padding-left を設定する */
   setPaddingLeft(value: string): this {
+    guardDuplicateCssProperty(this._paddingLeft, 'padding-left');
     this._paddingLeft = value;
     return this;
   }
 
   /** padding 一括指定を設定する */
   setPadding(value: string): this {
+    guardDuplicateCssProperty(this._padding, 'padding');
     this._padding = value;
     return this;
   }
@@ -110,48 +121,56 @@ export class CSSSpacing implements Renderable {
 
   /** margin-top を HlUnit で設定する */
   setMarginTopUnit(hlUnit: HlUnit): this {
+    guardDuplicateCssProperty(this._marginTop, 'margin-top');
     this._marginTop = hlUnitToCssString(hlUnit);
     return this;
   }
 
   /** margin-right を HlUnit で設定する */
   setMarginRightUnit(hlUnit: HlUnit): this {
+    guardDuplicateCssProperty(this._marginRight, 'margin-right');
     this._marginRight = hlUnitToCssString(hlUnit);
     return this;
   }
 
   /** margin-bottom を HlUnit で設定する */
   setMarginBottomUnit(hlUnit: HlUnit): this {
+    guardDuplicateCssProperty(this._marginBottom, 'margin-bottom');
     this._marginBottom = hlUnitToCssString(hlUnit);
     return this;
   }
 
   /** margin-left を HlUnit で設定する */
   setMarginLeftUnit(hlUnit: HlUnit): this {
+    guardDuplicateCssProperty(this._marginLeft, 'margin-left');
     this._marginLeft = hlUnitToCssString(hlUnit);
     return this;
   }
 
   /** padding-top を HlUnit で設定する */
   setPaddingTopUnit(hlUnit: HlUnit): this {
+    guardDuplicateCssProperty(this._paddingTop, 'padding-top');
     this._paddingTop = hlUnitToCssString(hlUnit);
     return this;
   }
 
   /** padding-right を HlUnit で設定する */
   setPaddingRightUnit(hlUnit: HlUnit): this {
+    guardDuplicateCssProperty(this._paddingRight, 'padding-right');
     this._paddingRight = hlUnitToCssString(hlUnit);
     return this;
   }
 
   /** padding-bottom を HlUnit で設定する */
   setPaddingBottomUnit(hlUnit: HlUnit): this {
+    guardDuplicateCssProperty(this._paddingBottom, 'padding-bottom');
     this._paddingBottom = hlUnitToCssString(hlUnit);
     return this;
   }
 
   /** padding-left を HlUnit で設定する */
   setPaddingLeftUnit(hlUnit: HlUnit): this {
+    guardDuplicateCssProperty(this._paddingLeft, 'padding-left');
     this._paddingLeft = hlUnitToCssString(hlUnit);
     return this;
   }

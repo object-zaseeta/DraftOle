@@ -33,14 +33,14 @@
 | **P1** | CFA構造改善 | CFA-A.1 | html-tag.ts 具象依存除去 | [ ] |
 | **P1** | CFA構造改善 | CFA-A.2 | protocol 依存反転 | [ ] |
 | **P1** | CFA構造改善 | CFA-A.3 | Composition Root 導入 | [ ] |
-| **P1** | DX改善 | DX-1 | ファクトリ関数の文字列引数で `Text()` を不要にする | [ ] |
-| **P1** | DX改善 | DX-2 | `Text.raw()` 静的メソッド追加（エスケープなしテキスト） | [ ] |
+| **P1** | DX改善 | DX-1 | ファクトリ関数の文字列引数で `Text()` を不要にする | [x] |
+| **P1** | DX改善 | DX-2 | `Text.unsafeRaw()` 静的メソッド追加 | [x] |
 | **P2** | DF修正 | DF-6 | `<!DOCTYPE html>` 出力オプション | [ ] |
 | **P2** | DF修正 | DF-7 | `setFlex()` CSSショートハンド追加 | [ ] |
 | **P1** | DX改善 | DF-8 | コンポーネント分割パターン（関数ベース） | [ ] |
-| **P0** | セキュリティ | SEC-1 | 属性値サニタイズ（href の javascript: 検出・拒否） | [ ] |
+| **P0** | セキュリティ | SEC-1 | 属性値サニタイズ（href の javascript: 検出・拒否） | [x] |
 | **P1** | セキュリティ | SEC-2 | CSS値サニタイズ（url(), expression() 検出・拒否） | [ ] |
-| **P1** | セキュリティ | SEC-3 | 危険APIの命名改善（TextType → unsafeRaw 等） | [ ] |
+| **P1** | セキュリティ | SEC-3 | 危険APIの命名改善（TextType → unsafeRaw 等） | [x] |
 | **P1** | セキュリティ | SEC-4 | HTMX統合時のCSRFトークン機構 | [ ] |
 | **P2** | セキュリティ | SEC-5 | CSP対応（nonce生成、style-src制御） | [ ] |
 | **P2** | 機能拡張 | 6.5 | CSS変数機能の実装 | [ ] |
@@ -145,18 +145,8 @@ P4: 宣言的API / SSG / Webアプリ
 > **出典**: LP再構築コードレビュー（2026-04-08）
 > **目標**: SwiftUIに匹敵する簡潔さ・可読性を達成する
 
-### [ ] DX-1: ファクトリ関数の文字列引数で `Text()` を不要にする
-- **対象**: `src/html/tags/factories.ts`（makePairTag）
-- **現状**: `h1(Text('Hello'))` と書く必要がある。ファクトリ関数は文字列自動ラップに対応しているが、Fluent CSSメソッドの戻り値型が `PairType` のため `h1('Hello').fontSize('24px')` が動く
-- **改善**: ドキュメント・LP・サンプルから `Text()` を除去。`h1('Hello').fontSize('24px')` を標準パターンにする
-- **影響**: `Text()` は明示的エスケープが必要な場面で残す。通常は不要
-- **工数**: 30分（主にドキュメント・サンプル更新）
-
-### [ ] DX-2: `Text.raw()` 静的メソッド追加
-- **対象**: `src/html/tags/factories.ts`（Text関数）
-- **現状**: エスケープなしテキストには `new TextType('...')` を使う必要がある。ユーザーにクラス直接利用を強いる
-- **改善**: `Text.raw('<b>bold</b>')` でエスケープなしTextTypeを返す静的メソッドを追加
-- **工数**: 30分
+### [x] DX-1: → 完了（2026-04-10、コミット: 11ddf77）
+### [x] DX-2: → 完了（Text.unsafeRaw()として実装、SEC-3も同時解消、コミット: 3dfb56f）
 
 ### [ ] DF-8: コンポーネント分割パターン（関数ベース）
 - **対象**: ドキュメント + LP実装例の分割
@@ -189,11 +179,7 @@ P4: 宣言的API / SSG / Webアプリ
 > **出典**: Webアプリ拡張（HTMX統合）を視野に入れたセキュリティ評価（2026-04-08）
 > **目標**: ユーザー入力を含むHTML生成時のXSS・インジェクション対策
 
-### [ ] SEC-1: 属性値サニタイズ（P0）
-- **対象**: `src/html/attributes/html-attribute.ts`（renderAttribute）, ファクトリ関数の属性マップ処理
-- **現状**: `href`, `src`, `action` 等の属性値に `javascript:`, `data:` スキームが挿入可能。XSSの攻撃面
-- **改善**: URL属性（href, src, action, formaction）に対して危険なスキーム（`javascript:`, `vbscript:`, `data:`）を検出・拒否。許可スキーム（http, https, mailto, tel, #, /）をホワイトリスト化
-- **工数**: 2時間
+### [x] SEC-1: → 完了（2026-04-10、コミット: 79be725）
 
 ### [ ] SEC-2: CSS値サニタイズ（P1）
 - **対象**: Fluent CSSメソッド全体、CSSプロパティクラスの setter
@@ -201,11 +187,7 @@ P4: 宣言的API / SSG / Webアプリ
 - **改善**: CSS値に `url()`, `expression()`, `-moz-binding` 等の危険パターンを検出・警告。`background-image` で外部URLを使う場合は明示的API（`backgroundImage.url()`）を要求
 - **工数**: 2-3時間
 
-### [ ] SEC-3: 危険APIの命名改善（P1）
-- **対象**: `TextType` コンストラクタ, `Text.raw()`（DX-2で追加予定）
-- **現状**: `new TextType(userInput)` はエスケープなしでHTMLを出力するが、名前から危険性が伝わらない
-- **改善**: DX-2 で追加する `Text.raw()` を `Text.unsafeRaw()` に命名。ドキュメントにセキュリティ警告を明記
-- **工数**: 30分
+### [x] SEC-3: → DX-2と同時完了（Text.unsafeRaw()として実装、コミット: 3dfb56f）
 
 ### [ ] SEC-4: HTMX統合時のCSRFトークン機構（P1）
 - **対象**: 将来のHTMX統合モジュール

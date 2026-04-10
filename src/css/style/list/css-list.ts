@@ -10,6 +10,7 @@
 import type { Renderable } from '../../../utils/renderable.js';
 import { CSSPropertyKey } from '../style-keys.js';
 import { renderCssProperties } from '../../utils/css-sanitizer.js';
+import { guardDuplicateCssProperty } from '../../../utils/dev-guard.js';
 
 /**
  * リストスタイルプロパティを管理するクラス
@@ -27,24 +28,28 @@ export class CSSList implements Renderable {
 
   /** list-style-type を設定する */
   setListStyleType(value: string): this {
+    guardDuplicateCssProperty(this._listStyleType, 'list-style-type');
     this._listStyleType = value;
     return this;
   }
 
   /** list-style-position を設定する */
   setListStylePosition(value: string): this {
+    guardDuplicateCssProperty(this._listStylePosition, 'list-style-position');
     this._listStylePosition = value;
     return this;
   }
 
   /** list-style-image を設定する */
   setListStyleImage(value: string): this {
+    guardDuplicateCssProperty(this._listStyleImage, 'list-style-image');
     this._listStyleImage = value;
     return this;
   }
 
   /** list-style (shorthand) を設定する */
   setListStyle(value: string): this {
+    guardDuplicateCssProperty(this._listStyle, 'list-style');
     this._listStyle = value;
     return this;
   }

@@ -10,6 +10,7 @@
 import type { Renderable } from '../../../utils/renderable.js';
 import { CSSPropertyKey } from '../style-keys.js';
 import { renderCssProperties } from '../../utils/css-sanitizer.js';
+import { guardDuplicateCssProperty } from '../../../utils/dev-guard.js';
 
 /**
  * アニメーション・トランジションプロパティを管理するクラス
@@ -43,54 +44,63 @@ export class CSSAnimation implements Renderable {
 
   /** animation-name を設定する */
   setAnimationName(value: string): this {
+    guardDuplicateCssProperty(this._animationName, 'animation-name');
     this._animationName = value;
     return this;
   }
 
   /** animation-duration を設定する */
   setAnimationDuration(value: string): this {
+    guardDuplicateCssProperty(this._animationDuration, 'animation-duration');
     this._animationDuration = value;
     return this;
   }
 
   /** animation-timing-function を設定する */
   setAnimationTimingFunction(value: string): this {
+    guardDuplicateCssProperty(this._animationTimingFunction, 'animation-timing-function');
     this._animationTimingFunction = value;
     return this;
   }
 
   /** animation-delay を設定する */
   setAnimationDelay(value: string): this {
+    guardDuplicateCssProperty(this._animationDelay, 'animation-delay');
     this._animationDelay = value;
     return this;
   }
 
   /** animation-iteration-count を設定する */
   setAnimationIterationCount(value: string): this {
+    guardDuplicateCssProperty(this._animationIterationCount, 'animation-iteration-count');
     this._animationIterationCount = value;
     return this;
   }
 
   /** animation-direction を設定する */
   setAnimationDirection(value: string): this {
+    guardDuplicateCssProperty(this._animationDirection, 'animation-direction');
     this._animationDirection = value;
     return this;
   }
 
   /** animation-fill-mode を設定する */
   setAnimationFillMode(value: string): this {
+    guardDuplicateCssProperty(this._animationFillMode, 'animation-fill-mode');
     this._animationFillMode = value;
     return this;
   }
 
   /** animation-play-state を設定する */
   setAnimationPlayState(value: string): this {
+    guardDuplicateCssProperty(this._animationPlayState, 'animation-play-state');
     this._animationPlayState = value;
     return this;
   }
 
   /** animation ショートハンドを設定する */
   setAnimation(value: string): this {
+    guardDuplicateCssProperty(this._animation, 'animation');
     this._animation = value;
     return this;
   }
@@ -99,30 +109,35 @@ export class CSSAnimation implements Renderable {
 
   /** transition-property を設定する */
   setTransitionProperty(value: string): this {
+    guardDuplicateCssProperty(this._transitionProperty, 'transition-property');
     this._transitionProperty = value;
     return this;
   }
 
   /** transition-duration を設定する */
   setTransitionDuration(value: string): this {
+    guardDuplicateCssProperty(this._transitionDuration, 'transition-duration');
     this._transitionDuration = value;
     return this;
   }
 
   /** transition-timing-function を設定する */
   setTransitionTimingFunction(value: string): this {
+    guardDuplicateCssProperty(this._transitionTimingFunction, 'transition-timing-function');
     this._transitionTimingFunction = value;
     return this;
   }
 
   /** transition-delay を設定する */
   setTransitionDelay(value: string): this {
+    guardDuplicateCssProperty(this._transitionDelay, 'transition-delay');
     this._transitionDelay = value;
     return this;
   }
 
   /** transition ショートハンドを設定する */
   setTransition(value: string): this {
+    guardDuplicateCssProperty(this._transition, 'transition');
     this._transition = value;
     return this;
   }

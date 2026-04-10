@@ -10,6 +10,7 @@
 import type { Renderable } from '../../../utils/renderable.js';
 import { CSSPropertyKey } from '../style-keys.js';
 import { renderCssProperties } from '../../utils/css-sanitizer.js';
+import { guardDuplicateCssProperty } from '../../../utils/dev-guard.js';
 
 /**
  * Flexboxレイアウトプロパティを管理するクラス
@@ -48,77 +49,104 @@ export class CSSFlex implements Renderable {
 
   /** display:flex + 主要プロパティを一括設定するショートハンド */
   setFlex(options?: FlexOptions): this {
+    guardDuplicateCssProperty(this._display, 'display');
     this._display = 'flex';
-    if (options?.direction) this._flexDirection = options.direction;
-    if (options?.justify) this._justifyContent = options.justify;
-    if (options?.align) this._alignItems = options.align;
-    if (options?.wrap) this._flexWrap = options.wrap;
-    if (options?.gap) this._gap = options.gap;
+    if (options?.direction) {
+      guardDuplicateCssProperty(this._flexDirection, 'flex-direction');
+      this._flexDirection = options.direction;
+    }
+    if (options?.justify) {
+      guardDuplicateCssProperty(this._justifyContent, 'justify-content');
+      this._justifyContent = options.justify;
+    }
+    if (options?.align) {
+      guardDuplicateCssProperty(this._alignItems, 'align-items');
+      this._alignItems = options.align;
+    }
+    if (options?.wrap) {
+      guardDuplicateCssProperty(this._flexWrap, 'flex-wrap');
+      this._flexWrap = options.wrap;
+    }
+    if (options?.gap) {
+      guardDuplicateCssProperty(this._gap, 'gap');
+      this._gap = options.gap;
+    }
     return this;
   }
 
   /** flex-direction を設定する */
   setFlexDirection(value: string): this {
+    guardDuplicateCssProperty(this._flexDirection, 'flex-direction');
     this._flexDirection = value;
     return this;
   }
 
   /** justify-content を設定する */
   setJustifyContent(value: string): this {
+    guardDuplicateCssProperty(this._justifyContent, 'justify-content');
     this._justifyContent = value;
     return this;
   }
 
   /** align-items を設定する */
   setAlignItems(value: string): this {
+    guardDuplicateCssProperty(this._alignItems, 'align-items');
     this._alignItems = value;
     return this;
   }
 
   /** align-content を設定する */
   setAlignContent(value: string): this {
+    guardDuplicateCssProperty(this._alignContent, 'align-content');
     this._alignContent = value;
     return this;
   }
 
   /** flex-wrap を設定する */
   setFlexWrap(value: string): this {
+    guardDuplicateCssProperty(this._flexWrap, 'flex-wrap');
     this._flexWrap = value;
     return this;
   }
 
   /** gap を設定する */
   setGap(value: string): this {
+    guardDuplicateCssProperty(this._gap, 'gap');
     this._gap = value;
     return this;
   }
 
   /** flex-grow を設定する */
   setFlexGrow(value: string): this {
+    guardDuplicateCssProperty(this._flexGrow, 'flex-grow');
     this._flexGrow = value;
     return this;
   }
 
   /** flex-shrink を設定する */
   setFlexShrink(value: string): this {
+    guardDuplicateCssProperty(this._flexShrink, 'flex-shrink');
     this._flexShrink = value;
     return this;
   }
 
   /** flex-basis を設定する */
   setFlexBasis(value: string): this {
+    guardDuplicateCssProperty(this._flexBasis, 'flex-basis');
     this._flexBasis = value;
     return this;
   }
 
   /** align-self を設定する */
   setAlignSelf(value: string): this {
+    guardDuplicateCssProperty(this._alignSelf, 'align-self');
     this._alignSelf = value;
     return this;
   }
 
   /** order を設定する */
   setOrder(value: string): this {
+    guardDuplicateCssProperty(this._order, 'order');
     this._order = value;
     return this;
   }

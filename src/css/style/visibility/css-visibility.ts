@@ -13,6 +13,7 @@
 import type { Renderable } from '../../../utils/renderable.js';
 import { CSSPropertyKey } from '../style-keys.js';
 import { renderCssProperties } from '../../utils/css-sanitizer.js';
+import { guardDuplicateCssProperty } from '../../../utils/dev-guard.js';
 
 export class CSSVisibility implements Renderable {
   private _display?: string;
@@ -33,71 +34,85 @@ export class CSSVisibility implements Renderable {
   // ── Fluent setters ──
 
   setDisplay(value: string): this {
+    guardDuplicateCssProperty(this._display, 'display');
     this._display = value;
     return this;
   }
 
   setWidth(value: string): this {
+    guardDuplicateCssProperty(this._width, 'width');
     this._width = value;
     return this;
   }
 
   setHeight(value: string): this {
+    guardDuplicateCssProperty(this._height, 'height');
     this._height = value;
     return this;
   }
 
   setMinWidth(value: string): this {
+    guardDuplicateCssProperty(this._minWidth, 'min-width');
     this._minWidth = value;
     return this;
   }
 
   setMaxWidth(value: string): this {
+    guardDuplicateCssProperty(this._maxWidth, 'max-width');
     this._maxWidth = value;
     return this;
   }
 
   setMinHeight(value: string): this {
+    guardDuplicateCssProperty(this._minHeight, 'min-height');
     this._minHeight = value;
     return this;
   }
 
   setMaxHeight(value: string): this {
+    guardDuplicateCssProperty(this._maxHeight, 'max-height');
     this._maxHeight = value;
     return this;
   }
 
   setVisibility(value: string): this {
+    guardDuplicateCssProperty(this._visibility, 'visibility');
     this._visibility = value;
     return this;
   }
 
   setZIndex(value: string): this {
+    guardDuplicateCssProperty(this._zIndex, 'z-index');
     this._zIndex = value;
     return this;
   }
 
   setOverflow(value: string): this {
+    guardDuplicateCssProperty(this._overflow, 'overflow');
     this._overflow = value;
     return this;
   }
 
   setOverflowX(value: string): this {
+    guardDuplicateCssProperty(this._overflowX, 'overflow-x');
     this._overflowX = value;
     return this;
   }
 
   setOverflowY(value: string): this {
+    guardDuplicateCssProperty(this._overflowY, 'overflow-y');
     this._overflowY = value;
     return this;
   }
 
   setFloat(value: string): this {
+    guardDuplicateCssProperty(this._cssFloat, 'float');
     this._cssFloat = value;
     return this;
   }
 
   setClear(value: string): this {
+    guardDuplicateCssProperty(this._clear, 'clear');
     this._clear = value;
     return this;
   }

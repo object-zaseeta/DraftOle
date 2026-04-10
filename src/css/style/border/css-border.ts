@@ -15,6 +15,7 @@ import type { Renderable } from '../../../utils/renderable.js';
 import { CSSPropertyKey } from '../style-keys.js';
 import { renderCssProperties } from '../../utils/css-sanitizer.js';
 import type { CSSColor } from '../color/css-color.js';
+import { guardDuplicateCssProperty } from '../../../utils/dev-guard.js';
 
 export class CSSBorder implements Renderable {
   // ── 一括指定ストレージ ──
@@ -51,24 +52,28 @@ export class CSSBorder implements Renderable {
 
   /** border-width を一括設定する */
   setBorderWidth(value: string): this {
+    guardDuplicateCssProperty(this._borderWidth, 'border-width');
     this._borderWidth = value;
     return this;
   }
 
   /** border-style を一括設定する */
   setBorderStyle(value: string): this {
+    guardDuplicateCssProperty(this._borderStyle, 'border-style');
     this._borderStyle = value;
     return this;
   }
 
   /** border-color を文字列で一括設定する */
   setBorderColor(value: string): this {
+    guardDuplicateCssProperty(this._borderColor, 'border-color');
     this._borderColor = value;
     return this;
   }
 
   /** border-radius を一括設定する */
   setBorderRadius(value: string): this {
+    guardDuplicateCssProperty(this._borderRadius, 'border-radius');
     this._borderRadius = value;
     return this;
   }
@@ -77,24 +82,28 @@ export class CSSBorder implements Renderable {
 
   /** border-top-width を設定する */
   setBorderTopWidth(value: string): this {
+    guardDuplicateCssProperty(this._borderTopWidth, 'border-top-width');
     this._borderTopWidth = value;
     return this;
   }
 
   /** border-right-width を設定する */
   setBorderRightWidth(value: string): this {
+    guardDuplicateCssProperty(this._borderRightWidth, 'border-right-width');
     this._borderRightWidth = value;
     return this;
   }
 
   /** border-bottom-width を設定する */
   setBorderBottomWidth(value: string): this {
+    guardDuplicateCssProperty(this._borderBottomWidth, 'border-bottom-width');
     this._borderBottomWidth = value;
     return this;
   }
 
   /** border-left-width を設定する */
   setBorderLeftWidth(value: string): this {
+    guardDuplicateCssProperty(this._borderLeftWidth, 'border-left-width');
     this._borderLeftWidth = value;
     return this;
   }
@@ -103,24 +112,28 @@ export class CSSBorder implements Renderable {
 
   /** border-top-style を設定する */
   setBorderTopStyle(value: string): this {
+    guardDuplicateCssProperty(this._borderTopStyle, 'border-top-style');
     this._borderTopStyle = value;
     return this;
   }
 
   /** border-right-style を設定する */
   setBorderRightStyle(value: string): this {
+    guardDuplicateCssProperty(this._borderRightStyle, 'border-right-style');
     this._borderRightStyle = value;
     return this;
   }
 
   /** border-bottom-style を設定する */
   setBorderBottomStyle(value: string): this {
+    guardDuplicateCssProperty(this._borderBottomStyle, 'border-bottom-style');
     this._borderBottomStyle = value;
     return this;
   }
 
   /** border-left-style を設定する */
   setBorderLeftStyle(value: string): this {
+    guardDuplicateCssProperty(this._borderLeftStyle, 'border-left-style');
     this._borderLeftStyle = value;
     return this;
   }
@@ -129,24 +142,28 @@ export class CSSBorder implements Renderable {
 
   /** border-top-color を文字列で設定する */
   setBorderTopColor(value: string): this {
+    guardDuplicateCssProperty(this._borderTopColor, 'border-top-color');
     this._borderTopColor = value;
     return this;
   }
 
   /** border-right-color を文字列で設定する */
   setBorderRightColor(value: string): this {
+    guardDuplicateCssProperty(this._borderRightColor, 'border-right-color');
     this._borderRightColor = value;
     return this;
   }
 
   /** border-bottom-color を文字列で設定する */
   setBorderBottomColor(value: string): this {
+    guardDuplicateCssProperty(this._borderBottomColor, 'border-bottom-color');
     this._borderBottomColor = value;
     return this;
   }
 
   /** border-left-color を文字列で設定する */
   setBorderLeftColor(value: string): this {
+    guardDuplicateCssProperty(this._borderLeftColor, 'border-left-color');
     this._borderLeftColor = value;
     return this;
   }
@@ -155,24 +172,28 @@ export class CSSBorder implements Renderable {
 
   /** border-top-left-radius を設定する */
   setBorderTopLeftRadius(value: string): this {
+    guardDuplicateCssProperty(this._borderTopLeftRadius, 'border-top-left-radius');
     this._borderTopLeftRadius = value;
     return this;
   }
 
   /** border-top-right-radius を設定する */
   setBorderTopRightRadius(value: string): this {
+    guardDuplicateCssProperty(this._borderTopRightRadius, 'border-top-right-radius');
     this._borderTopRightRadius = value;
     return this;
   }
 
   /** border-bottom-right-radius を設定する */
   setBorderBottomRightRadius(value: string): this {
+    guardDuplicateCssProperty(this._borderBottomRightRadius, 'border-bottom-right-radius');
     this._borderBottomRightRadius = value;
     return this;
   }
 
   /** border-bottom-left-radius を設定する */
   setBorderBottomLeftRadius(value: string): this {
+    guardDuplicateCssProperty(this._borderBottomLeftRadius, 'border-bottom-left-radius');
     this._borderBottomLeftRadius = value;
     return this;
   }
@@ -181,30 +202,35 @@ export class CSSBorder implements Renderable {
 
   /** border-color を CSSColor で一括設定する */
   setBorderColorValue(color: CSSColor): this {
+    guardDuplicateCssProperty(this._borderColor, 'border-color');
     this._borderColor = color.toString();
     return this;
   }
 
   /** border-top-color を CSSColor で設定する */
   setBorderTopColorValue(color: CSSColor): this {
+    guardDuplicateCssProperty(this._borderTopColor, 'border-top-color');
     this._borderTopColor = color.toString();
     return this;
   }
 
   /** border-right-color を CSSColor で設定する */
   setBorderRightColorValue(color: CSSColor): this {
+    guardDuplicateCssProperty(this._borderRightColor, 'border-right-color');
     this._borderRightColor = color.toString();
     return this;
   }
 
   /** border-bottom-color を CSSColor で設定する */
   setBorderBottomColorValue(color: CSSColor): this {
+    guardDuplicateCssProperty(this._borderBottomColor, 'border-bottom-color');
     this._borderBottomColor = color.toString();
     return this;
   }
 
   /** border-left-color を CSSColor で設定する */
   setBorderLeftColorValue(color: CSSColor): this {
+    guardDuplicateCssProperty(this._borderLeftColor, 'border-left-color');
     this._borderLeftColor = color.toString();
     return this;
   }

@@ -10,6 +10,7 @@
 import type { Renderable } from '../../../utils/renderable.js';
 import { CSSPropertyKey } from '../style-keys.js';
 import { renderCssProperties } from '../../utils/css-sanitizer.js';
+import { guardDuplicateCssProperty } from '../../../utils/dev-guard.js';
 
 /**
  * 変形・フィルタプロパティを管理するクラス
@@ -35,36 +36,42 @@ export class CSSTransform implements Renderable {
 
   /** transform を設定する */
   setTransform(value: string): this {
+    guardDuplicateCssProperty(this._transform, 'transform');
     this._transform = value;
     return this;
   }
 
   /** transform-origin を設定する */
   setTransformOrigin(value: string): this {
+    guardDuplicateCssProperty(this._transformOrigin, 'transform-origin');
     this._transformOrigin = value;
     return this;
   }
 
   /** filter を設定する */
   setFilter(value: string): this {
+    guardDuplicateCssProperty(this._filter, 'filter');
     this._filter = value;
     return this;
   }
 
   /** backdrop-filter を設定する */
   setBackdropFilter(value: string): this {
+    guardDuplicateCssProperty(this._backdropFilter, 'backdrop-filter');
     this._backdropFilter = value;
     return this;
   }
 
   /** perspective を設定する */
   setPerspective(value: string): this {
+    guardDuplicateCssProperty(this._perspective, 'perspective');
     this._perspective = value;
     return this;
   }
 
   /** perspective-origin を設定する */
   setPerspectiveOrigin(value: string): this {
+    guardDuplicateCssProperty(this._perspectiveOrigin, 'perspective-origin');
     this._perspectiveOrigin = value;
     return this;
   }

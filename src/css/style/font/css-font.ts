@@ -14,6 +14,7 @@ import type { Renderable } from '../../../utils/renderable.js';
 import type { CSSColor } from '../color/css-color.js';
 import { CSSPropertyKey } from '../style-keys.js';
 import { renderCssProperties } from '../../utils/css-sanitizer.js';
+import { guardDuplicateCssProperty } from '../../../utils/dev-guard.js';
 
 export class CSSFont implements Renderable {
   private _fontFamily?: string;
@@ -27,36 +28,43 @@ export class CSSFont implements Renderable {
   // ── Fluent setters ──
 
   setFontFamily(value: string): this {
+    guardDuplicateCssProperty(this._fontFamily, 'font-family');
     this._fontFamily = value;
     return this;
   }
 
   setFontSize(value: string): this {
+    guardDuplicateCssProperty(this._fontSize, 'font-size');
     this._fontSize = value;
     return this;
   }
 
   setFontWeight(value: string): this {
+    guardDuplicateCssProperty(this._fontWeight, 'font-weight');
     this._fontWeight = value;
     return this;
   }
 
   setFontStyle(value: string): this {
+    guardDuplicateCssProperty(this._fontStyle, 'font-style');
     this._fontStyle = value;
     return this;
   }
 
   setColor(value: string): this {
+    guardDuplicateCssProperty(this._color, 'color');
     this._color = value;
     return this;
   }
 
   setLineHeight(value: string): this {
+    guardDuplicateCssProperty(this._lineHeight, 'line-height');
     this._lineHeight = value;
     return this;
   }
 
   setLetterSpacing(value: string): this {
+    guardDuplicateCssProperty(this._letterSpacing, 'letter-spacing');
     this._letterSpacing = value;
     return this;
   }
@@ -70,6 +78,7 @@ export class CSSFont implements Renderable {
   // ── CSSColor連携メソッド ──
 
   setColorValue(color: CSSColor): this {
+    guardDuplicateCssProperty(this._color, 'color');
     this._color = color.toString();
     return this;
   }

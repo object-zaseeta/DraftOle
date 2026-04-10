@@ -10,6 +10,7 @@
 import type { Renderable } from '../../../utils/renderable.js';
 import { CSSPropertyKey } from '../style-keys.js';
 import { renderCssProperties } from '../../utils/css-sanitizer.js';
+import { guardDuplicateCssProperty } from '../../../utils/dev-guard.js';
 
 /**
  * テーブルレイアウトプロパティを管理するクラス
@@ -28,30 +29,35 @@ export class CSSTable implements Renderable {
 
   /** border-collapse を設定する */
   setBorderCollapse(value: string): this {
+    guardDuplicateCssProperty(this._borderCollapse, 'border-collapse');
     this._borderCollapse = value;
     return this;
   }
 
   /** border-spacing を設定する */
   setBorderSpacing(value: string): this {
+    guardDuplicateCssProperty(this._borderSpacing, 'border-spacing');
     this._borderSpacing = value;
     return this;
   }
 
   /** table-layout を設定する */
   setTableLayout(value: string): this {
+    guardDuplicateCssProperty(this._tableLayout, 'table-layout');
     this._tableLayout = value;
     return this;
   }
 
   /** caption-side を設定する */
   setCaptionSide(value: string): this {
+    guardDuplicateCssProperty(this._captionSide, 'caption-side');
     this._captionSide = value;
     return this;
   }
 
   /** empty-cells を設定する */
   setEmptyCells(value: string): this {
+    guardDuplicateCssProperty(this._emptyCells, 'empty-cells');
     this._emptyCells = value;
     return this;
   }

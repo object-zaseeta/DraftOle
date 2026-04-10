@@ -10,6 +10,7 @@
 import type { Renderable } from '../../../utils/renderable.js';
 import { CSSPropertyKey } from '../style-keys.js';
 import { renderCssProperties } from '../../utils/css-sanitizer.js';
+import { guardDuplicateCssProperty } from '../../../utils/dev-guard.js';
 
 /**
  * グリッドレイアウトプロパティを管理するクラス
@@ -42,84 +43,98 @@ export class CSSGrid implements Renderable {
 
   /** grid-template-columns を設定する */
   setGridTemplateColumns(value: string): this {
+    guardDuplicateCssProperty(this._gridTemplateColumns, 'grid-template-columns');
     this._gridTemplateColumns = value;
     return this;
   }
 
   /** grid-template-rows を設定する */
   setGridTemplateRows(value: string): this {
+    guardDuplicateCssProperty(this._gridTemplateRows, 'grid-template-rows');
     this._gridTemplateRows = value;
     return this;
   }
 
   /** grid-gap を設定する */
   setGridGap(value: string): this {
+    guardDuplicateCssProperty(this._gridGap, 'grid-gap');
     this._gridGap = value;
     return this;
   }
 
   /** grid-column を設定する */
   setGridColumn(value: string): this {
+    guardDuplicateCssProperty(this._gridColumn, 'grid-column');
     this._gridColumn = value;
     return this;
   }
 
   /** grid-row を設定する */
   setGridRow(value: string): this {
+    guardDuplicateCssProperty(this._gridRow, 'grid-row');
     this._gridRow = value;
     return this;
   }
 
   /** grid-column-start を設定する */
   setGridColumnStart(value: string): this {
+    guardDuplicateCssProperty(this._gridColumnStart, 'grid-column-start');
     this._gridColumnStart = value;
     return this;
   }
 
   /** grid-column-end を設定する */
   setGridColumnEnd(value: string): this {
+    guardDuplicateCssProperty(this._gridColumnEnd, 'grid-column-end');
     this._gridColumnEnd = value;
     return this;
   }
 
   /** grid-row-start を設定する */
   setGridRowStart(value: string): this {
+    guardDuplicateCssProperty(this._gridRowStart, 'grid-row-start');
     this._gridRowStart = value;
     return this;
   }
 
   /** grid-row-end を設定する */
   setGridRowEnd(value: string): this {
+    guardDuplicateCssProperty(this._gridRowEnd, 'grid-row-end');
     this._gridRowEnd = value;
     return this;
   }
 
   /** grid-template-areas を設定する */
   setGridTemplateAreas(value: string): this {
+    guardDuplicateCssProperty(this._gridTemplateAreas, 'grid-template-areas');
     this._gridTemplateAreas = value;
     return this;
   }
 
   /** grid-area を設定する */
   setGridArea(value: string): this {
+    guardDuplicateCssProperty(this._gridArea, 'grid-area');
     this._gridArea = value;
     return this;
   }
 
   /** grid-auto-flow を設定する */
   setGridAutoFlow(value: string): this {
+    guardDuplicateCssProperty(this._gridAutoFlow, 'grid-auto-flow');
     this._gridAutoFlow = value;
     return this;
   }
 
   /** grid-auto-columns を設定する */
   setGridAutoColumns(value: string): this {
+    guardDuplicateCssProperty(this._gridAutoColumns, 'grid-auto-columns');
     this._gridAutoColumns = value;
     return this;
   }
 
   /** grid-auto-rows を設定する */
   setGridAutoRows(value: string): this {
+    guardDuplicateCssProperty(this._gridAutoRows, 'grid-auto-rows');
     this._gridAutoRows = value;
     return this;
   }

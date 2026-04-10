@@ -10,6 +10,7 @@
 import type { Renderable } from '../../../utils/renderable.js';
 import { CSSPropertyKey } from '../style-keys.js';
 import { renderCssProperties } from '../../utils/css-sanitizer.js';
+import { guardDuplicateCssProperty } from '../../../utils/dev-guard.js';
 
 /**
  * 視覚効果プロパティを管理するクラス
@@ -28,36 +29,42 @@ export class CSSVisual implements Renderable {
 
   /** box-shadow を設定する */
   setBoxShadow(value: string): this {
+    guardDuplicateCssProperty(this._boxShadow, 'box-shadow');
     this._boxShadow = value;
     return this;
   }
 
   /** opacity を設定する */
   setOpacity(value: string): this {
+    guardDuplicateCssProperty(this._opacity, 'opacity');
     this._opacity = value;
     return this;
   }
 
   /** cursor を設定する */
   setCursor(value: string): this {
+    guardDuplicateCssProperty(this._cursor, 'cursor');
     this._cursor = value;
     return this;
   }
 
   /** overflow を設定する */
   setOverflow(value: string): this {
+    guardDuplicateCssProperty(this._overflow, 'overflow');
     this._overflow = value;
     return this;
   }
 
   /** overflow-x を設定する */
   setOverflowX(value: string): this {
+    guardDuplicateCssProperty(this._overflowX, 'overflow-x');
     this._overflowX = value;
     return this;
   }
 
   /** overflow-y を設定する */
   setOverflowY(value: string): this {
+    guardDuplicateCssProperty(this._overflowY, 'overflow-y');
     this._overflowY = value;
     return this;
   }

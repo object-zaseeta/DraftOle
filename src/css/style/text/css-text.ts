@@ -10,6 +10,7 @@
 import type { Renderable } from '../../../utils/renderable.js';
 import { CSSPropertyKey } from '../style-keys.js';
 import { renderCssProperties } from '../../utils/css-sanitizer.js';
+import { guardDuplicateCssProperty } from '../../../utils/dev-guard.js';
 
 /**
  * テキスト装飾プロパティを管理するクラス
@@ -41,78 +42,91 @@ export class CSSText implements Renderable {
 
   /** text-align を設定する */
   setTextAlign(value: string): this {
+    guardDuplicateCssProperty(this._textAlign, 'text-align');
     this._textAlign = value;
     return this;
   }
 
   /** text-decoration を設定する */
   setTextDecoration(value: string): this {
+    guardDuplicateCssProperty(this._textDecoration, 'text-decoration');
     this._textDecoration = value;
     return this;
   }
 
   /** text-transform を設定する */
   setTextTransform(value: string): this {
+    guardDuplicateCssProperty(this._textTransform, 'text-transform');
     this._textTransform = value;
     return this;
   }
 
   /** text-indent を設定する */
   setTextIndent(value: string): this {
+    guardDuplicateCssProperty(this._textIndent, 'text-indent');
     this._textIndent = value;
     return this;
   }
 
   /** word-spacing を設定する */
   setWordSpacing(value: string): this {
+    guardDuplicateCssProperty(this._wordSpacing, 'word-spacing');
     this._wordSpacing = value;
     return this;
   }
 
   /** white-space を設定する */
   setWhiteSpace(value: string): this {
+    guardDuplicateCssProperty(this._whiteSpace, 'white-space');
     this._whiteSpace = value;
     return this;
   }
 
   /** text-overflow を設定する */
   setTextOverflow(value: string): this {
+    guardDuplicateCssProperty(this._textOverflow, 'text-overflow');
     this._textOverflow = value;
     return this;
   }
 
   /** text-decoration-color を設定する */
   setTextDecorationColor(value: string): this {
+    guardDuplicateCssProperty(this._textDecorationColor, 'text-decoration-color');
     this._textDecorationColor = value;
     return this;
   }
 
   /** text-decoration-style を設定する */
   setTextDecorationStyle(value: string): this {
+    guardDuplicateCssProperty(this._textDecorationStyle, 'text-decoration-style');
     this._textDecorationStyle = value;
     return this;
   }
 
   /** text-decoration-line を設定する */
   setTextDecorationLine(value: string): this {
+    guardDuplicateCssProperty(this._textDecorationLine, 'text-decoration-line');
     this._textDecorationLine = value;
     return this;
   }
 
   /** word-break を設定する */
   setWordBreak(value: string): this {
+    guardDuplicateCssProperty(this._wordBreak, 'word-break');
     this._wordBreak = value;
     return this;
   }
 
   /** overflow-wrap を設定する */
   setOverflowWrap(value: string): this {
+    guardDuplicateCssProperty(this._overflowWrap, 'overflow-wrap');
     this._overflowWrap = value;
     return this;
   }
 
   /** text-shadow を設定する */
   setTextShadow(value: string): this {
+    guardDuplicateCssProperty(this._textShadow, 'text-shadow');
     this._textShadow = value;
     return this;
   }

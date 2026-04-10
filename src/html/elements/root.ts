@@ -87,11 +87,37 @@ export class Root extends HtmlTag {
    */
   cssOutputMode: CssOutputMode = 'default';
 
+  /** Global CSS strings (output before scoped CSS). */
+  private _globalCss: string[] = [];
+
   /**
    * Creates a new Root element.
    */
   constructor() {
     super('root');
+  }
+
+  /**
+   * Adds global CSS to the document (output before scoped CSS).
+   *
+   * Use for CSS resets, CSS variables (:root), and other global rules
+   * that can't be expressed as scoped per-element styles.
+   *
+   * @param css - Raw CSS string
+   * @returns This instance for method chaining
+   *
+   * @example
+   * ```typescript
+   * const root = new Root();
+   * root.addGlobalCss('* { box-sizing: border-box; }');
+   * root.addGlobalCss(':root { --bg: #0b1220; }');
+   * ```
+   */
+  addGlobalCss(css: string): this {
+    if (css.trim().length > 0) {
+      this._globalCss.push(css);
+    }
+    return this;
   }
 
   /**
@@ -112,11 +138,23 @@ export class Root extends HtmlTag {
    * ```
    */
   override collectCssStyleString(): string {
+    const parts: string[] = [];
+
+    // CSS-2: グローバルCSSを先頭に出力
+    if (this._globalCss.length > 0) {
+      parts.push(this._globalCss.join('\n\n'));
+    }
+
+    // スコープCSSを収集
     const childCss = this._children
       .filter((child): child is HtmlTag => child instanceof HtmlTag)
       .map(child => child.collectCssStyleString())
       .filter(css => css.length > 0);
-    return childCss.join('');
+    if (childCss.length > 0) {
+      parts.push(childCss.join(''));
+    }
+
+    return parts.join('\n\n');
   }
 
   /**

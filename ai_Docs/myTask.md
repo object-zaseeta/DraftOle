@@ -37,7 +37,9 @@
 | **P1** | DX改善 | DX-2 | `Text.unsafeRaw()` 静的メソッド追加 | [x] |
 | **P2** | DF修正 | DF-6 | `<!DOCTYPE html>` 出力オプション | [ ] |
 | **P2** | DF修正 | DF-7 | `setFlex()` CSSショートハンド追加 | [ ] |
-| **P1** | DX改善 | DF-8 | コンポーネント分割パターン（関数ベース） | [ ] |
+| **P1** | DX改善 | DF-8 | コンポーネント分割パターン（関数ベース） | [x] |
+| **P2** | DX改善 | DX-3 | コンポーネントProps型定義パターンの確立 | [ ] |
+| **P2** | DX改善 | DX-4 | 複数引数コンポーネントのオブジェクト引数化 | [ ] |
 | **P0** | セキュリティ | SEC-1 | 属性値サニタイズ（href の javascript: 検出・拒否） | [x] |
 | **P1** | セキュリティ | SEC-2 | CSS値サニタイズ（url(), expression() 検出・拒否） | [ ] |
 | **P1** | セキュリティ | SEC-3 | 危険APIの命名改善（TextType → unsafeRaw 等） | [x] |
@@ -171,6 +173,22 @@ P4: 宣言的API / SSG / Webアプリ
   ```
 - **ゴール**: DraftOleでのコンポーネント分割がReactと同等に自然であることを実証
 - **工数**: 2時間
+- **結果**: 完了（2026-04-10、コミット: 76168f2）。7ファイル分割成功。残課題 → DX-3, DX-4
+
+### [ ] DX-3: コンポーネントProps型定義パターンの確立
+- **対象**: ドキュメント + LP コンポーネント
+- **現状**: コンポーネントの引数に型定義がない。React の `interface Props` に相当するパターンが未確立
+- **改善**: `interface CodeBlockProps { label: string; bg: string; ... }` のようなProps型パターンをガイドラインとして確立し、LP コンポーネントに適用
+- **工数**: 1時間
+
+### [ ] DX-4: 複数引数コンポーネントのオブジェクト引数化
+- **対象**: `lp/components/code-example.ts`（CodeBlock）
+- **現状**: `CodeBlock('ラベル', color.subtle, color.surface, color.codeFg, BEFORE_CODE)` — 5つの位置引数で可読性が低い
+- **改善**: オブジェクト引数に変更
+  ```typescript
+  CodeBlock({ label: '従来の方法', labelColor: color.subtle, bg: color.surface, codeColor: color.codeFg, code: BEFORE_CODE })
+  ```
+- **工数**: 30分
 
 ---
 

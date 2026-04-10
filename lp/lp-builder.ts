@@ -1,5 +1,5 @@
 import {
-  Root, TextType,
+  Root, Text,
   html, head, body, title, meta,
   div, h1, h2, p, a, section, pre, code, footer,
   FileExporter,
@@ -111,7 +111,7 @@ const page = html({ lang: 'ja' },
         div(
           div(
             p('従来の方法（3ファイル）').fontSize(font.small).color(color.subtle).margin('0 0 16px 0'),
-            pre(code(new TextType(
+            pre(code(Text.unsafeRaw(
 `<!-- index.html -->
 <div class="card">
   <h2>Hello</h2>
@@ -134,7 +134,7 @@ document.getElementById('btn')
           ).flexGrow('1').background(color.surface).cornerRadius(radius.card).padding(space.block).overflow('auto'),
           div(
             p('DraftOle（1ファイル）').fontSize(font.small).color(color.accent).margin('0 0 16px 0'),
-            pre(code(new TextType(
+            pre(code(Text.unsafeRaw(
 `const card = div(
   h2('Hello'),
   button('Click')

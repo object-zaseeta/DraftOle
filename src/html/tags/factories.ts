@@ -803,3 +803,25 @@ export function wbr(): SelfClosingType { return makeSelfClosingTag(TAG_TYPES.wbr
 export function Text(content: string): TextType {
   return new TextType(content, { escape: true });
 }
+
+/**
+ * Creates an **unescaped** text node. HTML content is rendered as-is.
+ *
+ * **WARNING: This is unsafe for user input.** Only use for trusted content
+ * such as code examples or pre-rendered HTML. For user input, use `Text()` instead.
+ *
+ * @param content - Raw HTML/text content (NOT escaped)
+ * @returns A new TextType instance without HTML escaping
+ *
+ * @example
+ * ```typescript
+ * // Code example in <pre><code> — needs raw HTML
+ * pre(code(Text.unsafeRaw('<div class="card">Hello</div>')))
+ *
+ * // NEVER do this with user input:
+ * // Text.unsafeRaw(userInput) ← XSS vulnerability!
+ * ```
+ */
+Text.unsafeRaw = function unsafeRaw(content: string): TextType {
+  return new TextType(content);
+};

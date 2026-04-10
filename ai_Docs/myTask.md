@@ -23,10 +23,10 @@
 |:------:|---------|---------|------|:----:|
 | **P0** | DF修正 | DF-1 | collectCssStyleString() 子再帰修正 | [x] |
 | **P0** | DF修正 | DF-2 | スコープCSSクラスのHTML自動付与 | [x] |
-| **P0** | MVP Demo | 6.1 | examples/mvp-demo.ts 作成 | [ ] |
-| **P0** | MVP Demo | 6.2 | 統合テスト追加 | [ ] |
-| **P0** | MVP Demo | 6.3 | examples/README.md 作成 | [ ] |
-| **P0** | MVP Demo | 6.4 | package.json スクリプト追加 | [ ] |
+| **P0** | MVP Demo | 6.1 | examples/mvp-demo.ts 作成 | [x] |
+| **P0** | MVP Demo | 6.2 | 統合テスト追加 | [x] |
+| **P0** | MVP Demo | 6.3 | examples/README.md 作成 | [x] |
+| **P0** | MVP Demo | 6.4 | package.json スクリプト追加 | [x] |
 | **P1** | DF修正 | DF-3 | Text() HTMLエスケープのデフォルト化 | [x] |
 | **P1** | DF修正 | DF-4 | `<pre>` 内レンダラーインデント抑制 | [x] |
 | **P1** | DF修正 | DF-5 | CSS APIショートハンド（5段階→3段階チェーン） | [x] |

@@ -45,19 +45,24 @@
 | **P1** | セキュリティ | SEC-3 | 危険APIの命名改善（TextType → unsafeRaw 等） | [x] |
 | **P1** | セキュリティ | SEC-4 | HTMX統合時のCSRFトークン機構 | [ ] |
 | **P2** | セキュリティ | SEC-5 | CSP対応（nonce生成、style-src制御） | [ ] |
-| **P2** | 機能拡張 | 6.5 | CSS変数機能の実装 | [ ] |
-| **P2** | 機能拡張 | 6.6 | radial-gradient 実装 | [ ] |
+| **P1** | CSS拡張 | 6.5 | CSS変数（:root定義 + var()参照） | [ ] |
+| **P1** | CSS拡張 | MVP-2.4 | 疑似セレクタ（:hover, :focus, :active） | [ ] |
+| **P1** | CSS拡張 | MVP-2.5 | 複合セレクタ（.btn.primary, .item.done .text） | [ ] |
+| **P1** | CSS拡張 | 6.6 | radial-gradient 実装 | [ ] |
+| **P1** | CSS拡張 | CSS-1 | class共有スタイル（複数要素に同じスタイル適用） | [ ] |
+| **P1** | CSS拡張 | CSS-2 | グローバルCSS注入（*, html,body 等のリセット） | [ ] |
+| **P1** | CSS拡張 | CSS-3 | 子孫セレクタ（.parent .child スタイリング） | [ ] |
+| **P1** | JS拡張 | JS-1 | 動的DOM生成（createElement + appendChild） | [ ] |
+| **P1** | JS拡張 | JS-2 | イベントハンドラ関数本体（名前だけでなくロジック記述） | [ ] |
 | **P2** | 機能拡張 | 6.7 | examples/基本例追加 | [ ] |
+| **P2** | JS | MVP-3.3 | DOMContentLoadedラッパー | [ ] |
 | **P2** | CFA分割 | CFA-B.1 | attribute-builder.ts 分割（966行→6ファイル） | [ ] |
 | **P2** | CFA分割 | CFA-B.2 | factories.ts 分割（805行→5ファイル） | [ ] |
 | **P2** | CFA分割 | CFA-B.3 | attribute-keys.ts 分割 | [ ] |
 | **P2** | CFA分割 | CFA-B.4 | index.ts エクスポート分散 | [ ] |
 | **P3** | CFA型分散 | CFA-C.1 | errors.ts エラーコード分散 | [ ] |
 | **P3** | CFA型分散 | CFA-C.2 | style-keys.ts カテゴリ別分割 | [ ] |
-| **P3** | CSS拡張 | MVP-2.3 | CSS変数（Custom Properties）サポート | [ ] |
-| **P3** | CSS拡張 | MVP-2.4 | 疑似セレクタサポート | [ ] |
-| **P3** | CSS拡張 | MVP-2.5 | 複合セレクタサポート | [ ] |
-| **P3** | JS | MVP-3.3 | DOMContentLoadedラッパー | [ ] |
+| **P3** | CSS拡張 | MVP-2.3 | CSS変数（Custom Properties）サポート（→6.5に統合） | [x] |
 | **P3** | 改善 | 3 | テストフレームワーク統一（Swift Testing） | [ ] |
 | **P4** | 宣言的API | D-1.2〜D-4.1 | Result Builder / Fluent CSS / イミュータブル | [ ] |
 | **P4** | SSG | 1-A〜1-E | CLI / コンテンツ読込 / テンプレート / 開発サーバー | [ ] |
@@ -69,13 +74,15 @@
 ### 🎯 クリティカルパス
 
 ```
-P0: DF-1（CSS再帰）+ DF-2（スコープCSS付与）→ Task 6.1〜6.4（MVP Demo）
+P0: ✅ 全完了（v0.9達成）
          ↓
-P1: DF-3〜5（DX改善）/ CFA-A.1〜A.3（構造改善）
+P1-CSS: 6.5(CSS変数) → MVP-2.4(疑似セレクタ) → MVP-2.5(複合セレクタ)
+     + CSS-1(共有スタイル) / CSS-2(グローバルCSS) / CSS-3(子孫セレクタ) / 6.6(radial-gradient)
+P1-JS:  JS-1(動的DOM) / JS-2(ハンドラ関数本体)
+P1-SEC: SEC-2(CSSサニタイズ) / SEC-4(CSRF)
+P1-CFA: CFA-A.1〜A.3（並列可）
          ↓
-P2: DF-6〜8 / CFA-B.1〜B.4（並列可）/ Task 6.5〜6.7（並列可）
-         ↓
-P3: CFA-C.1〜C.2 / MVP-2.3〜2.5
+P2: DF-6,7 / DX-3,4 / SEC-5 / CFA-B.1〜B.4 / MVP-3.3
          ↓
 P4: 宣言的API / SSG / Webアプリ
 ```
@@ -218,6 +225,76 @@ P4: 宣言的API / SSG / Webアプリ
 - **現状**: インラインスタイル・スクリプトに対するCSP対応なし
 - **改善**: nonce生成機能、`<style nonce="...">` / `<script nonce="...">` の自動付与
 - **工数**: 2時間
+
+---
+
+## P1: 高優先度 — CSS拡張（supplementCSS解消）
+
+> **出典**: MVP Demo精査（2026-04-10）。supplementCSSの95%がDraftOle未サポート機能
+> **目標**: DraftOle APIのみでMVP Demoが完結する状態にする（生CSS排除）
+
+### [ ] 6.5: CSS変数（:root定義 + var()参照）
+- **対象**: 新規 `src/css/variables/` モジュール
+- **現状**: CSS変数は完全に未サポート。デザイントークンをTS constで定義しているが、CSS出力には反映されない
+- **改善**: `:root { --bg: #0b1220; }` の定義API + `var(--bg)` の参照API
+- **SwiftUIライクDX**: `theme.define({ bg: '#0b1220' })` → `element.background(theme.bg)`
+- **工数**: 4-5時間
+
+### [ ] MVP-2.4: 疑似セレクタ（:hover, :focus, :active）
+- **対象**: CssManager, HtmlTag
+- **現状**: 完全に未サポート。ボタンのhover効果、入力のfocus効果が書けない
+- **改善**: `element.onHover({ background: 'rgba(255,255,255,0.10)' })` のようなAPI
+- **工数**: 4-5時間
+
+### [ ] MVP-2.5: 複合セレクタ（.btn.primary, .item.done .text）
+- **対象**: CssManager, スコープCSS出力
+- **現状**: 完全に未サポート。状態バリアント（done/active）が表現できない
+- **改善**: `element.variant('primary', { borderColor: '...' })` のようなAPI
+- **工数**: 4-5時間
+
+### [ ] 6.6: radial-gradient 実装
+- **対象**: `src/css/style/background/css-background.ts`
+- **現状**: linear-gradient は対応済み。radial-gradient は未対応
+- **改善**: `setRadialGradient()` メソッド追加
+- **工数**: 1-2時間
+
+### [ ] CSS-1: class共有スタイル
+- **対象**: 新規設計
+- **現状**: スコープCSS は要素ごとにユニークなクラスを生成。同じスタイルを複数要素に共有するパターンがない
+- **改善**: `const cardStyle = createStyle({ padding: '16px', borderRadius: '14px' })` → `section({ class: cardStyle }, ...)` で複数要素に適用
+- **SwiftUI対応**: `ViewModifier` 相当
+- **工数**: 3-4時間
+
+### [ ] CSS-2: グローバルCSS注入
+- **対象**: Root or FileExporter
+- **現状**: `* { box-sizing: border-box }` や `html, body { height: 100% }` をDraftOle APIで記述する手段がない
+- **改善**: `root.addGlobalCss('* { box-sizing: border-box; }')` または専用API
+- **工数**: 1時間
+
+### [ ] CSS-3: 子孫セレクタ
+- **対象**: CssManager
+- **現状**: `.item .text { flex: 1 1 auto; }` のような子孫関係のスタイリングが不可
+- **改善**: MVP-2.5（複合セレクタ）に含まれる可能性あり。独立タスクとして切り出し
+- **工数**: 2-3時間（MVP-2.5と統合可能）
+
+---
+
+## P1: 高優先度 — JS拡張
+
+> **出典**: MVP Demo精査（2026-04-10）
+> **目標**: JQueryManagerの機能をWebアプリレベルに引き上げる
+
+### [ ] JS-1: 動的DOM生成
+- **対象**: JQueryManager or 新規モジュール
+- **現状**: DraftOleはビルド時にHTML構造を生成するのみ。実行時に`createElement`でDOM要素を動的追加するパターンをサポートしない
+- **改善**: テンプレート関数をJS出力に含める。例: `createTodoItem(text)` のようなファクトリをDraftOle DSLで定義 → JS関数として出力
+- **工数**: 4-5時間（設計が必要）
+
+### [ ] JS-2: イベントハンドラ関数本体
+- **対象**: JQueryManager
+- **現状**: `jqm.click('handlerName')` は関数名の参照のみ。`() => { ... }` のような関数本体を記述・出力できない
+- **改善**: `jqm.on('click', '() => { alert("clicked") }')` またはビルダーパターンでハンドラロジックを記述
+- **工数**: 3-4時間
 
 ---
 

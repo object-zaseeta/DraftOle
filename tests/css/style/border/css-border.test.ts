@@ -6,7 +6,7 @@
  *
  * Requirements: 5.6, 5.7
  */
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { CSSBorder } from '../../../../src/css/style/border/css-border.js';
 import { CSSColor } from '../../../../src/css/style/color/css-color.js';
 
@@ -731,6 +731,13 @@ describe('CSSBorder', () => {
   // ── 一括設定と方向別設定の組み合わせ ──
 
   describe('一括設定と方向別設定の組み合わせ', () => {
+    const savedDev = process.env.DRAFT_OLE_DEV;
+    beforeEach(() => { delete process.env.DRAFT_OLE_DEV; });
+    afterEach(() => {
+      if (savedDev === undefined) delete process.env.DRAFT_OLE_DEV;
+      else process.env.DRAFT_OLE_DEV = savedDev;
+    });
+
     it('border-width 一括と border-top-width を同時に設定できる', () => {
       const sut = makeSUT();
       sut.setBorderWidth('1px');
@@ -812,6 +819,13 @@ describe('CSSBorder', () => {
   // ── エッジケース ──
 
   describe('エッジケース', () => {
+    const savedDev = process.env.DRAFT_OLE_DEV;
+    beforeEach(() => { delete process.env.DRAFT_OLE_DEV; });
+    afterEach(() => {
+      if (savedDev === undefined) delete process.env.DRAFT_OLE_DEV;
+      else process.env.DRAFT_OLE_DEV = savedDev;
+    });
+
     it('同じプロパティを複数回設定した場合、最後の値が使われる', () => {
       const sut = makeSUT();
       sut.setBorderWidth('1px');

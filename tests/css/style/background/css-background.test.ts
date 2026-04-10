@@ -13,7 +13,7 @@
  *
  * Requirements: 5.4, 5.5, 5.7
  */
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { CSSBackground } from '../../../../src/css/style/background/css-background.js';
 import { CSSColor } from '../../../../src/css/style/color/css-color.js';
 
@@ -251,6 +251,13 @@ describe('CSSBackground', () => {
   // ── linear-gradient ヘルパー ──
 
   describe('linear-gradient', () => {
+    const savedDev = process.env.DRAFT_OLE_DEV;
+    beforeEach(() => { delete process.env.DRAFT_OLE_DEV; });
+    afterEach(() => {
+      if (savedDev === undefined) delete process.env.DRAFT_OLE_DEV;
+      else process.env.DRAFT_OLE_DEV = savedDev;
+    });
+
     it('2色のグラデーションを設定できる', () => {
       const sut = makeSUT();
       sut.setLinearGradient('to right', '#f00', '#00f');
@@ -480,6 +487,13 @@ describe('CSSBackground', () => {
   // ── エッジケース ──
 
   describe('エッジケース', () => {
+    const savedDev = process.env.DRAFT_OLE_DEV;
+    beforeEach(() => { delete process.env.DRAFT_OLE_DEV; });
+    afterEach(() => {
+      if (savedDev === undefined) delete process.env.DRAFT_OLE_DEV;
+      else process.env.DRAFT_OLE_DEV = savedDev;
+    });
+
     it('同じプロパティを複数回設定した場合、最後の値が使われる', () => {
       const sut = makeSUT();
       sut.setBackgroundColor('#fff');

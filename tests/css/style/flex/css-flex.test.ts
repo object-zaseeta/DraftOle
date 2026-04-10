@@ -8,7 +8,7 @@
  *
  * Requirements: 4.1, 4.2, 4.3, 4.4, 4.5
  */
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { CSSFlex } from '../../../../src/css/style/flex/css-flex.js';
 
 // ============================================================
@@ -527,6 +527,13 @@ describe('CSSFlex', () => {
   // ── プロパティの上書き ──
 
   describe('プロパティの上書き', () => {
+    const savedDev = process.env.DRAFT_OLE_DEV;
+    beforeEach(() => { delete process.env.DRAFT_OLE_DEV; });
+    afterEach(() => {
+      if (savedDev === undefined) delete process.env.DRAFT_OLE_DEV;
+      else process.env.DRAFT_OLE_DEV = savedDev;
+    });
+
     it('同じプロパティを再設定すると上書きされる', () => {
       const sut = makeSUT();
       sut.setFlexDirection('row');

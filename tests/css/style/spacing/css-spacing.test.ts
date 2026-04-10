@@ -6,7 +6,7 @@
  *
  * Requirements: 3.3, 3.4, 3.5, 3.6
  */
-import { describe, it, expect, afterEach } from 'vitest';
+import { describe, it, expect, afterEach, beforeEach } from 'vitest';
 import { CSSSpacing } from '../../../../src/css/style/spacing/css-spacing.js';
 import type { HlUnit } from '../../../../src/utils/unit-style.js';
 
@@ -290,6 +290,13 @@ describe('CSSSpacing', () => {
   // ── エッジケース ──
 
   describe('エッジケース', () => {
+    const savedDev = process.env.DRAFT_OLE_DEV;
+    beforeEach(() => { delete process.env.DRAFT_OLE_DEV; });
+    afterEach(() => {
+      if (savedDev === undefined) delete process.env.DRAFT_OLE_DEV;
+      else process.env.DRAFT_OLE_DEV = savedDev;
+    });
+
     it('同じプロパティを上書きすると最後の値が使用される', () => {
       const sut = makeSUT();
       sut.setMarginTop('10px');

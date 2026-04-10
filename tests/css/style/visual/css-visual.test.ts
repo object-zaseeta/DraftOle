@@ -8,7 +8,7 @@
  *
  * Requirements: 7.3, 7.7
  */
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { CSSVisual } from '../../../../src/css/style/visual/css-visual.js';
 
 // ============================================================
@@ -379,6 +379,13 @@ describe('CSSVisual', () => {
   // ── プロパティの上書き ──
 
   describe('プロパティの上書き', () => {
+    const savedDev = process.env.DRAFT_OLE_DEV;
+    beforeEach(() => { delete process.env.DRAFT_OLE_DEV; });
+    afterEach(() => {
+      if (savedDev === undefined) delete process.env.DRAFT_OLE_DEV;
+      else process.env.DRAFT_OLE_DEV = savedDev;
+    });
+
     it('同じプロパティを再設定すると上書きされる', () => {
       const sut = makeSUT();
       sut.setBoxShadow('1px 1px 2px black');

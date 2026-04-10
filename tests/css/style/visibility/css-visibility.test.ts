@@ -11,7 +11,7 @@
  *
  * Requirements: 3.1, 3.2, 3.5, 3.6, 7.6
  */
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { CSSVisibility } from '../../../../src/css/style/visibility/css-visibility.js';
 
 // ============================================================
@@ -583,6 +583,13 @@ describe('CSSVisibility', () => {
   // ── エッジケース ──
 
   describe('エッジケース', () => {
+    const savedDev = process.env.DRAFT_OLE_DEV;
+    beforeEach(() => { delete process.env.DRAFT_OLE_DEV; });
+    afterEach(() => {
+      if (savedDev === undefined) delete process.env.DRAFT_OLE_DEV;
+      else process.env.DRAFT_OLE_DEV = savedDev;
+    });
+
     it('同じプロパティを複数回設定した場合、最後の値が使われる', () => {
       const sut = makeSUT();
       sut.setDisplay('block');

@@ -12,7 +12,7 @@
  *
  * Requirements: 5.1, 5.2, 5.7
  */
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { CSSFont } from '../../../../src/css/style/font/css-font.js';
 import { CSSColor } from '../../../../src/css/style/color/css-color.js';
 import { CSSColorName } from '../../../../src/css/style/color/css-color-name.js';
@@ -551,6 +551,13 @@ describe('CSSFont', () => {
   // ── エッジケース ──
 
   describe('エッジケース', () => {
+    const savedDev = process.env.DRAFT_OLE_DEV;
+    beforeEach(() => { delete process.env.DRAFT_OLE_DEV; });
+    afterEach(() => {
+      if (savedDev === undefined) delete process.env.DRAFT_OLE_DEV;
+      else process.env.DRAFT_OLE_DEV = savedDev;
+    });
+
     it('同じプロパティを複数回設定した場合、最後の値が使われる', () => {
       const sut = makeSUT();
       sut.setFontSize('12px');

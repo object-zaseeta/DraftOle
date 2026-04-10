@@ -9,6 +9,7 @@
  */
 import type { Renderable } from '../../../utils/renderable.js';
 import { CSSPropertyKey } from '../style-keys.js';
+import { renderCssProperties } from '../../utils/css-sanitizer.js';
 
 /**
  * Flexboxレイアウトプロパティを管理するクラス
@@ -17,8 +18,18 @@ import { CSSPropertyKey } from '../style-keys.js';
  *   align-content, flex-wrap, gap
  * アイテムプロパティ: flex-grow, flex-shrink, flex-basis, align-self, order
  */
+/** Options for setFlex() shorthand. */
+export interface FlexOptions {
+  direction?: string;
+  justify?: string;
+  align?: string;
+  wrap?: string;
+  gap?: string;
+}
+
 export class CSSFlex implements Renderable {
   // ── コンテナプロパティ ──
+  private _display?: string;
   private _flexDirection?: string;
   private _justifyContent?: string;
   private _alignItems?: string;
@@ -34,6 +45,17 @@ export class CSSFlex implements Renderable {
   private _order?: string;
 
   // ── Fluent Setters ──
+
+  /** display:flex + 主要プロパティを一括設定するショートハンド */
+  setFlex(options?: FlexOptions): this {
+    this._display = 'flex';
+    if (options?.direction) this._flexDirection = options.direction;
+    if (options?.justify) this._justifyContent = options.justify;
+    if (options?.align) this._alignItems = options.align;
+    if (options?.wrap) this._flexWrap = options.wrap;
+    if (options?.gap) this._gap = options.gap;
+    return this;
+  }
 
   /** flex-direction を設定する */
   setFlexDirection(value: string): this {
@@ -110,6 +132,9 @@ export class CSSFlex implements Renderable {
   private collectProperties(): Map<string, string> {
     const properties = new Map<string, string>();
 
+    if (this._display !== undefined) {
+      properties.set(CSSPropertyKey.display, this._display);
+    }
     if (this._flexDirection !== undefined) {
       properties.set(CSSPropertyKey.flexDirection, this._flexDirection);
     }
@@ -155,11 +180,6 @@ export class CSSFlex implements Renderable {
    * - フォーマット: `key: value;\nkey: value;`
    */
   render(): string {
-    const properties = this.collectProperties();
-    if (properties.size === 0) return '';
-    return [...properties.entries()]
-      .sort((a, b) => a[0].localeCompare(b[0]))
-      .map(([key, value]) => `${key}: ${value}`)
-      .join(';\n') + ';';
+    return renderCssProperties(this.collectProperties());
   }
 }

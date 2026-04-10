@@ -30,7 +30,15 @@ const AFTER_CODE = `const card = div(
 
 card.jqm.click('handleClick');`;
 
-const CodeBlock = (label: string, labelColor: string, bgColor: string, codeColor: string, codeText: string) =>
+interface CodeBlockProps {
+  label: string;
+  labelColor: string;
+  bgColor: string;
+  codeColor: string;
+  code: string;
+}
+
+const CodeBlock = ({ label, labelColor, bgColor, codeColor, code: codeText }: CodeBlockProps) =>
   div(
     p(label).fontSize(font.small).color(labelColor).margin('0 0 16px 0'),
     pre(code(Text.unsafeRaw(codeText)))
@@ -43,7 +51,7 @@ export const CodeExample = () =>
       .fontSize(font.heading).fontWeight(font.bold).color(color.text)
       .textAlign('center').margin('0 0 48px 0'),
     div(
-      CodeBlock('従来の方法（3ファイル）', color.subtle, color.surface, color.codeFg, BEFORE_CODE),
-      CodeBlock('DraftOle（1ファイル）', color.accent, color.codeBg, color.codeAccent, AFTER_CODE),
-    ).display('flex').gap(space.gapM),
+      CodeBlock({ label: '従来の方法（3ファイル）', labelColor: color.subtle, bgColor: color.surface, codeColor: color.codeFg, code: BEFORE_CODE }),
+      CodeBlock({ label: 'DraftOle（1ファイル）', labelColor: color.accent, bgColor: color.codeBg, codeColor: color.codeAccent, code: AFTER_CODE }),
+    ).flex({ gap: space.gapM }),
   ).padding(space.section);

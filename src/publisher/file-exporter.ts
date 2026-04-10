@@ -2,6 +2,7 @@ import { mkdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { ExportableError } from './exportable-error.js';
 import { RESET_CSS } from './reset-css.js';
+import { wrapDOMReady } from './dom-ready.js';
 
 /**
  * FileExporterのオプション
@@ -38,6 +39,8 @@ export interface FileExporterOptions {
   readonly jsFileName?: string;
   /** reset.cssを含めるか（デフォルト: false） */
   readonly includeResetCss?: boolean;
+  /** JSをDOMContentLoadedでラップするか（デフォルト: false） */
+  readonly wrapDOMReady?: boolean;
 }
 
 /**
@@ -136,12 +139,14 @@ export class FileExporter {
   private readonly cssFileName: string;
   private readonly jsFileName: string;
   private readonly includeResetCss: boolean;
+  private readonly _wrapDOMReady: boolean;
 
   constructor(options?: FileExporterOptions) {
     this.htmlFileName = options?.htmlFileName ?? 'index.html';
     this.cssFileName = options?.cssFileName ?? 'style.css';
     this.jsFileName = options?.jsFileName ?? 'script.js';
     this.includeResetCss = options?.includeResetCss ?? false;
+    this._wrapDOMReady = options?.wrapDOMReady ?? false;
   }
 
   /**
@@ -261,7 +266,8 @@ export class FileExporter {
     }
 
     // JS処理
-    const hasJs = jsContent.trim().length > 0;
+    const finalJsContent = this._wrapDOMReady ? wrapDOMReady(jsContent) : jsContent;
+    const hasJs = finalJsContent.trim().length > 0;
 
     // HTMLにタグを挿入
     let finalHtmlContent = htmlContent;
@@ -314,7 +320,7 @@ export class FileExporter {
       if (hasJs) {
         writeFileSync(
           join(outputPath, this.jsFileName),
-          jsContent,
+          finalJsContent,
           'utf-8',
         );
       }

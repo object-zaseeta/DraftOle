@@ -1,7 +1,12 @@
 import { div, h2, p, section } from '../../dist/index.js';
 import { color, font, space, radius } from '../tokens.ts';
 
-const FeatureCard = (title: string, description: string) =>
+interface FeatureCardProps {
+  title: string;
+  description: string;
+}
+
+const FeatureCard = ({ title, description }: FeatureCardProps) =>
   div(
     h2(title).fontSize(font.subheading).fontWeight(font.semibold).color(color.text).margin('0 0 12px 0'),
     p(description).color(color.muted).lineHeight('1.6'),
@@ -13,8 +18,8 @@ export const Features = () =>
       .fontSize(font.heading).fontWeight(font.bold).color(color.text)
       .textAlign('center').margin('0 0 48px 0'),
     div(
-      FeatureCard('三位一体', 'HTML・CSS・JSを1つのTypeScriptファイルで記述。もう3ファイルを行き来する必要はありません。'),
-      FeatureCard('型安全', '146以上のCSSプロパティすべてに型補完が効きます。タイポや無効な値をコンパイル時にキャッチ。'),
-      FeatureCard('ゼロランタイム', '出力は純粋なHTML/CSS/JS。ランタイム依存なし。どこにでもデプロイできます。'),
-    ).display('flex').gap(space.gapL),
+      FeatureCard({ title: '三位一体', description: 'HTML・CSS・JSを1つのTypeScriptファイルで記述。もう3ファイルを行き来する必要はありません。' }),
+      FeatureCard({ title: '型安全', description: '146以上のCSSプロパティすべてに型補完が効きます。タイポや無効な値をコンパイル時にキャッチ。' }),
+      FeatureCard({ title: 'ゼロランタイム', description: '出力は純粋なHTML/CSS/JS。ランタイム依存なし。どこにでもデプロイできます。' }),
+    ).flex({ gap: space.gapL }),
   ).padding(space.section);

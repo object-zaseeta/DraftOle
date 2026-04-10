@@ -209,6 +209,10 @@ export {
   FileExporter,
 } from './publisher/file-exporter.js';
 
+export {
+  wrapDOMReady,
+} from './publisher/dom-ready.js';
+
 export type {
   // ── Exporter ──
   FileExporterOptions,

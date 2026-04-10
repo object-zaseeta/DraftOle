@@ -12,6 +12,7 @@
  */
 import type { Renderable } from '../../../utils/renderable.js';
 import { CSSPropertyKey } from '../style-keys.js';
+import { renderCssProperties } from '../../utils/css-sanitizer.js';
 
 export class CSSVisibility implements Renderable {
   private _display?: string;
@@ -155,11 +156,6 @@ export class CSSVisibility implements Renderable {
   // ── CSS文字列レンダリング ──
 
   render(): string {
-    const properties = this.collectProperties();
-    if (properties.size === 0) return '';
-    return [...properties.entries()]
-      .sort((a, b) => a[0].localeCompare(b[0]))
-      .map(([key, value]) => `${key}: ${value}`)
-      .join(';\n') + ';';
+    return renderCssProperties(this.collectProperties());
   }
 }

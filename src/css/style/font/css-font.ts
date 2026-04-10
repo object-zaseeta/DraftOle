@@ -13,6 +13,7 @@
 import type { Renderable } from '../../../utils/renderable.js';
 import type { CSSColor } from '../color/css-color.js';
 import { CSSPropertyKey } from '../style-keys.js';
+import { renderCssProperties } from '../../utils/css-sanitizer.js';
 
 export class CSSFont implements Renderable {
   private _fontFamily?: string;
@@ -106,11 +107,6 @@ export class CSSFont implements Renderable {
   // ── CSS文字列レンダリング ──
 
   render(): string {
-    const properties = this.collectProperties();
-    if (properties.size === 0) return '';
-    return [...properties.entries()]
-      .sort((a, b) => a[0].localeCompare(b[0]))
-      .map(([key, value]) => `${key}: ${value}`)
-      .join(';\n') + ';';
+    return renderCssProperties(this.collectProperties());
   }
 }

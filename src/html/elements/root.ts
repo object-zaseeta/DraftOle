@@ -90,11 +90,23 @@ export class Root extends HtmlTag {
   /** Global CSS strings (output before scoped CSS). */
   private _globalCss: string[] = [];
 
+  /** Whether to prepend <!DOCTYPE html> to render output. */
+  private _doctype = false;
+
   /**
    * Creates a new Root element.
    */
   constructor() {
     super('root');
+  }
+
+  /**
+   * Enables or disables <!DOCTYPE html> output.
+   * Default is false (backward compatible).
+   */
+  setDoctype(enabled = true): this {
+    this._doctype = enabled;
+    return this;
   }
 
   /**
@@ -118,6 +130,15 @@ export class Root extends HtmlTag {
       this._globalCss.push(css);
     }
     return this;
+  }
+
+  /**
+   * Renders the document tree to formatted HTML.
+   * Prepends <!DOCTYPE html> if enabled via setDoctype().
+   */
+  override render(): string {
+    const html = super.render();
+    return this._doctype ? `<!DOCTYPE html>\n${html}` : html;
   }
 
   /**

@@ -10,5 +10,5 @@ export const Hero = () =>
     p('型安全なDSLでWebページを丸ごと生成')
       .fontSize(font.body).color(color.muted)
       .margin('0 0 40px 0'),
-    CtaButton('Get Started'),
+    CtaButton({ label: 'Get Started' }),
   ).padding(space.heroY).textAlign('center');

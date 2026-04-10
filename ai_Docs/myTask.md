@@ -35,13 +35,13 @@
 | **P1** | CFA構造改善 | CFA-A.3 | Composition Root 導入 | [ ] |
 | **P1** | DX改善 | DX-1 | ファクトリ関数の文字列引数で `Text()` を不要にする | [x] |
 | **P1** | DX改善 | DX-2 | `Text.unsafeRaw()` 静的メソッド追加 | [x] |
-| **P2** | DF修正 | DF-6 | `<!DOCTYPE html>` 出力オプション | [ ] |
-| **P2** | DF修正 | DF-7 | `setFlex()` CSSショートハンド追加 | [ ] |
+| **P2** | DF修正 | DF-6 | `<!DOCTYPE html>` 出力オプション | [x] |
+| **P2** | DF修正 | DF-7 | `setFlex()` CSSショートハンド追加 | [x] |
 | **P1** | DX改善 | DF-8 | コンポーネント分割パターン（関数ベース） | [x] |
-| **P2** | DX改善 | DX-3 | コンポーネントProps型定義パターンの確立 | [ ] |
-| **P2** | DX改善 | DX-4 | 複数引数コンポーネントのオブジェクト引数化 | [ ] |
+| **P2** | DX改善 | DX-3 | コンポーネントProps型定義パターンの確立 | [x] |
+| **P2** | DX改善 | DX-4 | 複数引数コンポーネントのオブジェクト引数化 | [x] |
 | **P0** | セキュリティ | SEC-1 | 属性値サニタイズ（href の javascript: 検出・拒否） | [x] |
-| **P1** | セキュリティ | SEC-2 | CSS値サニタイズ（url(), expression() 検出・拒否） | [ ] |
+| **P1** | セキュリティ | SEC-2 | CSS値サニタイズ（url(), expression() 検出・拒否） | [x] |
 | **P1** | セキュリティ | SEC-3 | 危険APIの命名改善（TextType → unsafeRaw 等） | [x] |
 | **P1** | セキュリティ | SEC-4 | HTMX統合時のCSRFトークン機構 | [ ] |
 | **P2** | セキュリティ | SEC-5 | CSP対応（nonce生成、style-src制御） | [ ] |
@@ -55,7 +55,7 @@
 | **P1** | JS拡張 | JS-1 | 動的DOM生成（createElement + appendChild） | [ ] |
 | **P1** | JS拡張 | JS-2 | イベントハンドラ関数本体（名前だけでなくロジック記述） | [ ] |
 | **P2** | 機能拡張 | 6.7 | examples/基本例追加 | [ ] |
-| **P2** | JS | MVP-3.3 | DOMContentLoadedラッパー | [ ] |
+| **P2** | JS | MVP-3.3 | DOMContentLoadedラッパー | [x] |
 | **P2** | CFA分割 | CFA-B.1 | attribute-builder.ts 分割（966行→6ファイル） | [ ] |
 | **P2** | CFA分割 | CFA-B.2 | factories.ts 分割（805行→5ファイル） | [ ] |
 | **P2** | CFA分割 | CFA-B.3 | attribute-keys.ts 分割 | [ ] |

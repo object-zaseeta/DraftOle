@@ -21,6 +21,8 @@
  * ```
  */
 
+import { sanitizeCssValue } from '../utils/css-sanitizer.js';
+
 /**
  * Converts a camelCase property name to kebab-case.
  * @internal
@@ -31,10 +33,12 @@ function toKebabCase(str: string): string {
 
 /**
  * Renders a CSS properties object into indented CSS body lines.
+ * Dangerous values (url(javascript:), expression()) are excluded.
  * @internal
  */
 function renderCssBody(properties: Record<string, string>): string {
   return Object.entries(properties)
+    .filter(([, v]) => sanitizeCssValue(v) !== '')
     .map(([k, v]) => `  ${toKebabCase(k)}: ${v};`)
     .join('\n');
 }

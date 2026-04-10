@@ -19,6 +19,7 @@ import type { JQueryManagerProtocol } from '../protocols/jquery-manager-protocol
 import type { CssManagerInstance } from '../../css/manager/css-manager-instance-type.js';
 import { CssManager } from '../../css/manager/css-manager.js';
 import { HtmlStyle } from '../../css/style/html-style.js';
+import type { FlexOptions } from '../../css/style/flex/css-flex.js';
 import { generateScopedClassName } from '../../css/utils/scoped-css-generator.js';
 import { HtmlAttribute } from '../attributes/html-attribute.js';
 import type { TagType } from '../tags/tag-type.js';
@@ -152,6 +153,7 @@ export abstract class HtmlTag implements HTMLTagProtocol, CssManagerType, JQuery
   boxShadow(v: string): this { this.style.visual.setBoxShadow(v); return this; }
   gap(v: string): this { this.style.flex.setGap(v); return this; }
   flexGrow(v: string): this { this.style.flex.setFlexGrow(v); return this; }
+  flex(options?: FlexOptions): this { this.style.flex.setFlex(options); return this; }
 
   // ── JS コンポジション ──
 

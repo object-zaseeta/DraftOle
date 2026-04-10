@@ -57,10 +57,15 @@ export class CSSBackground implements Renderable {
     return this;
   }
 
-  // ── linear-gradient ヘルパー ──
+  // ── gradient ヘルパー ──
 
   setLinearGradient(direction: string, ...stops: string[]): this {
     this._backgroundImage = `linear-gradient(${direction}, ${stops.join(', ')})`;
+    return this;
+  }
+
+  setRadialGradient(shape: string, ...stops: string[]): this {
+    this._backgroundImage = `radial-gradient(${shape}, ${stops.join(', ')})`;
     return this;
   }
 

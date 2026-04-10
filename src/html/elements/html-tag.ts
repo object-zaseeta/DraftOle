@@ -324,7 +324,16 @@ export abstract class HtmlTag implements HTMLTagProtocol, CssManagerType, JQuery
     const hasCss = this._css.render().length > 0;
     if (hasCss && this._css.tagPath) {
       const scopeClass = generateScopedClassName(this._css.tagPath);
-      this.addHtmlAttribute(HtmlAttribute.className(scopeClass));
+      // 既存の class 属性があればマージ、なければ新規追加
+      const existingClassIdx = this._attributes.findIndex(a => a.key === 'class');
+      if (existingClassIdx >= 0) {
+        const existing = this._attributes[existingClassIdx]!;
+        if (existing.attributeValue.type === 'keyValue') {
+          this._attributes[existingClassIdx] = HtmlAttribute.className(existing.attributeValue.value, scopeClass);
+        }
+      } else {
+        this.addHtmlAttribute(HtmlAttribute.className(scopeClass));
+      }
     }
 
     const attrs = this.renderAttributes();

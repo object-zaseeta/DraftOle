@@ -146,6 +146,10 @@ export {
   djb2Hash,
 } from './css/index.js';
 
+// Phase 3: CSS Variables
+export { createTheme } from './css/variables/css-theme.js';
+export type { Theme } from './css/variables/css-theme.js';
+
 export type {
   // ── Manager ──
   CssManagerInstance,

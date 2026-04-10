@@ -23,7 +23,8 @@ export type HtmlErrorCode = 'invalidTag' | 'invalidAttribute' | 'nestingLimit';
 export type CssErrorCode =
   | 'invalidProperty'
   | 'invalidValue'
-  | 'layoutConflict';
+  | 'layoutConflict'
+  | 'duplicateProperty';
 
 /**
  * Error codes specific to the JavaScript module.
@@ -161,5 +162,23 @@ export abstract class DraftOleError extends Error {
     if (Error.captureStackTrace) {
       Error.captureStackTrace(this, new.target);
     }
+  }
+}
+
+/**
+ * DEVモードで同一CSSプロパティが2回設定された場合にthrowされるエラー。
+ *
+ * `DRAFT_OLE_DEV=true` 環境変数が設定されている場合のみ発生する。
+ * 本番環境では後から設定した値で上書きされる（CSS仕様通り）。
+ */
+export class DuplicateCssPropertyError extends DraftOleError {
+  readonly code = 'duplicateProperty' as const;
+  readonly module = 'css' as const;
+
+  constructor(property: string) {
+    super(
+      `CSS property "${property}" was set twice on the same element. This is likely a bug.`,
+    );
+    this.name = 'DuplicateCssPropertyError';
   }
 }

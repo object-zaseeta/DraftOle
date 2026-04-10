@@ -1,23 +1,142 @@
 /**
  * DraftOle MVP Demo: Todo App
  *
- * DraftOle の SwiftUI ライク API で Todo アプリを生成する。
- * CSS変数・疑似セレクタ等はDraftOle未サポートのため、
- * 補完CSSとして手動追加する。
+ * DraftOle API のみで Todo アプリを生成する。
+ * supplementCSS（生CSS）ゼロ。
  *
  * 実行: node --experimental-strip-types examples/mvp-demo.ts
  * 出力: output/mvp_demo/index.html, style.css, script.js
  */
 import {
-  Root, Text,
+  Root,
   html, head, body, title, meta,
   div, h1, p, section, header, footer,
-  form, label, input, button, ul, span, small,
+  label, input, button, ul, span, small,
+  createTheme, createStyle,
   FileExporter,
 } from '../dist/index.js';
 
+// ── Theme (CSS Variables) ──
+const theme = createTheme({
+  bg: '#0b1220',
+  panel: 'rgba(255, 255, 255, 0.06)',
+  border: 'rgba(255, 255, 255, 0.12)',
+  text: 'rgba(255, 255, 255, 0.92)',
+  muted: 'rgba(255, 255, 255, 0.68)',
+  accent: '#7c5cff',
+  'accent-2': '#32d399',
+  danger: '#ef4444',
+  shadow: '0 18px 60px rgba(0, 0, 0, 0.35)',
+  radius: '14px',
+});
+
+// ── Shared Styles ──
+const cardStyle = createStyle('card', {
+  background: theme.panel,
+  border: `1px solid ${theme.border}`,
+  borderRadius: theme.radius,
+  boxShadow: theme.shadow,
+  padding: '16px',
+  marginTop: '14px',
+});
+
+const rowStyle = createStyle('row', {
+  display: 'flex',
+  gap: '10px',
+  alignItems: 'center',
+  flexWrap: 'wrap',
+}, {
+  '&.meta': { marginTop: '12px', justifyContent: 'space-between' },
+});
+
+const labelStyle = createStyle('label', {
+  minWidth: '44px',
+  color: theme.muted,
+});
+
+const inputStyle = createStyle('input', {
+  flex: '1 1 260px',
+  padding: '11px 12px',
+  borderRadius: '12px',
+  border: `1px solid ${theme.border}`,
+  background: 'rgba(0, 0, 0, 0.25)',
+  color: theme.text,
+  outline: 'none',
+}, {
+  focus: {
+    borderColor: 'rgba(124, 92, 255, 0.65)',
+    boxShadow: '0 0 0 3px rgba(124, 92, 255, 0.25)',
+  },
+});
+
+const btnStyle = createStyle('btn', {
+  padding: '10px 12px',
+  borderRadius: '12px',
+  border: `1px solid ${theme.border}`,
+  background: 'rgba(255, 255, 255, 0.06)',
+  color: theme.text,
+  cursor: 'pointer',
+}, {
+  hover: { background: 'rgba(255, 255, 255, 0.10)' },
+  '&.primary': {
+    borderColor: 'rgba(124, 92, 255, 0.55)',
+    background: 'linear-gradient(180deg, rgba(124, 92, 255, 0.35), rgba(124, 92, 255, 0.18))',
+  },
+});
+
+const countStyle = createStyle('count', { color: theme.muted });
+
+const listStyle = createStyle('list', {
+  listStyle: 'none',
+  padding: '0',
+  margin: '0',
+  display: 'grid',
+  gap: '10px',
+});
+
+const itemStyle = createStyle('item', {
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'space-between',
+  gap: '10px',
+  padding: '12px',
+  borderRadius: '12px',
+  border: `1px solid ${theme.border}`,
+  background: 'rgba(0, 0, 0, 0.22)',
+}, {
+  ' .text': { flex: '1 1 auto' },
+  '&.done .text': { textDecoration: 'line-through', color: 'rgba(255, 255, 255, 0.55)' },
+});
+
+const pillStyle = createStyle('pill', {
+  display: 'inline-flex',
+  alignItems: 'center',
+  gap: '6px',
+  borderRadius: '999px',
+  padding: '6px 10px',
+  border: `1px solid ${theme.border}`,
+  background: 'rgba(255, 255, 255, 0.05)',
+  color: theme.muted,
+  fontSize: '12px',
+}, {
+  '&.ok': { color: 'rgba(50, 211, 153, 0.95)', borderColor: 'rgba(50, 211, 153, 0.35)' },
+  '&.ng': { color: 'rgba(239, 68, 68, 0.95)', borderColor: 'rgba(239, 68, 68, 0.35)' },
+});
+
+const footerStyle = createStyle('footer', { color: theme.muted });
+const headerStyle = createStyle('header', { marginBottom: '18px' });
+
 // ── Document ──
 const root = new Root();
+
+// Global CSS
+root.addGlobalCss(theme.css);
+root.addGlobalCss('* { box-sizing: border-box; }');
+root.addGlobalCss('html, body { height: 100%; }');
+root.addGlobalCss([
+  cardStyle, rowStyle, labelStyle, inputStyle, btnStyle,
+  countStyle, listStyle, itemStyle, pillStyle, footerStyle, headerStyle,
+].map(s => s.css).join('\n\n'));
 
 const page = html({ lang: 'ja' },
   head(
@@ -26,62 +145,54 @@ const page = html({ lang: 'ja' },
     title('DraftOle MVP Demo'),
   ),
   body(
-    div({ id: 'app', class: 'app' },
-      // ── Header ──
-      header({ class: 'header' },
+    div({ id: 'app' },
+      header({ class: headerStyle.className },
         h1('DraftOle MVP Demo').margin('0').fontSize('28px'),
         p('TypeScript DSLから生成されたHTML/CSS/JS（サーバ不要）')
-          .margin('8px 0 0').color('rgba(255,255,255,0.68)'),
+          .margin('8px 0 0').color(theme.muted),
       ),
 
-      // ── Input Card ──
-      section({ class: 'card' },
-        div({ class: 'row' },
-          label({ for: 'todo-input', class: 'label' }, 'Todo'),
-          input({ id: 'todo-input', class: 'input', type: 'text', placeholder: '例: DraftOleのCSS出力を確認する' }),
-          button({ id: 'add-btn', class: 'btn primary', type: 'button' }, '追加'),
+      section({ class: cardStyle.className },
+        div({ class: rowStyle.className },
+          label({ for: 'todo-input', class: labelStyle.className }, 'Todo'),
+          input({ id: 'todo-input', class: inputStyle.className, type: 'text', placeholder: '例: DraftOleのCSS出力を確認する' }),
+          button({ id: 'add-btn', class: `${btnStyle} primary`, type: 'button' }, '追加'),
         ),
-        div({ class: 'row meta' },
-          span({ id: 'count', class: 'count' }, '0 items'),
-          button({ id: 'clear-btn', class: 'btn', type: 'button' }, '完了をクリア'),
+        div({ class: `${rowStyle} meta` },
+          span({ id: 'count', class: countStyle.className }, '0 items'),
+          button({ id: 'clear-btn', class: btnStyle.className, type: 'button' }, '完了をクリア'),
         ),
       ),
 
-      // ── Todo List Card ──
-      section({ class: 'card' },
-        ul({ id: 'todo-list', class: 'list', 'aria-label': 'Todo list' }),
+      section({ class: cardStyle.className },
+        ul({ id: 'todo-list', class: listStyle.className, 'aria-label': 'Todo list' }),
       ),
 
-      // ── Footer ──
-      footer({ class: 'footer' },
+      footer({ class: footerStyle.className },
         small('Generated by DraftOle'),
       ).margin('18px 0 0'),
-    ).maxWidth('860px').margin('0 auto').padding('36px 18px 60px'),
-  ),
+    ).maxWidth('860px').margin('0 auto').padding('36px 18px 60px')
+     .fontFamily("ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, 'Apple Color Emoji', 'Segoe UI Emoji'")
+     .color(theme.text).margin('0'),
+  ).background(theme.bg),
 );
 
 root.addChild(page);
 
-// ── JS: Todo アプリロジック ──
-// DraftOle の JQueryManager ではカバーできないロジックを直接記述
-const appJs = `// Todo App Logic
-function createTodoItem(text) {
+// ── JS ──
+const appJs = `function createTodoItem(text) {
   const li = document.createElement("li");
   li.className = "item";
-
   const span = document.createElement("span");
   span.className = "text";
   span.textContent = text;
-
   const pill = document.createElement("span");
   pill.className = "pill ng";
   pill.textContent = "active";
-
   const btn = document.createElement("button");
   btn.className = "btn";
   btn.type = "button";
   btn.textContent = "toggle";
-
   btn.addEventListener("click", () => {
     li.classList.toggle("done");
     const done = li.classList.contains("done");
@@ -90,37 +201,29 @@ function createTodoItem(text) {
     pill.classList.toggle("ng", !done);
     updateCount();
   });
-
   li.appendChild(span);
   li.appendChild(pill);
   li.appendChild(btn);
   return li;
 }
-
 function updateCount() {
   const items = document.querySelectorAll("#todo-list .item");
   const active = Array.from(items).filter(x => !x.classList.contains("done")).length;
   document.querySelector("#count").textContent = active + " items";
 }
-
 function clearDone() {
   document.querySelectorAll("#todo-list .item.done").forEach(el => el.remove());
   updateCount();
 }
-
 function addTodo() {
   const input = document.querySelector("#todo-input");
   const text = (input.value || "").trim();
-  if (!text) {
-    input.style.borderColor = "rgba(239, 68, 68, 0.65)";
-    return;
-  }
+  if (!text) { input.style.borderColor = "rgba(239, 68, 68, 0.65)"; return; }
   input.style.borderColor = "rgba(255, 255, 255, 0.12)";
   document.querySelector("#todo-list").appendChild(createTodoItem(text));
   input.value = "";
   updateCount();
 }
-
 document.addEventListener("DOMContentLoaded", () => {
   document.querySelector("#add-btn").addEventListener("click", addTodo);
   document.querySelector("#clear-btn").addEventListener("click", clearDone);
@@ -130,116 +233,11 @@ document.addEventListener("DOMContentLoaded", () => {
   updateCount();
 });`;
 
-// ── CSS: DraftOle 未サポート機能を補完 ──
-// CSS変数、疑似セレクタ、複合セレクタ、radial-gradient 等
-const supplementCss = `/* CSS Variables */
-:root {
-  --bg: #0b1220;
-  --panel: rgba(255, 255, 255, 0.06);
-  --border: rgba(255, 255, 255, 0.12);
-  --text: rgba(255, 255, 255, 0.92);
-  --muted: rgba(255, 255, 255, 0.68);
-  --accent: #7c5cff;
-  --accent-2: #32d399;
-  --danger: #ef4444;
-  --shadow: 0 18px 60px rgba(0, 0, 0, 0.35);
-  --radius: 14px;
-}
-
-* { box-sizing: border-box; }
-html, body { height: 100%; }
-
-body {
-  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
-  background: radial-gradient(1200px 600px at 20% 10%, rgba(124, 92, 255, 0.35), transparent 60%),
-              radial-gradient(900px 500px at 80% 20%, rgba(50, 211, 153, 0.25), transparent 60%),
-              var(--bg);
-  color: var(--text);
-  margin: 0;
-}
-
-/* Card */
-.card {
-  background: var(--panel);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
-  padding: 16px;
-  margin-top: 14px;
-}
-
-/* Row layout */
-.row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
-.row.meta { margin-top: 12px; justify-content: space-between; }
-
-/* Label */
-.label { min-width: 44px; color: var(--muted); }
-
-/* Input */
-.input {
-  flex: 1 1 260px;
-  padding: 11px 12px;
-  border-radius: 12px;
-  border: 1px solid var(--border);
-  background: rgba(0, 0, 0, 0.25);
-  color: var(--text);
-  outline: none;
-}
-.input:focus {
-  border-color: rgba(124, 92, 255, 0.65);
-  box-shadow: 0 0 0 3px rgba(124, 92, 255, 0.25);
-}
-
-/* Button */
-.btn {
-  padding: 10px 12px;
-  border-radius: 12px;
-  border: 1px solid var(--border);
-  background: rgba(255, 255, 255, 0.06);
-  color: var(--text);
-  cursor: pointer;
-}
-.btn:hover { background: rgba(255, 255, 255, 0.10); }
-.btn.primary {
-  border-color: rgba(124, 92, 255, 0.55);
-  background: linear-gradient(180deg, rgba(124, 92, 255, 0.35), rgba(124, 92, 255, 0.18));
-}
-
-/* Count */
-.count { color: var(--muted); }
-
-/* Todo List */
-.list { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; }
-
-/* Todo Item */
-.item {
-  display: flex; align-items: center; justify-content: space-between;
-  gap: 10px; padding: 12px; border-radius: 12px;
-  border: 1px solid var(--border); background: rgba(0, 0, 0, 0.22);
-}
-.item .text { flex: 1 1 auto; }
-.item.done .text { text-decoration: line-through; color: rgba(255, 255, 255, 0.55); }
-
-/* Pill */
-.pill {
-  display: inline-flex; align-items: center; gap: 6px;
-  border-radius: 999px; padding: 6px 10px;
-  border: 1px solid var(--border); background: rgba(255, 255, 255, 0.05);
-  color: var(--muted); font-size: 12px;
-}
-.pill.ok { color: rgba(50, 211, 153, 0.95); border-color: rgba(50, 211, 153, 0.35); }
-.pill.ng { color: rgba(239, 68, 68, 0.95); border-color: rgba(239, 68, 68, 0.35); }
-
-/* Footer */
-.footer { color: var(--muted); }`;
-
 // ── Export ──
 const htmlContent = root.render();
-const scopedCss = root.collectCssStyleString();
-const cssContent = supplementCss + (scopedCss ? '\n\n/* Scoped CSS */\n' + scopedCss : '');
-const jsContent = appJs;
+const cssContent = root.collectCssStyleString();
 
 const exporter = new FileExporter();
-exporter.export(htmlContent, cssContent, jsContent, './output/mvp_demo');
+exporter.export(htmlContent, cssContent, appJs, './output/mvp_demo');
 
 console.log('✓ MVP Demo generated → output/mvp_demo/');

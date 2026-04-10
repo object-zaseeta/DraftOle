@@ -22,7 +22,8 @@
     "test:watch": "vitest",
     "lint": "eslint src/ tests/",
     "typecheck": "tsc --noEmit",
-    "docs:api": "typedoc"
+    "docs:api": "typedoc",
+    "demo:mvp": "node --experimental-strip-types examples/mvp-demo.ts"
   },
   "keywords": [
     "typescript",

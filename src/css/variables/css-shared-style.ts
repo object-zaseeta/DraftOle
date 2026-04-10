@@ -39,15 +39,26 @@ function renderCssBody(properties: Record<string, string>): string {
     .join('\n');
 }
 
-/** Pseudo-selector definitions. */
-export type PseudoSelectors = {
-  hover?: Record<string, string>;
-  focus?: Record<string, string>;
-  active?: Record<string, string>;
-  visited?: Record<string, string>;
-  disabled?: Record<string, string>;
-  'first-child'?: Record<string, string>;
-  'last-child'?: Record<string, string>;
+/**
+ * Known pseudo-selector names (for IDE autocomplete).
+ * @internal
+ */
+const PSEUDO_SELECTORS = new Set([
+  'hover', 'focus', 'active', 'visited', 'disabled',
+  'first-child', 'last-child', 'focus-within', 'focus-visible',
+]);
+
+/**
+ * Style selector definitions.
+ *
+ * Key formats:
+ * - `hover`, `focus`, etc. → pseudo selector (`.name:hover`)
+ * - `&.modifier` → compound selector (`.name.modifier`)
+ * - ` .child` → descendant selector (`.name .child`)
+ * - `&.state .child` → compound + descendant (`.name.state .child`)
+ */
+export type StyleSelectors = {
+  [key: string]: Record<string, string>;
 };
 
 /**
@@ -63,17 +74,48 @@ export interface SharedStyle {
 }
 
 /**
+ * Resolves a selector key to a full CSS selector.
+ * @internal
+ */
+function resolveSelector(name: string, key: string): string {
+  // Pseudo selector: hover → .name:hover
+  if (PSEUDO_SELECTORS.has(key)) {
+    return `.${name}:${key}`;
+  }
+  // Compound selector: &.primary → .name.primary
+  if (key.startsWith('&')) {
+    return `.${name}${key.slice(1)}`;
+  }
+  // Descendant selector: " .text" → .name .text
+  if (key.startsWith(' ')) {
+    return `.${name}${key}`;
+  }
+  // Fallback: treat as pseudo
+  return `.${name}:${key}`;
+}
+
+/**
  * Creates a shared CSS style with a named class.
  *
  * @param name - The CSS class name
  * @param properties - CSS properties as key-value pairs (camelCase or kebab-case)
- * @param pseudo - Optional pseudo-selector styles (:hover, :focus, :active, etc.)
+ * @param selectors - Optional selectors: pseudo (:hover), compound (&.primary), descendant ( .text)
  * @returns A SharedStyle object with className, css, and toString()
+ *
+ * @example
+ * ```typescript
+ * const btn = createStyle('btn', { padding: '10px' }, {
+ *   hover: { background: '...' },           // → .btn:hover
+ *   '&.primary': { borderColor: '...' },    // → .btn.primary
+ *   ' .icon': { width: '16px' },            // → .btn .icon
+ *   '&.done .text': { textDecoration: '...' }, // → .btn.done .text
+ * });
+ * ```
  */
 export function createStyle(
   name: string,
   properties: Record<string, string>,
-  pseudo?: PseudoSelectors,
+  selectors?: StyleSelectors,
 ): SharedStyle {
   const parts: string[] = [];
 
@@ -83,11 +125,12 @@ export function createStyle(
     parts.push(`.${name} {\n${renderCssBody(properties)}\n}`);
   }
 
-  // Pseudo-selector rules
-  if (pseudo) {
-    for (const [selector, props] of Object.entries(pseudo)) {
+  // Additional selector rules
+  if (selectors) {
+    for (const [key, props] of Object.entries(selectors)) {
       if (props && Object.keys(props).length > 0) {
-        parts.push(`.${name}:${selector} {\n${renderCssBody(props)}\n}`);
+        const selector = resolveSelector(name, key);
+        parts.push(`${selector} {\n${renderCssBody(props)}\n}`);
       }
     }
   }

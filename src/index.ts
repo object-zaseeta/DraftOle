@@ -146,9 +146,11 @@ export {
   djb2Hash,
 } from './css/index.js';
 
-// Phase 3: CSS Variables
+// Phase 3: CSS Variables & Shared Styles
 export { createTheme } from './css/variables/css-theme.js';
 export type { Theme } from './css/variables/css-theme.js';
+export { createStyle } from './css/variables/css-shared-style.js';
+export type { SharedStyle } from './css/variables/css-shared-style.js';
 
 export type {
   // ── Manager ──

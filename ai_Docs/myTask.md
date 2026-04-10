@@ -45,13 +45,13 @@
 | **P1** | セキュリティ | SEC-3 | 危険APIの命名改善（TextType → unsafeRaw 等） | [x] |
 | **P1** | セキュリティ | SEC-4 | HTMX統合時のCSRFトークン機構 | [ ] |
 | **P2** | セキュリティ | SEC-5 | CSP対応（nonce生成、style-src制御） | [ ] |
-| **P1** | CSS拡張 | 6.5 | CSS変数（:root定義 + var()参照） | [ ] |
-| **P1** | CSS拡張 | MVP-2.4 | 疑似セレクタ（:hover, :focus, :active） | [ ] |
-| **P1** | CSS拡張 | MVP-2.5 | 複合セレクタ（.btn.primary, .item.done .text） | [ ] |
-| **P1** | CSS拡張 | 6.6 | radial-gradient 実装 | [ ] |
-| **P1** | CSS拡張 | CSS-1 | class共有スタイル（複数要素に同じスタイル適用） | [ ] |
-| **P1** | CSS拡張 | CSS-2 | グローバルCSS注入（*, html,body 等のリセット） | [ ] |
-| **P1** | CSS拡張 | CSS-3 | 子孫セレクタ（.parent .child スタイリング） | [ ] |
+| **P1** | CSS拡張 | 6.5 | CSS変数（:root定義 + var()参照） | [x] |
+| **P1** | CSS拡張 | MVP-2.4 | 疑似セレクタ（:hover, :focus, :active） | [x] |
+| **P1** | CSS拡張 | MVP-2.5 | 複合セレクタ（.btn.primary, .item.done .text） | [x] |
+| **P1** | CSS拡張 | 6.6 | radial-gradient 実装 | [x] |
+| **P1** | CSS拡張 | CSS-1 | class共有スタイル（複数要素に同じスタイル適用） | [x] |
+| **P1** | CSS拡張 | CSS-2 | グローバルCSS注入（*, html,body 等のリセット） | [x] |
+| **P1** | CSS拡張 | CSS-3 | 子孫セレクタ（.parent .child スタイリング） | [x] |
 | **P1** | JS拡張 | JS-1 | 動的DOM生成（createElement + appendChild） | [ ] |
 | **P1** | JS拡張 | JS-2 | イベントハンドラ関数本体（名前だけでなくロジック記述） | [ ] |
 | **P2** | 機能拡張 | 6.7 | examples/基本例追加 | [ ] |

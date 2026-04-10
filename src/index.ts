@@ -9,7 +9,12 @@ export { hlUnitToCssString } from './utils/unit-style.js';
 export {
   // ── Base Error ──
   DraftOleError,
+  // ── CSS Dev Error ──
+  DuplicateCssPropertyError,
 } from './utils/errors.js';
+
+// Phase 1: Utils - Dev Guard
+export { guardDuplicateCssProperty } from './utils/dev-guard.js';
 
 export type {
   // ── Error Codes ──

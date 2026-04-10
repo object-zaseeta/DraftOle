@@ -173,7 +173,7 @@ const page = html({ lang: 'ja' },
       ).margin('18px 0 0'),
     ).maxWidth('860px').margin('0 auto').padding('36px 18px 60px')
      .fontFamily("ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, 'Apple Color Emoji', 'Segoe UI Emoji'")
-     .color(theme.text).margin('0'),
+     .color(theme.text),
   ).background(theme.bg),
 );
 

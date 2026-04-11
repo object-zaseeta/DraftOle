@@ -212,6 +212,18 @@ export type {
   JQueryMethodType,
 } from './js/jquery-method-type.js';
 
+// Phase 4: JS Template
+export {
+  jsTemplate,
+  param,
+  isJsParam,
+} from './js/js-template.js';
+
+export type {
+  JsParam,
+  JsTemplateResult,
+} from './js/js-template.js';
+
 // Phase 5: Publisher Module
 export {
   // ── Exporter ──

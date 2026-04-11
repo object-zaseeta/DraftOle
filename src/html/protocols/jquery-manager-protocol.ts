@@ -7,8 +7,8 @@
  * Requirements: 1.5, 1.9, 6.1, 6.2
  */
 
-import type { JQueryMethodType } from '../../js/jquery-method-type.js';
-import type { JQueryManagerInstance } from '../../js/jquery-manager.js';
+import type { JQueryMethodType } from './jquery-method-type.js';
+import type { JQueryManagerInstance } from './jquery-manager-instance-type.js';
 
 /**
  * jQuery管理機能を提供するインターフェース

@@ -50,3 +50,9 @@ export type { JQueryManagerProtocol } from './jquery-manager-protocol.js';
 
 // Req 1.6: 属性ビルダー
 export type { AttributeBuilderProtocol } from './attribute-builder-protocol.js';
+
+// CFA-A: インターフェース定義（依存方向修正）
+export type { CssManagerInstance } from './css-manager-instance-type.js';
+export type { JQueryManagerInstance } from './jquery-manager-instance-type.js';
+export type { JQueryMethodType } from './jquery-method-type.js';
+export { JQUERY_METHOD_TYPES } from './jquery-method-type.js';

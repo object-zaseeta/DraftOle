@@ -6,7 +6,7 @@
  *
  * Requirements: 1.4
  */
-import type { CssManagerInstance } from '../../css/manager/css-manager-instance-type.js';
+import type { CssManagerInstance } from './css-manager-instance-type.js';
 
 /**
  * CSS管理機能を提供するインターフェース

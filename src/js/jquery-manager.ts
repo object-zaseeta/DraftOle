@@ -1,46 +1,11 @@
-import type { Renderable } from '../utils/renderable.js';
 import type { JQueryMethodType } from './jquery-method-type.js';
+import type { JQueryManagerInstance } from '../html/protocols/jquery-manager-instance-type.js';
 
 /**
- * JQueryManagerのインスタンスインターフェース
- *
- * Swift版JQueryManagerと同等の機能を提供します。
- * 要素に対するjQuery風のDOM操作コードを蓄積し、最終的にJavaScript文字列として出力します。
- *
- * @remarks
- * このインターフェースは {@link Renderable} を継承し、render()メソッドで蓄積された操作を出力します。
- *
- * @example 基本的な使用方法
- * ```typescript
- * const manager: JQueryManagerInstance = new JQueryManager('my-element');
- * manager.css({ 'color': 'red' });
- * manager.text('Hello');
- * console.log(manager.render());
- * // → "$('.my-element').css({'color': 'red'});\n$('.my-element').text('Hello')"
- * ```
- *
- * @public
+ * 後方互換性のための re-export。
+ * 定義は html/protocols/jquery-manager-instance-type.ts に移動。
  */
-export interface JQueryManagerInstance extends Renderable {
-  readonly path: string;
-  readonly usedMethods: ReadonlySet<JQueryMethodType>;
-
-  css(properties: Record<string, string>): string;
-  height(value: number, unit?: string): string;
-  on(eventType: string, handler: string): string;
-  click(handler: string): string;
-  keydown(handler: string): string;
-  keyup(handler: string): string;
-  text(value: string, isVariable?: boolean): string;
-  html(value: string): string;
-  addClass(className: string): string;
-  removeClass(className: string): string;
-  toggleClass(className: string, force?: boolean): string;
-  needsHelper(): boolean;
-
-  updatePath(newPath: string): void;
-  render(): string;
-}
+export type { JQueryManagerInstance } from '../html/protocols/jquery-manager-instance-type.js';
 
 /**
  * JQueryManager - 要素ごとのjQuery風JavaScript操作を蓄積・生成

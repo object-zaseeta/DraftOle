@@ -1,4 +1,4 @@
-import type { JQueryMethodType } from './jquery-method-type.js';
+import type { JQueryMethodType } from '../html/protocols/jquery-method-type.js';
 
 /**
  * JQueryHelper - Tree-shaking対応の$()ヘルパー関数生成

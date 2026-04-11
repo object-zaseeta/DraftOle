@@ -36,7 +36,7 @@
  * @see {@link CssPositionMaker}
  * @see {@link CssConfig}
  */
-import type { CssManagerInstance } from './css-manager-instance-type.js';
+import type { CssManagerInstance } from '../../html/protocols/css-manager-instance-type.js';
 import type { LazyLayoutRegister } from '../layout/lazy-layout/registered-item.js';
 
 import { CssConfig } from '../config/css-config.js';

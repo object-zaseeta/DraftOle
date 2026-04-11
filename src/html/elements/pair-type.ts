@@ -11,6 +11,7 @@
  * Requirements: 3.2, 3.5, 3.6, 6.5, 6.8
  */
 import { HtmlTag } from './html-tag.js';
+import type { HtmlTagOptions } from './html-tag.js';
 import type { TagType } from '../tags/tag-type.js';
 
 /**
@@ -68,7 +69,7 @@ export class PairType extends HtmlTag {
    * It's recommended to use factory functions like {@link div}, {@link p}, {@link span}
    * instead of direct instantiation.
    */
-  constructor(tagType: TagType) {
-    super(tagType);
+  constructor(tagType: TagType, options?: HtmlTagOptions) {
+    super(tagType, options);
   }
 }

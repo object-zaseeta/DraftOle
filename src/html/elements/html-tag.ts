@@ -16,7 +16,7 @@
 import type { HTMLTagProtocol, HtmlAttributeShape } from '../protocols/html-tag-protocol.js';
 import type { CssManagerType } from '../protocols/css-manager-type.js';
 import type { JQueryManagerProtocol } from '../protocols/jquery-manager-protocol.js';
-import type { CssManagerInstance } from '../../css/manager/css-manager-instance-type.js';
+import type { CssManagerInstance } from '../protocols/css-manager-instance-type.js';
 import { CssManager } from '../../css/manager/css-manager.js';
 import { HtmlStyle } from '../../css/style/html-style.js';
 import type { FlexOptions } from '../../css/style/flex/css-flex.js';
@@ -25,9 +25,18 @@ import { HtmlAttribute } from '../attributes/html-attribute.js';
 import type { TagType } from '../tags/tag-type.js';
 import { SELF_CLOSING_TAGS } from '../tags/tag-type.js';
 import { HTMLFormatter } from '../utils/html-formatter.js';
-import type { JQueryMethodType } from '../../js/jquery-method-type.js';
-import type { JQueryManagerInstance } from '../../js/jquery-manager.js';
+import type { JQueryMethodType } from '../protocols/jquery-method-type.js';
+import type { JQueryManagerInstance } from '../protocols/jquery-manager-instance-type.js';
 import { JQueryManager } from '../../js/jquery-manager.js';
+
+/**
+ * HtmlTag コンストラクタのオプション引数。
+ * テスト時に CssManager / JQueryManager をモック注入するために使用。
+ */
+export interface HtmlTagOptions {
+  css?: CssManagerInstance;
+  jqm?: JQueryManagerInstance;
+}
 
 /**
  * Abstract base class for all HTML elements.
@@ -88,21 +97,24 @@ export abstract class HtmlTag implements HTMLTagProtocol, CssManagerType, JQuery
    * CSS manager instance (composition pattern).
    * @internal
    */
-  private _css: CssManagerInstance = new CssManager();
+  private _css: CssManagerInstance;
 
   /**
    * jQuery manager instance (composition pattern).
    * @internal
    */
-  private _jqm: JQueryManagerInstance = new JQueryManager();
+  private _jqm: JQueryManagerInstance;
 
   /**
    * Creates a new HtmlTag instance.
    *
    * @param tagType - The HTML tag type
+   * @param options - Optional DI options for injecting CssManager/JQueryManager (mainly for testing)
    */
-  constructor(tagType: TagType) {
+  constructor(tagType: TagType, options?: HtmlTagOptions) {
     this.tagType = tagType;
+    this._css = options?.css ?? new CssManager();
+    this._jqm = options?.jqm ?? new JQueryManager();
   }
 
   // ── CSS コンポジション ──

@@ -11,6 +11,7 @@
  * Requirements: 3.3, 6.4, 10.1
  */
 import { HtmlTag } from './html-tag.js';
+import type { HtmlTagOptions } from './html-tag.js';
 import type { HTMLTagProtocol } from '../protocols/html-tag-protocol.js';
 import type { TagType } from '../tags/tag-type.js';
 
@@ -65,8 +66,8 @@ export class SelfClosingType extends HtmlTag {
    * It's recommended to use factory functions like {@link br}, {@link img}, {@link input}
    * instead of direct instantiation.
    */
-  constructor(tagType: TagType) {
-    super(tagType);
+  constructor(tagType: TagType, options?: HtmlTagOptions) {
+    super(tagType, options);
   }
 
   /**

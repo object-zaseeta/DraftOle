@@ -22,6 +22,8 @@ import type { HTMLTagProtocol } from '../protocols/html-tag-protocol.js';
 import type { BooleanAttributeKey, KeyValueAttributeKey, AriaAttributeKey } from '../attributes/attribute-keys.js';
 import { TAG_TYPES } from './tag-type.js';
 import type { TagType } from './tag-type.js';
+import type { JsParam } from '../../js/js-param.js';
+import { isJsParam, encodeJsParam } from '../../js/js-param.js';
 
 // ============================================================
 // 宣言的API共通型 (Task 5.2, Req 5.7, 5.8)
@@ -77,7 +79,7 @@ export type ChildArg = HTMLTagProtocol | string;
  * });
  * ```
  */
-export type AttributeMap = Record<string, string | boolean>;
+export type AttributeMap = Record<string, string | boolean | JsParam>;
 
 // ============================================================
 // 内部ユーティリティ (Task 5.2)
@@ -136,6 +138,11 @@ function parseAttributeMap(map: AttributeMap): HtmlAttribute[] {
         result.push(HtmlAttribute.boolean(key as BooleanAttributeKey));
       }
       // false → omit
+    } else if (isJsParam(value)) {
+      // JsParam マーカー → sentinel エンコードして keyValue として保存
+      // jsTemplate.render() が sentinel をデコードして変数参照に変換する
+      const encoded = encodeJsParam(value);
+      result.push(HtmlAttribute.keyValue(key as KeyValueAttributeKey | AriaAttributeKey, encoded));
     } else if (key === 'class') {
       result.push(HtmlAttribute.className(value));
     } else if (key.startsWith('data-')) {

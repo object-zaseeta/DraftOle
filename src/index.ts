@@ -105,6 +105,10 @@ export type {
   ButtonType,
 } from './html/index.js';
 
+export type {
+  HtmlTagOptions,
+} from './html/elements/html-tag.js';
+
 // Phase 3: CSS Module
 export {
   // ── Manager ──

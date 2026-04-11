@@ -158,21 +158,36 @@ function attrToJsLines(varName: string, attr: HtmlAttributeShape): string[] {
  * @param node - 現在のノード
  * @param counter - 変数カウンタ（共有オブジェクト、インクリメントしながら使う）
  * @param lines - 出力行リスト（破壊的追加）
+ * @param refs - jsName → 変数名のマップ（破壊的追加）
  * @returns このノードに割り当てた変数名
  */
 function walkNode(
   node: HTMLTagProtocol,
   counter: { value: number },
   lines: string[],
+  refs: Record<string, string>,
 ): string {
-  const varName = `el${counter.value++}`;
+  // jsName (data-jsname カスタム属性) を検出して変数名を決定する
+  const jsNameAttr = node.attributes.find(
+    a => a.attributeValue.type === 'custom' && a.attributeValue.name === 'jsname',
+  );
+  let varName: string;
+  if (jsNameAttr && jsNameAttr.attributeValue.type === 'custom') {
+    varName = jsNameAttr.attributeValue.value;
+    refs[varName] = varName;
+  } else {
+    varName = `el${counter.value++}`;
+  }
+
   const tagType = node.tagType;
 
   // createElement
   lines.push(`const ${varName} = document.createElement("${tagType}");`);
 
-  // 属性の出力
+  // 属性の出力（data-jsname はスキップする）
   for (const attr of node.attributes) {
+    // data-jsname は jsTemplate のメタデータのため JS 出力には含めない
+    if (attr.attributeValue.type === 'custom' && attr.attributeValue.name === 'jsname') continue;
     const attrLines = attrToJsLines(varName, attr);
     for (const line of attrLines) {
       lines.push(line);
@@ -192,7 +207,7 @@ function walkNode(
       }
     } else {
       // 要素ノード → 再帰してから appendChild
-      const childVar = walkNode(child, counter, lines);
+      const childVar = walkNode(child, counter, lines, refs);
       lines.push(`${varName}.appendChild(${childVar});`);
     }
   }
@@ -210,6 +225,8 @@ function walkNode(
  * @param name - 生成する JS 関数名
  * @param params - 関数引数名のリスト
  * @param rootElement - DraftOle タグツリーのルート要素
+ * @param afterCreate - オプション。{ jsName: varName } のマップを受け取り
+ *   return 文の直前に挿入する生 JS コードを返すコールバック
  * @returns render() メソッドを持つ JsTemplateResult
  *
  * @example
@@ -227,6 +244,7 @@ export function jsTemplate(
   name: string,
   params: string[],
   rootElement: HTMLTagProtocol,
+  afterCreate?: (refs: Record<string, string>) => string,
 ): JsTemplateResult {
   return {
     name,
@@ -234,17 +252,34 @@ export function jsTemplate(
     render(): string {
       const bodyLines: string[] = [];
       const counter = { value: 0 };
-      const rootVarName = walkNode(rootElement, counter, bodyLines);
+      const refs: Record<string, string> = {};
+      const rootVarName = walkNode(rootElement, counter, bodyLines, refs);
 
       const paramsStr = params.join(', ');
       const indented = bodyLines.map(l => `  ${l}`).join('\n');
 
-      return [
+      const parts: string[] = [
         `function ${name}(${paramsStr}) {`,
         indented,
-        `  return ${rootVarName};`,
-        `}`,
-      ].join('\n');
+      ];
+
+      // afterCreate コールバックの出力を return 前に挿入する
+      if (afterCreate) {
+        const afterCode = afterCreate(refs);
+        if (afterCode.trim().length > 0) {
+          const afterLines = afterCode
+            .split('\n')
+            .filter(l => l.trim().length > 0)
+            .map(l => `  ${l}`)
+            .join('\n');
+          parts.push(afterLines);
+        }
+      }
+
+      parts.push(`  return ${rootVarName};`);
+      parts.push('}');
+
+      return parts.join('\n');
     },
   };
 }

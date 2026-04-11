@@ -133,6 +133,13 @@ function isAttributeMap(arg: unknown): arg is AttributeMap {
 function parseAttributeMap(map: AttributeMap): HtmlAttribute[] {
   const result: HtmlAttribute[] = [];
   for (const [key, value] of Object.entries(map)) {
+    // jsName → data-jsname カスタム属性として保存（jsTemplate が検出・利用する）
+    if (key === 'jsName') {
+      if (typeof value === 'string') {
+        result.push(HtmlAttribute.custom('jsname', value));
+      }
+      continue;
+    }
     if (typeof value === 'boolean') {
       if (value) {
         result.push(HtmlAttribute.boolean(key as BooleanAttributeKey));

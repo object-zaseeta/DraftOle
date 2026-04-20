@@ -122,7 +122,7 @@
   - _Boundary: tests/js/vanilla_
   - _Depends: 6.1_
 
-- [ ] 7.2 (P) `mvp-demo` パリティテストとリポジトリ衛生テストを追加する
+- [x] 7.2 (P) `mvp-demo` パリティテストとリポジトリ衛生テストを追加する
   - `tests/js/vanilla/mvp-demo-parity.test.ts` で本ビルダー生成結果と旧 `appJs` を空白正規化後にトークナイズ比較し、`DOMContentLoaded` 登録・ハンドラ骨格・セレクタ 1 回評価パターンの一致を検証する
   - `tests/repo-source-js.test.ts` でリポジトリ直下の `.js` ファイルが `eslint.config.js` のみであること（`dist/` / `output/` / `node_modules/` 除外）を検証する
   - `tests/examples-raw-js.test.ts` で `examples/**.{ts,tsx}` 中に `addEventListener` / `querySelector` を含む長大テンプレートリテラルが残存しないことを検証する

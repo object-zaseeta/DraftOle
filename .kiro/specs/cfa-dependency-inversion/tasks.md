@@ -136,7 +136,15 @@
   - _Requirements: 4.1, 4.2, 4.4, 5.1, 6.3_
   - _Boundary: Root, factories-*_
 
-- [ ] 7. 既存テストスイート全件回帰と公開 API 不変確認
+- [x] 7. 既存テストスイート全件回帰と公開 API 不変確認
+
+## Implementation Notes
+
+- Task 1: `HtmlTagOptions` 型は type-only import で `./html/elements/html-tag.js` から循環参照を回避している（保持先移設は未実施）。
+- Task 1: プロジェクトの `vitest.config.ts` は `tests/**/*.test.ts` のみ include するため、`src/` 直下に `.test.ts` を置いてもテストが実行されない。新規テストは必ず `tests/` 配下に配置する。
+- Task 5.1: ESLint 依存方向ガードは `jquery-helper*` も禁止するため、`root.ts` の直接 import を `composition-root` 経由の re-export へ変更した。Composition Root が js/ 具象を知る唯一の場所である原則を維持。
+- Task 6.3: Req 4.4 の "生成ツリー全体で注入参照を共有" は、factory/コンストラクタに明示的に options を渡した場合のみ成立する。`addChild` による子要素の `_css`/`_jqm` 自動伝播は現行実装では未実装（各 HtmlTag 派生は自身の構築時点で `resolveHtmlTagDependencies` を解決する）。深い自動伝播が必要な場合は将来スコープ。
+- baseline: 改修前 2,371 テスト → 改修後 2,653 テスト（composition-root 17、html-tag-di 7、root-di 2、factories-* options 18、di-propagation 10 を追加）。`src/index.ts` 差分ゼロ。
   - `tsc --noEmit` と既存テストランナーを実行し、2,371 件を全 PASS させる
   - `src/index.ts` の export 一覧に対し改修前後で差分がないことを確認する（シンボル追加なし・削除なし・型シグネチャ不変）
   - options 未指定の代表 factory 呼び出し（`html()`, `div()`, `p()`, `img()`, `table()`）の出力文字列が改修前と一致することを確認する

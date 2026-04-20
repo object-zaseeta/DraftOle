@@ -110,7 +110,7 @@
 ## Validation
 
 - [ ] 6. テスト追加
-- [ ] 6.1 (P) composition-root.ts の単体テスト
+- [x] 6.1 (P) composition-root.ts の単体テスト
   - options 未指定／部分指定（css のみ／jqm のみ）／完全指定の 4 ケースで `resolveHtmlTagDependencies` の戻り値を検証する
   - 完全指定時は渡した参照と `===` 一致、部分指定時は指定側のみ参照一致・未指定側は `CssManagerInstance` / `JQueryManagerInstance` 契約を満たすデフォルト
   - `isHtmlTagOptions` を `{ css }` / `{ jqm }` / `{ css, jqm }` / `{}` / `{ id: 'x' }` / 文字列 / `null` / `undefined` で網羅検証する
@@ -119,7 +119,7 @@
   - _Requirements: 3.1, 3.4, 4.3, 5.3_
   - _Boundary: composition-root_
 
-- [ ] 6.2 (P) HtmlTag のモック注入単体テスト
+- [x] 6.2 (P) HtmlTag のモック注入単体テスト
   - `CssManagerInstance` / `JQueryManagerInstance` 契約を満たすモック（最小メソッド集合）を用意する
   - モック注入時に `_css` / `_jqm` アクセサ経由で注入参照と `===` 一致することを確認する
   - spy を用いて具象 `CssManager` / `JQueryManager` コンストラクタがモック注入ケースで呼ばれないことを検証する

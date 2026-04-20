@@ -51,7 +51,7 @@
   - _Requirements: 4.2, 4.4, 6.1, 6.3_
   - _Boundary: factories-structure_
 
-- [ ] 4.3 (P) factories-form.ts の factory 群に options を適用
+- [x] 4.3 (P) factories-form.ts の factory 群に options を適用
   - `form`, `input`, `button`, `select` 等へ 4.2 と同パターンを適用
   - 完了観測: 代表関数 2 種で options あり／なしの双方が TS 通過・出力一致
   - _Depends: 4.1_

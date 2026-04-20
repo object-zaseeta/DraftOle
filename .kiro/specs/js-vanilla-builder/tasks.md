@@ -83,7 +83,7 @@
   - _Depends: 2.1, 3.1_
 
 - [ ] 5. `jsTemplate` 統合
-- [ ] 5.1 `attach()` ブリッジと `jsName` 参照共有を実装する
+- [x] 5.1 `attach()` ブリッジと `jsName` 参照共有を実装する
   - `attach(build)` を実装し、`jsTemplate` の `afterCreate(refs)` 契約に一致するコールバックを返す
   - 内部で一時 Builder を生成し、`refs[jsName]` を `ref(jsName)` に変換して `VanillaScope` に渡す
   - `attach` 内では `onDomReady` / `declareFunction` 呼び出しを検出して `Error` を投げる

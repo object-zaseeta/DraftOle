@@ -39,3 +39,7 @@ pnpm-lock.yaml
 
 # BuildInPublic content
 content/
+
+# Tool runtime state（ランタイム生成・ログ・pidなど）
+.superpowers/
+SessionStorage/

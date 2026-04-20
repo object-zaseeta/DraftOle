@@ -1,8 +1,6 @@
 # DraftOle
 
-TypeScriptでHTML/CSS/JavaScriptを一括生成するDSL（Domain Specific Language）ライブラリ。
-
-Swift版 [DraftOle](https://github.com/object-zaseeta/DraftOle) からの移植プロジェクトです。
+HTML・CSS・JavaScript を TypeScript だけで**宣言的に**記述できるライブラリ。ひとつのソースから型安全に書き、静的ファイルへコンパイルします。
 
 ## 特徴
 

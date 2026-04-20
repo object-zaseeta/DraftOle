@@ -1,8 +1,6 @@
 # DraftOle
 
-A DSL (Domain Specific Language) library that generates HTML, CSS, and JavaScript all from TypeScript.
-
-Ported from the Swift version of [DraftOle](https://github.com/object-zaseeta/DraftOle).
+Declaratively build HTML, CSS, and JavaScript as a single TypeScript program — one source of truth, fully type-checked, statically compiled into plain files.
 
 ## Features
 

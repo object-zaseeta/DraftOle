@@ -224,6 +224,9 @@ export type {
   JsTemplateResult,
 } from './js/js-template.js';
 
+// Phase 4: JS Vanilla Builder（`src/js/vanilla/`）
+export * from './js/vanilla/index.js';
+
 // Phase 5: Publisher Module
 export {
   // ── Exporter ──

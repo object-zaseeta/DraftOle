@@ -48,6 +48,12 @@ new FileExporter().export(
 );
 ```
 
+### Output preview
+
+![MVP Demo output](docs/images/mvp-demo.png)
+
+Generated from [`examples/mvp-demo.ts`](examples/mvp-demo.ts) — run `pnpm build && pnpm demo:mvp` to reproduce.
+
 ## Use Cases
 
 - As a layer for SSG (Static Site Generators)

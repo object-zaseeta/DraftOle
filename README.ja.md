@@ -48,6 +48,12 @@ new FileExporter().export(
 );
 ```
 
+### 出力プレビュー
+
+![MVP Demo の出力](docs/images/mvp-demo.png)
+
+[`examples/mvp-demo.ts`](examples/mvp-demo.ts) から生成 — `pnpm build && pnpm demo:mvp` で再現できます。
+
 ## ユースケース
 
 - SSG（静的サイトジェネレーター）のレイヤーとして

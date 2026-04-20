@@ -42,7 +42,7 @@
   - _Depends: 2.2_
 
 - [ ] 4. ユーザ向け API レイヤの実装
-- [ ] 4.1 (P) イベント登録 API (`on` / `onDomReady`) を実装する
+- [x] 4.1 (P) イベント登録 API (`on` / `onDomReady`) を実装する
   - `on<K extends keyof HTMLElementEventMap>(target, event, handler)` で `addEventListener` 命令を append する
   - ハンドラ本体は子 `VanillaScope` で組み立て、イベント引数名は固定の `"e"` で出力する（`(e) => { ... }`）
   - `EventArgRef<K>` を構築し、`HTMLElementEventMap[K]` の文字列/数値/真偽プロパティを `JsExpr` として露出する

@@ -30,6 +30,23 @@ export interface ScopeExpr {
  * `query` / `on` / `classList.*` 等は後続タスクで別ファイルから拡張される想定。
  */
 export interface VanillaScope {
+  /**
+   * 内部 API：現在スコープのキューに任意の `VanillaCommand` を追加する。
+   *
+   * このフックは `event-api` / `query-api` / `dom-api` / `tree-api` などの
+   * ユーザ向け関数が、Scope インターフェース自体を `on` / `query` / `classList.*`
+   * 等で肥大化させずに命令を append できるようにするためのエスケープハッチ。
+   * 利用者コードからの直接呼び出しは非推奨（命令種別は内部詳細）。
+   */
+  _append(cmd: VanillaCommand): void;
+
+  /**
+   * 内部 API：現在スコープ用に子スコープを構築するためのフック。
+   * `event-api` のハンドラ本体組み立てなど、子キューで命令を蓄積して
+   * まとめて `renderCommands` に掛ける用途に利用する。
+   */
+  _childScope(queue: VanillaCommand[]): VanillaScope;
+
   /** 任意 JS 式を式として埋め込む。副作用として命令は発行しない（`JsExpr` 相当を返す）。 */
   raw(code: string): ScopeExpr;
 
@@ -102,6 +119,12 @@ export interface VanillaScriptBuilder extends VanillaScript {
  */
 function createScope(queue: VanillaCommand[]): VanillaScope {
   const scope: VanillaScope = {
+    _append(cmd) {
+      queue.push(cmd);
+    },
+    _childScope(childQueue) {
+      return createScope(childQueue);
+    },
     raw(code) {
       return { code };
     },

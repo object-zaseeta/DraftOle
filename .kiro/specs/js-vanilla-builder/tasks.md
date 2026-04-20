@@ -64,7 +64,7 @@
   - _Boundary: query-api_
   - _Depends: 2.1, 3.1_
 
-- [ ] 4.3 (P) クラス・プロパティ・スタイル操作 API を実装する
+- [x] 4.3 (P) クラス・プロパティ・スタイル操作 API を実装する
   - `toggleClass(el, name, force?)` / `addClass` / `removeClass` / `containsClass`（`JsBoolExpr` を返す）を実装する
   - `setText` / `getText` / `setValue` / `getValue` を実装し、`setValue` は要素型を `HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement` に型制約する
   - `setStyle<K extends WritableStyleKey>(el, key, value)` を実装し、`WritableStyleKey` が `CSSStyleDeclaration` の書き込み可能プロパティのみを抽出する

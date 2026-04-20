@@ -60,6 +60,46 @@ export type EventArgRef<K extends ElementEventName> = {
 };
 
 /**
+ * 入力系要素（`value` プロパティを持つ要素）を表す内部型。
+ * `ElementRef.value` の条件付き公開のために使用する。
+ */
+export type InputLikeElement = HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement;
+
+/**
+ * 要素参照を「変数参照 / セレクタ / 任意の JS 式」の 3 形態で統一表現する値オブジェクト。
+ * 不透明型として扱い、`kind` と `code` のみを外部に露出する。
+ *
+ * - `kind: 'var'`: `jsName` 由来の変数参照。`code === varName`。
+ * - `kind: 'selector'`: `document.querySelector(sel)` のインライン展開。
+ * - `kind: 'expr'`: 任意の JS 式（内部用）。
+ *
+ * `textContent` / `value` は `JsExpr` として遅延的に露出する。
+ * `value` は要素型 `E` が入力系要素のときのみ型レベルでアクセス可能。
+ */
+export interface ElementRef<E extends Element = Element> {
+  readonly __ref: true;
+  readonly kind: 'var' | 'selector' | 'expr';
+  readonly code: string;
+  readonly textContent: JsExpr;
+  readonly value: E extends InputLikeElement ? JsExpr : never;
+  cache(name?: string): ElementRef<E>;
+}
+
+/**
+ * 複数要素参照を表す値オブジェクト。`queryAll` 等の結果として生成する。
+ * - `kind: 'listSelector'`: `document.querySelectorAll(sel)` のインライン展開。
+ * - `kind: 'listExpr'`: 任意の JS 式（内部用）。
+ */
+export interface ElementListRef<E extends Element = Element> {
+  readonly __listRef: true;
+  readonly kind: 'listSelector' | 'listExpr';
+  readonly code: string;
+  readonly length: JsExpr;
+  // 型パラメータ E は query 系 API での要素型狭化のために保持する。
+  readonly _phantom?: E;
+}
+
+/**
  * `CSSStyleDeclaration` のうち書き込み可能なスタイルキーのみを抽出する型。
  * `length` / `parentRule` / `cssText` のような特殊プロパティを除外する。
  * `setStyle<K extends WritableStyleKey>()` で型レベルの安全性を提供する。

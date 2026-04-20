@@ -10,7 +10,7 @@
   - _Boundary: src/js/vanilla (scaffolding)_
 
 - [ ] 2. 要素参照と命令レコード層の実装
-- [ ] 2.1 (P) `ElementRef` / `ElementListRef` と生成関数を実装する
+- [x] 2.1 (P) `ElementRef` / `ElementListRef` と生成関数を実装する
   - `ref(varName)` / `fromSelector(selector)` / `fromExpr(code)` を実装し、`kind` と `code` を正しく生成する
   - `textContent` / `value`（`value` は `HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement` 条件型）を `JsExpr` として返す
   - `JsExpr` のチェーンメソッド（`eq` / `ne` / `or` / `trim` / `isFalsy` / `isTruthy`）を純関数として実装し、入力文字列は `JSON.stringify` でクォートする

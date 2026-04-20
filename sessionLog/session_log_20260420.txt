@@ -1,0 +1,117 @@
+================================================================
+セッションログ: 2026-04-20 (2回目)
+セッションID : unknown
+開始時刻     : 09:14:06 JST (初回) / 継続
+作業ディレクトリ: /Volumes/StudioSSD/AcitiveProject_waitnig/Draft_Project/DraftOleProject/DraftOle_TS
+================================================================
+
+================================================================
+作業ログ
+================================================================
+
+---
+[1] Discovery文書への追加・訂正
+---
+
+ユーザー: 追加訂正を反映してほしい
+
+作業:
+Discovery-DraftOle-significance.md に以下を追加:
+- Phase 4 マトリクス: DraftOleのシンプルさを ✓→✓/△ に修正
+- Phase 6 見出し: 「Web版SwiftUI」→「SwiftUIライクなサーバーサイドHTML DSL」
+- Phase 6 追加訂正(2): 「1言語完結」の限界を明文化
+  構文統一と概念抽象化の区別、SwiftUIとの本質的違い、
+  React/JSXとの真の差別化軸を「構文統一の深さ」と「ランタイムの軽さ」に限定
+- Phase 7b 総括: 「致命的」→「技術的」に限定、Phase 2 失敗との乖離を追記
+- Phase 8 競合分析: Hono JSX/Fresh/Enhance.dev/van.js/lit-html を追記
+- Phase 8 ターゲットA: 5万人推定の根拠薄さを訂正
+- Phase 9 新規追加: 撤退条件ゲート A/B/C
+
+結果:
+文書の楽観バイアスを補正し、売り文句の誤読リスクを低減。
+
+---
+[2] myTask.md 優先度組み換え
+---
+
+ユーザー: 先ほど提案したmyTask.mdの優先度組み換えに進んで
+
+作業:
+Discovery文書 Phase 6-9 の結論を反映:
+- D-1.2 / D-3.1 / D-3.2 を P4→P0 昇格（宣言的API）
+- GATE-A (LP再構築) を P0 新規追加
+- HTMX-1 / HTMX-2 を P1 新規追加
+- D-2.1〜D-2.5 を P4→P1 昇格
+- 6.7 examples を P2→P1 昇格
+- CFA-A.1〜A.3 を P1→P2 降格
+- CFA-B.1〜B.4 を P2→P3 降格
+- JS-1 / JS-2 を P1→P2 降格
+- GATE-B / GATE-C を P2 / P3 新規追加
+- マイルストーンを v0.95=宣言的API+GATE-A に再定義
+- クリティカルパスを撤退ゲート付きに再設計
+
+結果:
+「ビジョン検証→市場反応→持続性」の3段ゲート構造に再編成。
+
+---
+[3] レスポンシブ対応タスク追加
+---
+
+ユーザー: このプロジェクトで生成される成果物はレスポンシブデザインですか？ → 追加してほしい
+
+作業:
+調査: src/ 全体に @media クエリ生成機構なし、目標サンプルにもレスポンシブ指定なし。
+myTask.md に P1 レスポンシブ対応セクション新規追加:
+- CSS-4: @media クエリ生成サポート
+- CSS-5: ブレークポイントショートカット（mobile/tablet/desktop）
+- HTML-META: viewport meta 自動挿入
+
+結果:
+SwiftUIライクDSLを名乗る上で必須の欠落を補う P1 タスクを追加。
+
+---
+[4] React SSG 比較サンプル作成
+---
+
+ユーザー: mvp-demo.ts をリアクトでかくとどうなる？ → ファイルに書き出して
+
+作業:
+examples/react-demo.tsx を新規作成。DraftOle mvp-demo.ts と同じセクション構成で
+React + renderToStaticMarkup による等価実装。末尾に比較表を記載。
+
+結果:
+「結局ReactもHTMLを書いている」という指摘が生まれ、Discovery Phase 6 の
+「1言語完結」主張の再訂正（作業[1]の訂正(2)）につながった。
+
+================================================================
+使用したスキル・コマンド・ツール
+================================================================
+
+■ ファイル操作ツール
+  Read    : PM/Discovery-DraftOle-significance.md, ai_Docs/myTask.md,
+            examples/mvp-demo.ts (両プロジェクト版)
+  Edit    : PM/Discovery-DraftOle-significance.md（Phase 6 追加訂正 2項）
+            ai_Docs/myTask.md（優先度組み換え全面、レスポンシブ3タスク追加）
+  Write   : examples/react-demo.tsx（React SSG 比較版）
+            sessionLog/session_log_20260420.txt（本ファイル、上書き）
+
+■ シェルコマンド (Bash tool)
+  git status / git diff --stat HEAD / git branch --show-current
+  grep 検索（@media / responsive / mvp_dist）
+  find / ls（mvp 関連ディレクトリ特定）
+
+================================================================
+作成・変更ファイル一覧
+================================================================
+
+新規作成:
+  examples/react-demo.tsx
+  sessionLog/session_log_20260420.txt（上書き）
+
+変更:
+  PM/Discovery-DraftOle-significance.md  (Phase 6 追加訂正 x2、訂正注釈)
+  ai_Docs/myTask.md                      (優先度組み換え、レスポンシブ3タスク追加、
+                                          マイルストーン再定義、新規セクション2つ)
+
+参考（本セッション対象外・同ブランチ既存変更）:
+  src/html/tags/factories-semantic.ts    (HtmlTagOptions 型追加。refactor branch作業)

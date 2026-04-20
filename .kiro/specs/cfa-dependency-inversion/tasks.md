@@ -128,7 +128,7 @@
   - _Requirements: 1.2, 5.1, 5.2, 5.3_
   - _Boundary: HtmlTag_
 
-- [ ] 6.3 factory および Root 経由の DI 伝播統合テスト
+- [x] 6.3 factory および Root 経由の DI 伝播統合テスト
   - `new Root({ css: mockCss, jqm: mockJqm })` および `html({ css: mockCss, jqm: mockJqm })` 相当で生成したツリーの全ノードが注入参照を `===` で共有することを確認する
   - options を省略した呼び出しでは従来同様にデフォルト生成されることを確認する
   - 完了観測: 両経路での参照共有アサーションが PASS し、options 省略時の出力が既存スナップショット（または直接比較）と一致する

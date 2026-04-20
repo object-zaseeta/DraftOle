@@ -79,7 +79,7 @@
   - _Requirements: 4.2, 4.4, 6.1, 6.3_
   - _Boundary: factories-semantic_
 
-- [ ] 4.7 (P) factories-data.ts の factory 群に options を適用
+- [x] 4.7 (P) factories-data.ts の factory 群に options を適用
   - `table`, `tr`, `td` 等へ同パターンを適用
   - 完了観測: 代表関数 2 種で options あり／なしの双方が TS 通過・出力一致
   - _Depends: 4.1_

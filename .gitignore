@@ -43,3 +43,17 @@ content/
 # Tool runtime state（ランタイム生成・ログ・pidなど）
 .superpowers/
 SessionStorage/
+.agent/
+.claude/
+
+# Local-only: project workflow / docs not for publish
+.kiro/
+CLAUDE.md
+ai_Docs/
+PM/
+sessionLog/
+lp/
+
+# Generated / backup
+output/
+*.backup.*/

@@ -43,7 +43,7 @@
   - _Requirements: 4.2, 4.3, 6.1_
   - _Boundary: factories-utils_
 
-- [ ] 4.2 (P) factories-structure.ts の factory 群で options を末尾引数として受け取る
+- [x] 4.2 (P) factories-structure.ts の factory 群で options を末尾引数として受け取る
   - `html`, `head`, `body`, `div`, `section` 等の可変長引数末尾で `isHtmlTagOptions` により options を分離し `makePairTag` / `makeSelfClosingTag` に引き渡す
   - 既存シグネチャの非破壊性（options 省略時の動作）を保つ
   - 完了観測: 代表関数 `html(...)` と `div(...)` の both パターン（options あり／なし）で TS コンパイル通過・既存スナップショット一致

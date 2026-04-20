@@ -133,6 +133,12 @@ const root = new Root();
 root.addGlobalCss(theme.css);
 root.addGlobalCss('* { box-sizing: border-box; }');
 root.addGlobalCss('html, body { height: 100%; }');
+root.addGlobalCss(`body {
+  background-image:
+    radial-gradient(circle at 15% 85%, rgba(50, 211, 153, 0.18), transparent 55%),
+    radial-gradient(circle at 85% 10%, rgba(124, 92, 255, 0.15), transparent 55%);
+  background-attachment: fixed;
+}`);
 root.addGlobalCss([
   cardStyle, rowStyle, labelStyle, inputStyle, btnStyle,
   countStyle, listStyle, itemStyle, pillStyle, footerStyle, headerStyle,
@@ -148,7 +154,7 @@ const page = html({ lang: 'ja' },
     div({ id: 'app' },
       header({ class: headerStyle.className },
         h1('DraftOle MVP Demo').margin('0').fontSize('28px'),
-        p('TypeScript DSLから生成されたHTML/CSS/JS（サーバ不要）')
+        p('TypeScript で宣言的に書いた HTML/CSS/JS（サーバ不要）')
           .margin('8px 0 0').color(theme.muted),
       ),
 

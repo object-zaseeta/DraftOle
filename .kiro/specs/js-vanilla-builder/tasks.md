@@ -74,7 +74,7 @@
   - _Boundary: dom-api_
   - _Depends: 2.1, 3.1_
 
-- [ ] 4.4 (P) DOM ツリー操作 API (`appendChild` / `remove` / `removeAll`) を実装する
+- [x] 4.4 (P) DOM ツリー操作 API (`appendChild` / `remove` / `removeAll`) を実装する
   - `appendChild(parent, child)` で `child` に `ElementRef` または `JsExpr`（関数呼び出し結果など）を受け取れるようにする
   - `remove(el)` で単一要素 remove 命令、`removeAll(list)` で `list.forEach(el => el.remove())` 相当の命令を発行する
   - 観測可能な完了状態: `appendChild(parent, call("createTodoItem", [text]))` が `parent.appendChild(createTodoItem(text));` として出力され、`removeAll(queryAll(".done"))` が `forEach` 系の期待 JS に変換される

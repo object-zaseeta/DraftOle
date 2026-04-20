@@ -19,7 +19,7 @@
   - _Requirements: 2.4, 4.1, 4.2, 6.1, 6.2_
   - _Boundary: element-ref, types_
 
-- [ ] 2.2 (P) `VanillaCommand` 判別共用体と文字列化関数を実装する
+- [x] 2.2 (P) `VanillaCommand` 判別共用体と文字列化関数を実装する
   - `VanillaCommand` の全バリアント（`addEventListener` / `domReady` / `declareFunction` / `declareConst` / `classListToggle` / `classListAdd` / `classListRemove` / `setProp` / `setStyle` / `appendChild` / `remove` / `forEach` / `if` / `expr` / `raw`）を定義する
   - `renderCommand(cmd)` を `switch` + `exhaustive default`（`never` チェック）で実装し、各命令の JS 文字列化を集約する
   - `renderCommands(cmds, indent)` が各行に indent を付与して直列化する

@@ -29,7 +29,7 @@
   - _Boundary: commands_
 
 - [ ] 3. `VanillaScriptBuilder` 蓄積器と `VanillaScope` の実装
-- [ ] 3.1 Builder 本体とスコープ生成を実装する
+- [x] 3.1 Builder 本体とスコープ生成を実装する
   - `VanillaScriptBuilder` クラスに、トップレベル命令キュー / `declareFunction` ごとのキュー / 単一 `onDomReady` キュー（複数呼び出しを合流）を持たせる
   - `append(cmd)` / `onDomReady(body)` / `declareFunction(name, params, body)` / `fn(name, body)`（1/2 引数オーバーロード） を実装する
   - `render()` を冪等な文字列生成として実装し、`hasDomReady` を `onDomReady` 呼び出しの有無で返す

@@ -18,7 +18,17 @@ import { renderCssProperties } from '../../utils/css-sanitizer.js';
 import type { CSSColor } from '../color/css-color.js';
 import { guardDuplicateCssProperty } from '../../../utils/dev-guard.js';
 
+/** Options for setBackground() shorthand. */
+export interface BackgroundOptions {
+  color?: string;
+  image?: string;
+  size?: string;
+  position?: string;
+  repeat?: string;
+}
+
 export class CSSBackground implements Renderable {
+  private _background?: string;
   private _backgroundColor?: string;
   private _backgroundImage?: string;
   private _backgroundSize?: string;
@@ -57,6 +67,25 @@ export class CSSBackground implements Renderable {
     return this;
   }
 
+  /**
+   * background ショートハンド設定。
+   * - 文字列: CSS `background:` ショートハンドとして出力（例: `'#fff url(...) no-repeat center/cover'`, `'radial-gradient(...), #000'`）
+   * - オブジェクト: 個別の background-* プロパティを一括設定
+   */
+  setBackground(value: string | BackgroundOptions): this {
+    if (typeof value === 'string') {
+      guardDuplicateCssProperty(this._background, 'background');
+      this._background = value;
+    } else {
+      if (value.color !== undefined) this.setBackgroundColor(value.color);
+      if (value.image !== undefined) this.setBackgroundImage(value.image);
+      if (value.size !== undefined) this.setBackgroundSize(value.size);
+      if (value.position !== undefined) this.setBackgroundPosition(value.position);
+      if (value.repeat !== undefined) this.setBackgroundRepeat(value.repeat);
+    }
+    return this;
+  }
+
   // ── CSSColor 連携 ──
 
   setBackgroundColorValue(color: CSSColor): this {
@@ -84,6 +113,9 @@ export class CSSBackground implements Renderable {
   private collectProperties(): Map<string, string> {
     const properties = new Map<string, string>();
 
+    if (this._background !== undefined) {
+      properties.set(CSSPropertyKey.background, this._background);
+    }
     if (this._backgroundColor !== undefined) {
       properties.set(CSSPropertyKey.backgroundColor, this._backgroundColor);
     }

@@ -93,7 +93,7 @@ Open `dist/index.html` in a browser — done.
 |---|---|
 | **`Root`** | Top-level document container. Collects global CSS, child trees, and produces final output. |
 | **Tag factories** (`div`, `h1`, `p`, ...) | Build HTML elements. Accept `(attrs?, ...children)` and return a chainable `HtmlTag`. |
-| **Fluent style methods** | `.color()`, `.margin()`, `.padding()`, `.background()`, etc. — apply scoped CSS per node. |
+| **Fluent style methods** | `.color()`, `.margin()`, `.padding()`, `.background()` (shorthand), `.backgroundColor()`, etc. — apply scoped CSS per node. |
 | **`createStyle(name, props)`** | Define a reusable scoped CSS class. `.className` → use in `class` attr, `.css` → emit CSS. |
 | **`createTheme(vars)`** | Define CSS custom properties. Access via `theme.foo`, emit via `theme.css`. |
 | **`FileExporter`** | Writes `index.html`, `style.css`, `script.js` to a directory. |

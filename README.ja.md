@@ -93,7 +93,7 @@ dist/
 |---|---|
 | **`Root`** | ドキュメント全体のコンテナ。グローバル CSS・子要素・最終出力を統括。 |
 | **タグファクトリ**(`div`, `h1`, `p`, ...) | HTML 要素を構築。`(attrs?, ...children)` を受け取りチェイン可能な `HtmlTag` を返す。 |
-| **fluent スタイル API** | `.color()`, `.margin()`, `.padding()`, `.background()` などでノード単位の scoped CSS を適用。 |
+| **fluent スタイル API** | `.color()`, `.margin()`, `.padding()`, `.background()`（shorthand）, `.backgroundColor()` などでノード単位の scoped CSS を適用。 |
 | **`createStyle(name, props)`** | 再利用可能な scoped CSS クラスを定義。`.className` で `class` 属性に、`.css` で CSS 出力。 |
 | **`createTheme(vars)`** | CSS カスタムプロパティを定義。`theme.foo` で参照、`theme.css` で出力。 |
 | **`FileExporter`** | `index.html` / `style.css` / `script.js` をディレクトリに書き出し。 |

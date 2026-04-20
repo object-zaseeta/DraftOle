@@ -45,9 +45,46 @@ describe('D-3.1: Fluent CSS メソッド', () => {
       expect(el.css.render()).toContain('margin: 10px');
     });
 
-    it('.background() で background-color を設定', () => {
+    it('.background() で background ショートハンドを設定', () => {
       const el = div().background('#1a1a1a');
+      expect(el.css.render()).toContain('background: #1a1a1a');
+    });
+
+    it('.background() に gradient を渡すと background: として出力（bug fix）', () => {
+      const el = div().background('radial-gradient(circle, #fff, #000), #000');
+      const css = el.css.render();
+      expect(css).toContain('background: radial-gradient(circle, #fff, #000), #000');
+      expect(css).not.toContain('background-color: radial-gradient');
+    });
+
+    it('.backgroundColor() で background-color を設定', () => {
+      const el = div().backgroundColor('#1a1a1a');
       expect(el.css.render()).toContain('background-color: #1a1a1a');
+    });
+
+    it('.background({...}) shorthand で複数プロパティを設定', () => {
+      const el = div().background({
+        color: '#1a1a1a',
+        image: 'url(/bg.png)',
+        size: 'cover',
+        position: 'center',
+        repeat: 'no-repeat',
+      });
+      const css = el.css.render();
+      expect(css).toContain('background-color: #1a1a1a');
+      expect(css).toContain('background-image: url(/bg.png)');
+      expect(css).toContain('background-size: cover');
+      expect(css).toContain('background-position: center');
+      expect(css).toContain('background-repeat: no-repeat');
+    });
+
+    it('.background({...}) 部分指定で指定プロパティのみ出力', () => {
+      const el = div().background({ image: 'url(/hero.jpg)', size: 'cover' });
+      const css = el.css.render();
+      expect(css).toContain('background-image: url(/hero.jpg)');
+      expect(css).toContain('background-size: cover');
+      expect(css).not.toContain('background-color');
+      expect(css).not.toContain('background-repeat');
     });
 
     it('.color() で color を設定', () => {
@@ -147,7 +184,7 @@ describe('D-3.1: Fluent CSS メソッド', () => {
 
       const css = el.css.render();
       expect(css).toContain('padding: 24px');
-      expect(css).toContain('background-color: #1a1a1a');
+      expect(css).toContain('background: #1a1a1a');
       expect(css).toContain('border-radius: 12px');
     });
 
@@ -207,7 +244,7 @@ describe('D-3.1: Fluent CSS メソッド', () => {
       const css = hero.collectCssStyleString();
       expect(css).toContain('font-size: 48px');
       expect(css).toContain('padding: 16px 40px');
-      expect(css).toContain('background-color: #3b82f6');
+      expect(css).toContain('background: #3b82f6');
       expect(css).toContain('border-radius: 8px');
     });
   });

@@ -3,7 +3,7 @@
  *
  * TDD RED phase: CSSPropertyKeyオブジェクトの振る舞いを検証する。
  * - camelCaseキーからハイフネーションCSS標準名へのマッピング
- * - 全146プロパティの網羅性（13カテゴリ合計）
+ * - 全147プロパティの網羅性（13カテゴリ合計）
  * - as const による immutability
  * - 型推論の正確性
  */
@@ -26,9 +26,9 @@ describe('CSSPropertyKey', () => {
   // プロパティ数の検証
   // ============================================================
   describe('プロパティ数', () => {
-    it('全146プロパティが定義されている（13カテゴリ合計）', () => {
+    it('全147プロパティが定義されている（13カテゴリ合計）', () => {
       const keys = Object.keys(CSSPropertyKey);
-      expect(keys).toHaveLength(146);
+      expect(keys).toHaveLength(147);
     });
   });
 
@@ -134,7 +134,7 @@ describe('CSSPropertyKey', () => {
 
     it('全プロパティの値が CSSPropertyKeyValue 型に代入可能', () => {
       const values: CSSPropertyKeyValue[] = Object.values(CSSPropertyKey) as CSSPropertyKeyValue[];
-      expect(values.length).toBe(146);
+      expect(values.length).toBe(147);
     });
   });
 
@@ -160,8 +160,9 @@ describe('CSSPropertyKey', () => {
     );
   });
 
-  describe('Background関連プロパティ（5件）', () => {
+  describe('Background関連プロパティ（6件）', () => {
     const bgProperties: Record<string, string> = {
+      background: 'background',
       backgroundColor: 'background-color',
       backgroundImage: 'background-image',
       backgroundSize: 'background-size',
@@ -447,12 +448,12 @@ describe('CSSPropertyKey', () => {
   // カテゴリ件数合計の整合性検証
   // ============================================================
   describe('カテゴリ件数合計', () => {
-    it('13カテゴリの合計が146になり、実際のキー数と一致する', () => {
-      // Font:7 + Background:5 + Spacing:10 + Border:20 + Flex:11 +
+    it('13カテゴリの合計が147になり、実際のキー数と一致する', () => {
+      // Font:7 + Background:6 + Spacing:10 + Border:20 + Flex:11 +
       // Grid:14 + Visual:6 + Text:13 + Transform:6 + Animation:14 +
-      // Table:5 + List:4 + Visibility:31 = 146
-      const expectedTotal = 7 + 5 + 10 + 20 + 11 + 14 + 6 + 13 + 6 + 14 + 5 + 4 + 31;
-      expect(expectedTotal).toBe(146);
+      // Table:5 + List:4 + Visibility:31 = 147
+      const expectedTotal = 7 + 6 + 10 + 20 + 11 + 14 + 6 + 13 + 6 + 14 + 5 + 4 + 31;
+      expect(expectedTotal).toBe(147);
 
       const actualCount = Object.keys(CSSPropertyKey).length;
       expect(actualCount).toBe(expectedTotal);

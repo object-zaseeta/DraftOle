@@ -134,7 +134,7 @@ describe('DF-2: スコープCSS自動付与', () => {
       // CSSの内容が正しい
       expect(css).toContain('font-size: 32px');
       expect(css).toContain('padding: 24px');
-      expect(css).toContain('background-color: #000');
+      expect(css).toContain('background: #000');
     });
   });
 });

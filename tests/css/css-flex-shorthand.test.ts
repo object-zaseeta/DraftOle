@@ -95,6 +95,6 @@ describe('DF-7: HtmlTag.flex() ショートハンド', () => {
     expect(css).toContain('display: flex');
     expect(css).toContain('gap: 8px');
     expect(css).toContain('padding: 16px');
-    expect(css).toContain('background-color: #000');
+    expect(css).toContain('background: #000');
   });
 });

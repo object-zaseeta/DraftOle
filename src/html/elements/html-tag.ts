@@ -19,6 +19,7 @@ import type { JQueryManagerProtocol } from '../protocols/jquery-manager-protocol
 import type { CssManagerInstance } from '../protocols/css-manager-instance-type.js';
 import { HtmlStyle } from '../../css/style/html-style.js';
 import type { FlexOptions } from '../../css/style/flex/css-flex.js';
+import type { BackgroundOptions } from '../../css/style/background/css-background.js';
 import { generateScopedClassName } from '../../css/utils/scoped-css-generator.js';
 import { HtmlAttribute } from '../attributes/html-attribute.js';
 import type { TagType } from '../tags/tag-type.js';
@@ -147,7 +148,8 @@ export abstract class HtmlTag implements HTMLTagProtocol, CssManagerType, JQuery
 
   padding(v: string): this { this.style.spacing.setPadding(v); return this; }
   margin(v: string): this { this.style.spacing.setMargin(v); return this; }
-  background(v: string): this { this.style.backgroundColor.setBackgroundColor(v); return this; }
+  background(v: string | BackgroundOptions): this { this.style.backgroundColor.setBackground(v); return this; }
+  backgroundColor(v: string): this { this.style.backgroundColor.setBackgroundColor(v); return this; }
   color(v: string): this { this.style.font.setColor(v); return this; }
   fontSize(v: string): this { this.style.font.setFontSize(v); return this; }
   fontWeight(v: string): this { this.style.font.setFontWeight(v); return this; }

@@ -52,7 +52,8 @@ export const CSSPropertyKey = {
   lineHeight: 'line-height',
   letterSpacing: 'letter-spacing',
 
-  // ── Background関連 (5) ──
+  // ── Background関連 (6) ──
+  background: 'background',
   backgroundColor: 'background-color',
   backgroundImage: 'background-image',
   backgroundSize: 'background-size',

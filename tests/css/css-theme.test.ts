@@ -48,7 +48,7 @@ describe('6.5: CSS変数（createTheme）', () => {
     it('theme.bg を .background() に渡せる', () => {
       const theme = createTheme({ bg: '#0b1220' });
       const el = div().background(theme.bg);
-      expect(el.css.render()).toContain('background-color: var(--bg)');
+      expect(el.css.render()).toContain('background: var(--bg)');
     });
 
     it('theme.text を .color() に渡せる', () => {

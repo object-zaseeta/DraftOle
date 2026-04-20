@@ -223,7 +223,7 @@ const page = html({ lang: 'ja' },
     ).maxWidth('860px').margin('0 auto').padding('36px 18px 60px')
      .fontFamily("ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, 'Apple Color Emoji', 'Segoe UI Emoji'")
      .color(theme.text),
-  ).background(theme.bg),
+  ).backgroundColor(theme.bg),
 );
 
 root.addChild(page);

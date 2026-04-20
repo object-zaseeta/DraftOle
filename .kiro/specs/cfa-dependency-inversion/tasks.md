@@ -24,7 +24,7 @@
   - _Boundary: HtmlTag_
 
 - [ ] 3. Root コンストラクタへの DI 伝播
-- [ ] 3.1 Root クラスに optional `HtmlTagOptions` を受け付けるシグネチャを追加
+- [x] 3.1 Root クラスに optional `HtmlTagOptions` を受け付けるシグネチャを追加
   - `src/html/elements/root.ts` の `Root` コンストラクタを `constructor(options?: HtmlTagOptions)` に拡張する
   - 内部で `super('root', options)` に委譲し、子孫ツリーへ同一参照を共有させる
   - 既存の引数なし呼び出し互換を維持する（optional 引数）

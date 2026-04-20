@@ -1,0 +1,44 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`VanillaScript + VanillaScope 統合シナリオ (Req 1.x / 2.x / 3.x / 4.x / 5.x / 7.4) > 全 API を束ねたレンダリング出力がスナップショットとして安定する 1`] = `
+"function updateCount() {
+  document.querySelector("#count").textContent = Array.from(document.querySelectorAll("#todo-list .item")).filter((x) => !(x.classList.contains("done"))).length;
+}
+function clearDone() {
+  document.querySelectorAll("#todo-list .item.done").forEach((item) => {
+    item.remove();
+  });
+}
+function addTodo() {
+  const input = document.querySelector("#todo-input");
+  document.querySelector("#todo-list").appendChild(createTodoItem(input.value));
+  input.value = "";
+}
+document.addEventListener("DOMContentLoaded", () => {
+  document.querySelector("#add-btn").addEventListener("click", (e) => {
+    addTodo();
+  });
+  document.querySelector("#clear-btn").addEventListener("click", (e) => {
+    clearDone();
+  });
+  document.querySelector("#todo-input").addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+      addTodo();
+    }
+  });
+  document.querySelector(".item").classList.toggle("done");
+  document.querySelector(".item").classList.toggle("active", document.querySelector(".item").classList.contains("done"));
+  document.querySelector(".item").classList.add("seen");
+  document.querySelector(".item").classList.remove("new");
+  if (document.querySelector(".item").classList.contains("done")) {
+    noop();
+  }
+  document.querySelector(".item").style.borderColor = "red";
+  console.log(document.querySelector(".item").textContent);
+  document.querySelectorAll("#tmp .item").forEach((item) => {
+    item.remove();
+  });
+  document.querySelector("#doomed").remove();
+  updateCount();
+});"
+`;

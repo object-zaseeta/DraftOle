@@ -113,7 +113,7 @@
   - _Depends: 6.1_
 
 - [ ] 7. 検証・回帰テスト
-- [ ] 7.1 (P) ユニット/型レベルテストを追加する
+- [x] 7.1 (P) ユニット/型レベルテストを追加する
   - `tests/js/vanilla/` 配下に `vanilla-script.test.ts` / `event-api.test.ts` / `query-api.test.ts` / `dom-api.test.ts` / `tree-api.test.ts` / `integration.test.ts` を作成する
   - 命令→JS 文字列のスナップショット、`append` 順と出力順の一致、`jQuery` / `$` 非混入を正規表現で検証する
   - `expectTypeOf` 等で `on` のイベント引数型推論、`setValue` の要素型制約、`WritableStyleKey` の抽出結果を検証する

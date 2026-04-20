@@ -17,7 +17,6 @@ import type { HTMLTagProtocol, HtmlAttributeShape } from '../protocols/html-tag-
 import type { CssManagerType } from '../protocols/css-manager-type.js';
 import type { JQueryManagerProtocol } from '../protocols/jquery-manager-protocol.js';
 import type { CssManagerInstance } from '../protocols/css-manager-instance-type.js';
-import { CssManager } from '../../css/manager/css-manager.js';
 import { HtmlStyle } from '../../css/style/html-style.js';
 import type { FlexOptions } from '../../css/style/flex/css-flex.js';
 import { generateScopedClassName } from '../../css/utils/scoped-css-generator.js';
@@ -27,7 +26,7 @@ import { SELF_CLOSING_TAGS } from '../tags/tag-type.js';
 import { HTMLFormatter } from '../utils/html-formatter.js';
 import type { JQueryMethodType } from '../protocols/jquery-method-type.js';
 import type { JQueryManagerInstance } from '../protocols/jquery-manager-instance-type.js';
-import { JQueryManager } from '../../js/jquery-manager.js';
+import { resolveHtmlTagDependencies } from '../../composition-root.js';
 
 /**
  * HtmlTag コンストラクタのオプション引数。
@@ -113,8 +112,9 @@ export abstract class HtmlTag implements HTMLTagProtocol, CssManagerType, JQuery
    */
   constructor(tagType: TagType, options?: HtmlTagOptions) {
     this.tagType = tagType;
-    this._css = options?.css ?? new CssManager();
-    this._jqm = options?.jqm ?? new JQueryManager();
+    const resolved = resolveHtmlTagDependencies(options);
+    this._css = resolved.css;
+    this._jqm = resolved.jqm;
   }
 
   // ── CSS コンポジション ──

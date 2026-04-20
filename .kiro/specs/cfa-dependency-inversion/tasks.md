@@ -14,7 +14,7 @@
 ## Core
 
 - [ ] 2. HtmlTag コンストラクタの依存反転
-- [ ] 2.1 html-tag.ts から具象 import と fallback `new` を除去
+- [x] 2.1 html-tag.ts から具象 import と fallback `new` を除去
   - `src/html/elements/html-tag.ts` から `CssManager` / `JQueryManager` 具象クラスの `import` 行を削除する
   - コンストラクタ内の `options?.css ?? new CssManager()` / `options?.jqm ?? new JQueryManager()` を `resolveHtmlTagDependencies(options)` 呼び出しに置き換える
   - `_css` / `_jqm` に解決結果を代入し、型はプロトコル（`CssManagerInstance` / `JQueryManagerInstance`）のみを参照するように維持する

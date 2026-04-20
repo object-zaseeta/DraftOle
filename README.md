@@ -71,12 +71,93 @@ Generated from [`examples/mvp-demo.ts`](examples/mvp-demo.ts) — run `pnpm buil
 | Test | Vitest |
 | Output | ESM + CJS + .d.ts |
 
-## Setup
+## Installation
+
+> ⚠️ Not yet published to npm. Install from source for now:
 
 ```bash
+git clone https://github.com/object-zaseeta/DraftOle.git
+cd DraftOle
 pnpm install
 pnpm build
-pnpm test
+```
+
+Then link it from your project:
+
+```bash
+# in your project
+pnpm link --global <path-to-DraftOle>
+```
+
+## Quick Start
+
+**1. Create a script** (e.g. `build-site.ts`):
+
+```typescript
+import { Root, html, head, body, h1, p, FileExporter } from 'draft-ole';
+
+const root = new Root();
+root.addChild(
+  html({ lang: 'en' },
+    head(),
+    body(
+      h1('Hello, DraftOle!').color('#333'),
+      p('Static site generated from TypeScript.'),
+    ),
+  ),
+);
+
+new FileExporter().export(
+  root.render(),
+  root.collectCssStyleString(),
+  '',
+  './dist',
+);
+```
+
+**2. Run it:**
+
+```bash
+node --experimental-strip-types build-site.ts
+```
+
+**3. Check the output:**
+
+```
+dist/
+├── index.html
+├── style.css
+└── script.js
+```
+
+Open `dist/index.html` in a browser — done.
+
+## Core Concepts
+
+| Concept | Description |
+|---|---|
+| **`Root`** | Top-level document container. Collects global CSS, child trees, and produces final output. |
+| **Tag factories** (`div`, `h1`, `p`, ...) | Build HTML elements. Accept `(attrs?, ...children)` and return a chainable `HtmlTag`. |
+| **Fluent style methods** | `.color()`, `.margin()`, `.padding()`, `.background()`, etc. — apply scoped CSS per node. |
+| **`createStyle(name, props)`** | Define a reusable scoped CSS class. `.className` → use in `class` attr, `.css` → emit CSS. |
+| **`createTheme(vars)`** | Define CSS custom properties. Access via `theme.foo`, emit via `theme.css`. |
+| **`FileExporter`** | Writes `index.html`, `style.css`, `script.js` to a directory. |
+
+## Examples
+
+See the [`examples/`](examples/) directory:
+
+- [`mvp-demo.ts`](examples/mvp-demo.ts) — full Todo app (themes, scoped styles, embedded JS)
+- [`react-demo.tsx`](examples/react-demo.tsx) — React integration pattern
+
+## Scripts
+
+```bash
+pnpm build       # Compile to dist/ (ESM + CJS + .d.ts)
+pnpm test        # Run Vitest suite
+pnpm lint        # ESLint
+pnpm typecheck   # tsc --noEmit
+pnpm demo:mvp    # Run the MVP demo → output/mvp_demo/
 ```
 
 ## License

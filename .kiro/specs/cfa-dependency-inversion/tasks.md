@@ -98,7 +98,7 @@
   - _Requirements: 1.4, 2.1_
   - _Boundary: lint-config_
 
-- [ ] 5.2 (P) CssManager / JQueryManager の implements 整合性確認
+- [x] 5.2 (P) CssManager / JQueryManager の implements 整合性確認
   - `CssManager implements CssManagerInstance` および `JQueryManager implements JQueryManagerInstance` が宣言されていることを静的検査（`tsc --noEmit`）で確認する
   - プロトコル公開メソッド・プロパティがすべて具象側で満たされているかコンパイルレベルで検証する
   - ソースに `implements` 明示が欠けていれば追加する

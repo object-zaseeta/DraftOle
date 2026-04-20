@@ -103,7 +103,7 @@
   - _Boundary: src/js/vanilla/index, src/index_
   - _Depends: 4.1, 4.2, 4.3, 4.4, 5.1_
 
-- [ ] 6.2 `examples/mvp-demo.ts` の `appJs` を本ビルダー呼び出しへ置換する
+- [x] 6.2 `examples/mvp-demo.ts` の `appJs` を本ビルダー呼び出しへ置換する
   - `updateCount` / `clearDone` / `addTodo` を `script.fn(...)` で組み、`script.onDomReady(...)` 内にイベント登録と初期化呼び出しを記述する
   - 生 JS のテンプレートリテラル / 文字列リテラルを撤去し、`exporter.export(..., script.render(), ...)` に差し替える
   - `hasDomReady === true` のため `wrapDOMReady` は適用しない

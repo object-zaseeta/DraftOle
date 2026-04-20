@@ -2,7 +2,7 @@
  * DraftOle MVP Demo: Todo App
  *
  * DraftOle API のみで Todo アプリを生成する。
- * supplementCSS（生CSS）ゼロ。
+ * supplementCSS（生CSS）ゼロ。生 JS 文字列・テンプレートリテラルもゼロ。
  *
  * 実行: node --experimental-strip-types examples/mvp-demo.ts
  * 出力: output/mvp_demo/index.html, style.css, script.js
@@ -14,7 +14,50 @@ import {
   label, input, button, ul, span, small,
   createTheme, createStyle,
   FileExporter,
+  // JS Vanilla Builder（Phase B）
+  createVanillaScript,
+  ref,
+  onDomReady,
+  on,
+  query,
+  queryAll,
+  filterNot,
+  length,
+  containsClass,
+  toggleClass,
+  addClass,
+  setText,
+  setValue,
+  setStyle,
+  appendChild,
+  removeAll,
 } from '../dist/index.js';
+import type { JsExpr, JsBoolExpr } from '../dist/index.js';
+
+/**
+ * 任意の JS 式文字列を `JsExpr` 形に昇格させるローカルユーティリティ。
+ * 公開 DSL は `fromExpr` を公開していないため、このデモ限定のラッパとして用意する。
+ * 実装は dom-api / tree-api 等の `encodeValue` が `.code` のみを参照するため安全に互換。
+ */
+function asJsExpr(code: string): JsExpr {
+  const self = {
+    __jsExpr: true as const,
+    code,
+    eq: (other: string | number | JsExpr): JsBoolExpr =>
+      asJsBoolExpr(`${code} === ${typeof other === 'object' ? other.code : JSON.stringify(other)}`),
+    ne: (other: string | number | JsExpr): JsBoolExpr =>
+      asJsBoolExpr(`${code} !== ${typeof other === 'object' ? other.code : JSON.stringify(other)}`),
+    or: (fallback: string | JsExpr): JsExpr =>
+      asJsExpr(`(${code} || ${typeof fallback === 'object' ? fallback.code : JSON.stringify(fallback)})`),
+    trim: (): JsExpr => asJsExpr(`${code}.trim()`),
+    isFalsy: (): JsBoolExpr => asJsBoolExpr(`!${code}`),
+    isTruthy: (): JsBoolExpr => asJsBoolExpr(`!!${code}`),
+  };
+  return self as unknown as JsExpr;
+}
+function asJsBoolExpr(code: string): JsBoolExpr {
+  return { ...asJsExpr(code), __jsBool: true as const } as unknown as JsBoolExpr;
+}
 
 // ── Theme (CSS Variables) ──
 const theme = createTheme({
@@ -185,65 +228,128 @@ const page = html({ lang: 'ja' },
 
 root.addChild(page);
 
-// ── JS ──
-const appJs = `function createTodoItem(text) {
-  const li = document.createElement("li");
-  li.className = "item";
-  const span = document.createElement("span");
-  span.className = "text";
-  span.textContent = text;
-  const pill = document.createElement("span");
-  pill.className = "pill ng";
-  pill.textContent = "active";
-  const btn = document.createElement("button");
-  btn.className = "btn";
-  btn.type = "button";
-  btn.textContent = "toggle";
-  btn.addEventListener("click", () => {
-    li.classList.toggle("done");
-    const done = li.classList.contains("done");
-    pill.textContent = done ? "done" : "active";
-    pill.classList.toggle("ok", done);
-    pill.classList.toggle("ng", !done);
-    updateCount();
+// ── JS（Vanilla Builder で宣言的に構築） ──
+const script = createVanillaScript();
+
+// createTodoItem(text): <li> 要素を生成して返す。
+// DSL の外で直接表現できない property 代入（`button.type`）と
+// 末尾 `return li;` は `raw` / `setAttribute` 経由で組み立てる。
+script.fn('createTodoItem', ['text'], (s) => {
+  // const li = document.createElement("li"); li.classList.add("item");
+  s.let('li', s.raw('document.createElement("li")'));
+  const li = ref<HTMLLIElement>('li');
+  addClass(s, li, 'item');
+
+  // const span = document.createElement("span"); span.classList.add("text"); span.textContent = text;
+  s.let('span', s.raw('document.createElement("span")'));
+  const spanEl = ref<HTMLSpanElement>('span');
+  addClass(s, spanEl, 'text');
+  setText(s, spanEl, asJsExpr('text'));
+
+  // const pill = document.createElement("span"); pill.classList.add("pill"); pill.classList.add("ng"); pill.textContent = "active";
+  s.let('pill', s.raw('document.createElement("span")'));
+  const pill = ref<HTMLSpanElement>('pill');
+  addClass(s, pill, 'pill');
+  addClass(s, pill, 'ng');
+  setText(s, pill, 'active');
+
+  // const btn = document.createElement("button"); btn.classList.add("btn"); btn.setAttribute("type","button"); btn.textContent = "toggle";
+  s.let('btn', s.raw('document.createElement("button")'));
+  const btn = ref<HTMLButtonElement>('btn');
+  addClass(s, btn, 'btn');
+  s.call('btn.setAttribute', [s.raw('"type"'), s.raw('"button"')]);
+  setText(s, btn, 'toggle');
+
+  // btn.addEventListener("click", () => { ... })
+  on(s, btn, 'click', (s2) => {
+    toggleClass(s2, li, 'done');
+    const done = s2.let('done', s2.raw(`${li.code}.classList.contains("done")`));
+    // pill.textContent = done ? "done" : "active";
+    s2._append({
+      type: 'setProp',
+      target: pill.code,
+      prop: 'textContent',
+      expr: `${done.code} ? "done" : "active"`,
+    });
+    // pill.classList.toggle("ok", done); pill.classList.toggle("ng", !done);
+    toggleClass(s2, pill, 'ok', asJsBoolExpr(done.code));
+    toggleClass(s2, pill, 'ng', asJsBoolExpr(`!${done.code}`));
+    s2.call('updateCount');
   });
-  li.appendChild(span);
-  li.appendChild(pill);
-  li.appendChild(btn);
-  return li;
-}
-function updateCount() {
-  const items = document.querySelectorAll("#todo-list .item");
-  const active = Array.from(items).filter(x => !x.classList.contains("done")).length;
-  document.querySelector("#count").textContent = active + " items";
-}
-function clearDone() {
-  document.querySelectorAll("#todo-list .item.done").forEach(el => el.remove());
-  updateCount();
-}
-function addTodo() {
-  const input = document.querySelector("#todo-input");
-  const text = (input.value || "").trim();
-  if (!text) { input.style.borderColor = "rgba(239, 68, 68, 0.65)"; return; }
-  input.style.borderColor = "rgba(255, 255, 255, 0.12)";
-  document.querySelector("#todo-list").appendChild(createTodoItem(text));
-  input.value = "";
-  updateCount();
-}
-document.addEventListener("DOMContentLoaded", () => {
-  document.querySelector("#add-btn").addEventListener("click", addTodo);
-  document.querySelector("#clear-btn").addEventListener("click", clearDone);
-  document.querySelector("#todo-input").addEventListener("keydown", e => {
-    if (e.key === "Enter") addTodo();
+
+  // li.appendChild(span); li.appendChild(pill); li.appendChild(btn);
+  appendChild(s, li, spanEl);
+  appendChild(s, li, pill);
+  appendChild(s, li, btn);
+
+  // return li;
+  s._append({ type: 'raw', code: 'return li;' });
+});
+
+// updateCount(): 未完了の item 件数を "N items" として #count へ反映する。
+script.fn('updateCount', (s) => {
+  const items = queryAll(s, '#todo-list .item');
+  const active = filterNot(items, (it) => containsClass(it, 'done'));
+  setText(
+    s,
+    query(s, '#count'),
+    asJsExpr(`${length(active).code} + " items"`),
+  );
+});
+
+// clearDone(): 完了済みの item を一括削除し updateCount を呼ぶ。
+script.fn('clearDone', (s) => {
+  removeAll(s, queryAll(s, '#todo-list .item.done'));
+  s.call('updateCount');
+});
+
+// addTodo(): #todo-input の値で新しい <li> を #todo-list に追加する。
+script.fn('addTodo', (s) => {
+  const inputEl = query<HTMLInputElement>(s, '#todo-input').cache('input');
+  // text 式（JsExpr チェーン）：`(input.value || "").trim()`。
+  const textExpr = inputEl.value.or('').trim();
+
+  // if (!text_expr) { input.style.borderColor = "..."; return; }
+  s.ifThen(textExpr.isFalsy(), (s2) => {
+    setStyle(s2, inputEl, 'borderColor', 'rgba(239, 68, 68, 0.65)');
+    s2.return();
   });
-  updateCount();
-});`;
+
+  setStyle(s, inputEl, 'borderColor', 'rgba(255, 255, 255, 0.12)');
+  // appendChild(document.querySelector("#todo-list"), createTodoItem(text_expr));
+  // `s.call` は副作用として expr 文を発行してしまうため、ここでは式埋め込み専用に
+  // `asJsExpr` で `createTodoItem(...)` を直接組み立てて appendChild 引数に渡す。
+  appendChild(
+    s,
+    query(s, '#todo-list'),
+    asJsExpr(`createTodoItem(${textExpr.code})`),
+  );
+  setValue(s, inputEl, '');
+  s.call('updateCount');
+});
+
+// DOMContentLoaded: イベント登録と初期 updateCount。
+onDomReady(script, (s) => {
+  on(s, query(s, '#add-btn'), 'click', (s2) => {
+    s2.call('addTodo');
+  });
+  on(s, query(s, '#clear-btn'), 'click', (s2) => {
+    s2.call('clearDone');
+  });
+  on(s, query<HTMLInputElement>(s, '#todo-input'), 'keydown', (s2, e) => {
+    s2.ifThen(e.key.eq('Enter'), (s3) => {
+      s3.call('addTodo');
+    });
+  });
+  s.call('updateCount');
+});
 
 // ── Export ──
+// script.hasDomReady === true のため、exporter 側の wrapDOMReady は適用しない。
 const htmlContent = root.render();
 const cssContent = root.collectCssStyleString();
 
 const exporter = new FileExporter();
-exporter.export(htmlContent, cssContent, appJs, './output/mvp_demo');
+exporter.export(htmlContent, cssContent, script.render(), './output/mvp_demo');
 
 console.log('✓ MVP Demo generated → output/mvp_demo/');

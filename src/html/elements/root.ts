@@ -14,7 +14,7 @@
  * Requirements: 3.1, 3.7, 3.8, 3.9, 6.6, 6.1, 6.2, 6.3, 6.4
  */
 import { HtmlTag, type HtmlTagOptions } from './html-tag.js';
-import { JQueryHelper } from '../../js/jquery-helper.js';
+import { JQueryHelper } from '../../composition-root.js';
 import type { JQueryMethodType } from '../../js/jquery-method-type.js';
 
 /**

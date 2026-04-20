@@ -89,7 +89,7 @@
 ## Integration
 
 - [ ] 5. プロトコル依存方向ガードの追加
-- [ ] 5.1 ESLint `no-restricted-imports` で html/ および html/protocols/ から css/, js/ 具象への import を禁止
+- [x] 5.1 ESLint `no-restricted-imports` で html/ および html/protocols/ から css/, js/ 具象への import を禁止
   - プロジェクトの ESLint 設定に overrides を追加し、`src/html/**` および `src/html/protocols/**` を対象ディレクトリとする
   - 禁止パターン: `*/css/manager/*`, `*/js/jquery-manager*`, `*/js/jquery-helper*`
   - ESLint 未導入の場合は単体テストでディレクトリ配下の TS ファイルを走査し禁止 import を検出する fallback を作成する

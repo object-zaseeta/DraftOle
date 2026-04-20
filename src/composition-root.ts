@@ -24,6 +24,15 @@ import type { JQueryManagerInstance } from './html/protocols/jquery-manager-inst
 import type { HtmlTagOptions } from './html/elements/html-tag.js';
 
 /**
+ * `JQueryHelper` の再エクスポート。
+ *
+ * `html/` 配下からは `composition-root.ts` 経由でのみ `JQueryHelper` を参照する
+ * (Req 1.4, 3.1-3.3)。具象モジュール `js/jquery-helper.ts` を直接 import することは
+ * `no-restricted-imports` で禁止されている。
+ */
+export { JQueryHelper } from './js/jquery-helper.js';
+
+/**
  * 解決済みの HtmlTag 依存。`css` / `jqm` は必ず非 null。
  *
  * Requirements: 3.1, 4.3

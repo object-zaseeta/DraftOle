@@ -94,7 +94,7 @@
   - _Depends: 3.1_
 
 - [ ] 6. 公開 API 集約と mvp-demo の書き換え
-- [ ] 6.1 `src/js/vanilla/index.ts` から公開 API を確定する
+- [x] 6.1 `src/js/vanilla/index.ts` から公開 API を確定する
   - `createVanillaScript` / `ref` / `attach` と公開型（`ElementRef` / `ElementListRef` / `VanillaScript` / `VanillaScope` / `JsExpr` / `JsBoolExpr` / `EventArgRef` / `WritableStyleKey`）のみを export する
   - 命令レコード型やブリッジ内部型は export しない
   - `src/index.ts` から上記のみを再エクスポートする

@@ -10,12 +10,14 @@ import { PairType } from '../elements/pair-type.js';
 import { SelfClosingType } from '../elements/self-closing-type.js';
 import { TextType } from '../elements/text-type.js';
 import { HtmlTag } from '../elements/html-tag.js';
+import type { HtmlTagOptions } from '../elements/html-tag.js';
 import { HtmlAttribute } from '../attributes/html-attribute.js';
 import type { HTMLTagProtocol } from '../protocols/html-tag-protocol.js';
 import type { BooleanAttributeKey, KeyValueAttributeKey, AriaAttributeKey } from '../attributes/attribute-keys.js';
 import type { TagType } from './tag-type.js';
 import type { JsParam } from '../../js/js-param.js';
 import { isJsParam, encodeJsParam } from '../../js/js-param.js';
+import { isHtmlTagOptions } from '../../composition-root.js';
 
 // ============================================================
 // 宣言的API共通型 (Task 5.2, Req 5.7, 5.8)
@@ -197,21 +199,30 @@ export function toChild(arg: ChildArg): HTMLTagProtocol {
  *
  * @internal
  */
-export function makePairTag(tagType: TagType, args: Array<AttributeMap | ChildArg>): PairType {
-  const tag = new PairType(tagType);
-  if (args.length === 0) return tag;
+export function makePairTag(
+  tagType: TagType,
+  args: Array<AttributeMap | ChildArg | HtmlTagOptions>,
+  options?: HtmlTagOptions,
+): PairType {
+  // args 末尾に HtmlTagOptions が含まれている場合は抽出する（呼び出し側の柔軟性のため）。
+  // 明示的な第 3 引数 options が優先される。
+  const { options: extracted, rest } = extractOptions(args);
+  const resolvedOptions = options ?? extracted;
+
+  const tag = new PairType(tagType, resolvedOptions);
+  if (rest.length === 0) return tag;
 
   let startIndex = 0;
-  if (isAttributeMap(args[0])) {
-    const attrs = parseAttributeMap(args[0] as AttributeMap);
+  if (isAttributeMap(rest[0])) {
+    const attrs = parseAttributeMap(rest[0] as AttributeMap);
     for (const attr of attrs) {
       tag.addHtmlAttribute(attr);
     }
     startIndex = 1;
   }
 
-  for (let idx = startIndex; idx < args.length; idx++) {
-    tag.addChild(toChild(args[idx] as ChildArg));
+  for (let idx = startIndex; idx < rest.length; idx++) {
+    tag.addChild(toChild(rest[idx] as ChildArg));
   }
 
   return tag;
@@ -236,8 +247,29 @@ export function makePairTag(tagType: TagType, args: Array<AttributeMap | ChildAr
  *
  * @internal
  */
-export function makeSelfClosingTag(tagType: TagType, attrs?: AttributeMap): SelfClosingType {
-  const tag = new SelfClosingType(tagType);
+export function makeSelfClosingTag(
+  tagType: TagType,
+  args?: AttributeMap | Array<AttributeMap | ChildArg | HtmlTagOptions>,
+  options?: HtmlTagOptions,
+): SelfClosingType {
+  // args は以下のいずれかを許容:
+  //   - undefined              → 属性なし
+  //   - AttributeMap           → 旧 API: 単一の属性マップ
+  //   - Array<...>             → 新 API: 可変長引数化した配列（末尾に HtmlTagOptions を含み得る）
+  let attrs: AttributeMap | undefined;
+  let resolvedOptions: HtmlTagOptions | undefined = options;
+
+  if (Array.isArray(args)) {
+    const { options: extracted, rest } = extractOptions(args);
+    resolvedOptions = options ?? extracted;
+    if (rest.length > 0 && isAttributeMap(rest[0])) {
+      attrs = rest[0] as AttributeMap;
+    }
+  } else if (args !== undefined) {
+    attrs = args;
+  }
+
+  const tag = new SelfClosingType(tagType, resolvedOptions);
   if (attrs) {
     const attributes = parseAttributeMap(attrs);
     for (const attr of attributes) {
@@ -245,4 +277,38 @@ export function makeSelfClosingTag(tagType: TagType, attrs?: AttributeMap): Self
     }
   }
   return tag;
+}
+
+/**
+ * 配列末尾の要素が `HtmlTagOptions`（`isHtmlTagOptions` を満たす）であれば pop し、
+ * 残りの要素と共に返す。該当しない場合は options は undefined。
+ *
+ * `isAttributeMap` との曖昧さは `isHtmlTagOptions` が `'css' in v || 'jqm' in v` を
+ * 要求するため回避される（空オブジェクト `{}` は AttributeMap として扱われる）。
+ *
+ * @internal
+ */
+export function extractOptions<T>(
+  args: ReadonlyArray<T | HtmlTagOptions>,
+): { options: HtmlTagOptions | undefined; rest: T[] } {
+  if (args.length === 0) {
+    return { options: undefined, rest: [] };
+  }
+  const last = args[args.length - 1];
+  // HtmlTag インスタンスは `css` / `jqm` ゲッタを持ち構造的には
+  // `isHtmlTagOptions` を満たしてしまうが、子要素として扱うべきなので除外する。
+  // 配列・非オブジェクトも options としては扱わない。
+  if (
+    last !== null
+    && typeof last === 'object'
+    && !(last instanceof HtmlTag)
+    && !Array.isArray(last)
+    && isHtmlTagOptions(last)
+  ) {
+    return {
+      options: last,
+      rest: args.slice(0, -1) as T[],
+    };
+  }
+  return { options: undefined, rest: args.slice() as T[] };
 }

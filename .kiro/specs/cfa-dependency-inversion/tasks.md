@@ -34,7 +34,7 @@
   - _Boundary: Root_
 
 - [ ] 4. factory 関数群への options 伝播
-- [ ] 4.1 factories-utils.ts のヘルパに options を追加
+- [x] 4.1 factories-utils.ts のヘルパに options を追加
   - `makePairTag(tagType, args, options?)` および `makeSelfClosingTag(tagType, args, options?)` のシグネチャを拡張する
   - 内部の `new PairType(...)` / `new SelfClosingType(...)` 呼び出しへ `options` を伝播させる
   - 可変長引数末尾の options 抽出ヘルパ（`extractOptions(args)` 等）を用意し、`isHtmlTagOptions` を利用して判別する

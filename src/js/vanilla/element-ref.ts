@@ -7,6 +7,13 @@
  */
 
 import type { ElementRef, ElementListRef, JsExpr, JsBoolExpr } from './types.ts';
+import type { VanillaScope } from './vanilla-script-builder.ts';
+
+/**
+ * `cache()` 呼び出し時に自動生成する識別子名のカウンタ。
+ * 同一プロセス内で一意性を保つための単純なサフィックス。
+ */
+let cacheCounter = 0;
 
 /** 有効な JS 識別子か判定する（予約語チェックは行わない）。 */
 function isValidJsIdentifier(name: string): boolean {
@@ -75,7 +82,11 @@ function makeJsBoolExpr(code: string): JsBoolExpr {
  * `ElementRef` 値オブジェクトを生成する内部ファクトリ。
  * `textContent` / `value` プロパティを `JsExpr` として遅延露出する。
  */
-function makeElementRef<E extends Element>(kind: ElementRef['kind'], code: string): ElementRef<E> {
+function makeElementRef<E extends Element>(
+  kind: ElementRef['kind'],
+  code: string,
+  scope?: VanillaScope,
+): ElementRef<E> {
   const ref = {
     __ref: true as const,
     kind,
@@ -89,12 +100,32 @@ function makeElementRef<E extends Element>(kind: ElementRef['kind'], code: strin
     get value(): E extends HasValueElement ? JsExpr : never {
       return makeJsExpr(`${code}.value`) as E extends HasValueElement ? JsExpr : never;
     },
-    cache(_name?: string): ElementRef<E> {
-      // cache は後続タスク（vanilla-script-builder）で実装する。
-      // 本タスクでは型・シグネチャのみ提供し、呼び出しは未サポートとして throw する。
-      throw new Error(
-        'ElementRef.cache() is not implemented in Task 2.1; implemented in vanilla-script-builder.',
-      );
+    /**
+     * 現在スコープに `const <name> = <code>;` を append し、新しい `kind: "var"` 参照を返す。
+     * 同一セレクタを複数回埋め込む副作用を避けたい場合に明示的に使う（Issue 3）。
+     *
+     * スコープが紐付いていない参照（`ref()` / `fromSelector()` / `fromExpr()` 由来）に対して
+     * 呼ばれた場合は例外を投げる — 宣言場所が曖昧になるため。
+     */
+    cache(name?: string): ElementRef<E> {
+      if (scope === undefined) {
+        throw new Error(
+          'ElementRef.cache(): this reference is not bound to a scope; ' +
+            'use query(scope, sel) / queryAll(scope, sel) to obtain a cacheable reference.',
+        );
+      }
+      const chosen = name ?? `_cached_${++cacheCounter}`;
+      if (!isValidJsIdentifier(chosen)) {
+        throw new Error(
+          `ElementRef.cache(): invalid JS identifier: ${JSON.stringify(chosen)}`,
+        );
+      }
+      scope._append({ type: 'declareConst', name: chosen, expr: code });
+      return makeElementRef<E>('var', chosen, scope);
+    },
+    /** `classList.contains(name)` を真偽式として返す（Req 3.4）。 */
+    containsClass(name: string): JsBoolExpr {
+      return makeJsBoolExpr(`${code}.classList.contains(${JSON.stringify(name)})`);
     },
   };
   return ref as ElementRef<E>;
@@ -154,7 +185,10 @@ function makeElementListRef<E extends Element>(
     __listRef: true,
     kind,
     code,
-    length: makeJsExpr(`Array.from(${code}).length`),
+    // `kind: "listSelector"` の場合は `NodeList.length`、`kind: "listExpr"`（`filterNot` 等の
+    // 合成結果、`Array.from(...).filter(...)` 形式）の場合は `Array.length` を直接参照する。
+    // どちらも `.length` プロパティがネイティブに存在するため、追加の `Array.from` ラップは不要。
+    length: makeJsExpr(`${code}.length`),
   } as ElementListRef<E>;
 }
 
@@ -182,6 +216,30 @@ export function listFromExpr<E extends Element = HTMLElement>(code: string): Ele
     throw new Error('listFromExpr(): code must not be empty');
   }
   return makeElementListRef<E>('listExpr', code);
+}
+
+/**
+ * スコープに紐付いた `ElementRef` を生成する内部ファクトリ。
+ * `query(scope, sel)` がセレクタ参照を cache 可能にするために使用する。
+ */
+export function _makeScopedElementRef<E extends Element = HTMLElement>(
+  kind: ElementRef['kind'],
+  code: string,
+  scope: VanillaScope,
+): ElementRef<E> {
+  return makeElementRef<E>(kind, code, scope);
+}
+
+/**
+ * スコープに紐付いた `ElementListRef` を生成する内部ファクトリ。
+ * `queryAll(scope, sel)` 由来の参照は将来的な cache/forEach 化に備えて
+ * 同じ経路を共有する（本 Phase では単純な参照と等価）。
+ */
+export function _makeScopedElementListRef<E extends Element = HTMLElement>(
+  kind: ElementListRef['kind'],
+  code: string,
+): ElementListRef<E> {
+  return makeElementListRef<E>(kind, code);
 }
 
 /**

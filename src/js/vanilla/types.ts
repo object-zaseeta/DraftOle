@@ -83,6 +83,11 @@ export interface ElementRef<E extends Element = Element> {
   readonly textContent: JsExpr;
   readonly value: E extends InputLikeElement ? JsExpr : never;
   cache(name?: string): ElementRef<E>;
+  /**
+   * `element.classList.contains(name)` を `JsBoolExpr` として返す。
+   * `ifThen` / `toggleClass(force)` / `filterNot` 等の真偽式引数に使用する。
+   */
+  containsClass(name: string): JsBoolExpr;
 }
 
 /**

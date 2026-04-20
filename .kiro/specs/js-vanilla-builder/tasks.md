@@ -53,7 +53,7 @@
   - _Boundary: event-api_
   - _Depends: 2.1, 3.1_
 
-- [ ] 4.2 (P) DOM クエリ API (`query` / `queryAll` / `forEach` / `filterNot` / `length` / `cache`) を実装する
+- [x] 4.2 (P) DOM クエリ API (`query` / `queryAll` / `forEach` / `filterNot` / `length` / `cache`) を実装する
   - `query(sel)` / `queryAll(sel)` で `kind: "selector"` / `"listSelector"` の参照を返す（セレクタは `JSON.stringify` でクォート）
   - `forEach(list, body)` で `forEach` 命令を発行し、子スコープで項目名 `item` を束縛した `ElementRef` を渡す
   - `filterNot(list, predicate)` / `length(list)` は合成 `JsExpr` を返し、`Array.from(...).filter(...).length` 形で埋め込まれる

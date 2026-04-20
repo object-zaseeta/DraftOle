@@ -96,9 +96,9 @@ describe('listFromSelector()', () => {
     expect(l.code).toBe('document.querySelectorAll(".item")');
   });
 
-  it('exposes length as JsExpr "Array.from(...).length"', () => {
+  it('exposes length as JsExpr "<code>.length"', () => {
     const l = listFromSelector('.item');
-    expect(l.length.code).toBe('Array.from(document.querySelectorAll(".item")).length');
+    expect(l.length.code).toBe('document.querySelectorAll(".item").length');
   });
 });
 

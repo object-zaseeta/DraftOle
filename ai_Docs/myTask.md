@@ -1,11 +1,11 @@
 # DraftOle TypeScript版 - タスク管理
 
-## 📊 プロジェクト進捗（2026-02-11更新）
+## 📊 プロジェクト進捗（2026-04-20更新）
 
-### ✅ Phase 1-5完了（96%）
+### ✅ Phase 1-5完了 + P0/P1多数完了
 - **テスト状況**: 2,371個全てPASS（56テストファイル）
-- **実装状況**: HTML/CSS/JS生成の基本機能完成
-- **バックアップ**: src.backup.phase1/, tests.backup.phase1/ 作成済み
+- **実装状況**: HTML/CSS/JS生成の基本機能完成。CSS拡張・DX改善・セキュリティP0完了
+- **現在地**: P1 CFA構造改善・SEC・JS拡張が残存メインタスク
 
 ### 📁 実装済みモジュール
 | モジュール | ファイル数 | テスト数 | 状態 |
@@ -41,7 +41,7 @@
 | **P2** | DX改善 | DX-3 | コンポーネントProps型定義パターンの確立 | [x] |
 | **P2** | DX改善 | DX-4 | 複数引数コンポーネントのオブジェクト引数化 | [x] |
 | **P0** | セキュリティ | SEC-1 | 属性値サニタイズ（href の javascript: 検出・拒否） | [x] |
-| **P1** | セキュリティ | SEC-2 | CSS値サニタイズ（url(), expression() 検出・拒否） | [x] |
+| **P1** | セキュリティ | SEC-2 | CSS値サニタイズ（url(), expression() 検出・拒否） | [ ] |
 | **P1** | セキュリティ | SEC-3 | 危険APIの命名改善（TextType → unsafeRaw 等） | [x] |
 | **P1** | セキュリティ | SEC-4 | HTMX統合時のCSRFトークン機構 | [ ] |
 | **P2** | セキュリティ | SEC-5 | CSP対応（nonce生成、style-src制御） | [ ] |
@@ -56,8 +56,8 @@
 | **P1** | JS拡張 | JS-2 | イベントハンドラ関数本体（名前だけでなくロジック記述） | [ ] |
 | **P2** | 機能拡張 | 6.7 | examples/基本例追加 | [ ] |
 | **P2** | JS | MVP-3.3 | DOMContentLoadedラッパー | [x] |
-| **P2** | CFA分割 | CFA-B.1 | attribute-builder.ts 分割（966行→6ファイル） | [ ] |
-| **P2** | CFA分割 | CFA-B.2 | factories.ts 分割（805行→5ファイル） | [ ] |
+| **P2** | CFA分割 | CFA-B.1 | attribute-builder.ts 分割（966行→6ファイル） | [x] |
+| **P2** | CFA分割 | CFA-B.2 | factories.ts 分割（805行→5ファイル） | [x] |
 | **P2** | CFA分割 | CFA-B.3 | attribute-keys.ts 分割 | [ ] |
 | **P2** | CFA分割 | CFA-B.4 | index.ts エクスポート分散 | [ ] |
 | **P3** | CFA型分散 | CFA-C.1 | errors.ts エラーコード分散 | [ ] |
@@ -76,232 +76,20 @@
 ```
 P0: ✅ 全完了（v0.9達成）
          ↓
-P1-CSS: 6.5(CSS変数) → MVP-2.4(疑似セレクタ) → MVP-2.5(複合セレクタ)
-     + CSS-1(共有スタイル) / CSS-2(グローバルCSS) / CSS-3(子孫セレクタ) / 6.6(radial-gradient)
-P1-JS:  JS-1(動的DOM) / JS-2(ハンドラ関数本体)
-P1-SEC: SEC-2(CSSサニタイズ) / SEC-4(CSRF)
 P1-CFA: CFA-A.1〜A.3（並列可）
+P1-SEC: SEC-2(CSSサニタイズ) / SEC-4(CSRF)
+P1-JS:  JS-1(動的DOM) / JS-2(ハンドラ関数本体)
          ↓
-P2: DF-6,7 / DX-3,4 / SEC-5 / CFA-B.1〜B.4 / MVP-3.3
+P2: SEC-5 / CFA-B.1〜B.4 / 6.7(examples)
          ↓
 P4: 宣言的API / SSG / Webアプリ
 ```
 
 ---
 
-## P0: 最優先 — ドッグフーディング発見課題（DF修正）
-
-> **出典**: `lp/dogfooding-log.md`（2026-04-08 LP構築実験で発見）
-> **目標**: DraftOleを回避策なしで実用可能にする
-
-### [x] DF-1: → done.md にアーカイブ済み（2026-04-08完了）
-
-### [x] DF-2: → done.md にアーカイブ対象（2026-04-08完了、コミット: cd372e1）
-
----
-
-## P0: 最優先 — MVP Demo作成
-
-> **目標**: DraftOle TS版で動作するデモを作成し、ライブラリの実用性を証明する
-> **Gap分析**: GAP_ANALYSIS.md 参照
-
-### [ ] Task 6.1: examples/mvp-demo.ts 作成
-- **目的**: ai_Docs/output_samples/mvp_dist/ を再現するDraftOleコード
-- **成果物**:
-  - `examples/mvp-demo.ts` - DraftOleでTodoアプリを生成
-  - `output/mvp_demo/` - index.html, style.css, script.js
-- **工数**: 3-5時間
-- **アプローチ**:
-  - HTML構造をDraftOleで構築
-  - CSS変数・gradientは生文字列で対応（短期）
-  - JS操作はJQueryManagerで実装
-  - FileExporterで3ファイル出力
-
-### [ ] Task 6.2: tests/integration/mvp-output.test.ts 追加
-- **目的**: デモ出力の自動テスト
-- **成果物**: 統合テスト追加
-- **工数**: 2時間
-
-### [ ] Task 6.3: examples/README.md 作成
-- **目的**: examples/の使用方法説明
-- **成果物**: サンプル実行手順のドキュメント
-- **工数**: 30分
-
-### [ ] Task 6.4: package.json スクリプト追加
-```json
-{
-  "scripts": {
-    "examples:mvp": "tsx examples/mvp-demo.ts",
-    "examples:build": "tsx examples/**/*.ts"
-  }
-}
-```
-
----
-
-## P1: 高優先度 — ドッグフーディングDX改善
-
-> **出典**: `lp/dogfooding-log.md`（2026-04-08）
-
-### [x] DF-3: → done.md にアーカイブ対象（2026-04-08完了、コミット: 309e7fa）
-### [x] DF-4: → done.md にアーカイブ対象（2026-04-08完了、コミット: 20d422c）
-### [x] DF-5: → D-3.1 Fluent CSSメソッドで解消（2026-04-08完了、コミット: 7f93512）
-
----
-
-## P1: 高優先度 — DX洗練化（LP再構築レビュー由来）
-
-> **出典**: LP再構築コードレビュー（2026-04-08）
-> **目標**: SwiftUIに匹敵する簡潔さ・可読性を達成する
-
-### [x] DX-1: → 完了（2026-04-10、コミット: 11ddf77）
-### [x] DX-2: → 完了（Text.unsafeRaw()として実装、SEC-3も同時解消、コミット: 3dfb56f）
-
-### [ ] DF-8: コンポーネント分割パターン（関数ベース）
-- **対象**: ドキュメント + LP実装例の分割
-- **現状**: 1ファイルに全セクションがフラットに並ぶ（LP: 160行）。Reactのようなファイル分割パターンがない
-- **改善**: 関数コンポーネントパターンを確立し、LP を分割してデモする
-  - `lp/tokens.ts` — デザイントークン（color, font, space, radius）
-  - `lp/components/hero.ts` — Hero セクション
-  - `lp/components/features.ts` — Features セクション
-  - `lp/components/code-example.ts` — Code 比較セクション
-  - `lp/components/footer-cta.ts` — Footer CTA
-  - `lp/components/cta-button.ts` — 共通CTAボタン（再利用コンポーネント）
-  - `lp/lp-builder.ts` — エントリポイント（組み立てのみ）
-- **パターン**: Reactの関数コンポーネントに相当
-  ```typescript
-  // components/hero.ts
-  export const Hero = () =>
-    section(
-      h1('HTML, CSS, JS — TypeScript ひとつで。')
-        .fontSize(font.hero).fontWeight(font.bold).color(color.text),
-      CtaButton('Get Started'),
-    ).padding(space.heroY).textAlign('center');
-  ```
-- **ゴール**: DraftOleでのコンポーネント分割がReactと同等に自然であることを実証
-- **工数**: 2時間
-- **結果**: 完了（2026-04-10、コミット: 76168f2）。7ファイル分割成功。残課題 → DX-3, DX-4
-
-### [ ] DX-3: コンポーネントProps型定義パターンの確立
-- **対象**: ドキュメント + LP コンポーネント
-- **現状**: コンポーネントの引数に型定義がない。React の `interface Props` に相当するパターンが未確立
-- **改善**: `interface CodeBlockProps { label: string; bg: string; ... }` のようなProps型パターンをガイドラインとして確立し、LP コンポーネントに適用
-- **工数**: 1時間
-
-### [ ] DX-4: 複数引数コンポーネントのオブジェクト引数化
-- **対象**: `lp/components/code-example.ts`（CodeBlock）
-- **現状**: `CodeBlock('ラベル', color.subtle, color.surface, color.codeFg, BEFORE_CODE)` — 5つの位置引数で可読性が低い
-- **改善**: オブジェクト引数に変更
-  ```typescript
-  CodeBlock({ label: '従来の方法', labelColor: color.subtle, bg: color.surface, codeColor: color.codeFg, code: BEFORE_CODE })
-  ```
-- **工数**: 30分
-
----
-
-## P0/P1: セキュリティ — Webアプリスコープ対応
-
-> **出典**: Webアプリ拡張（HTMX統合）を視野に入れたセキュリティ評価（2026-04-08）
-> **目標**: ユーザー入力を含むHTML生成時のXSS・インジェクション対策
-
-### [x] SEC-1: → 完了（2026-04-10、コミット: 79be725）
-
-### [ ] SEC-2: CSS値サニタイズ（P1）
-- **対象**: Fluent CSSメソッド全体、CSSプロパティクラスの setter
-- **現状**: `div().background(userInput)` で `url('https://evil.com/steal')` や `expression()` を注入可能
-- **改善**: CSS値に `url()`, `expression()`, `-moz-binding` 等の危険パターンを検出・警告。`background-image` で外部URLを使う場合は明示的API（`backgroundImage.url()`）を要求
-- **工数**: 2-3時間
-
-### [x] SEC-3: → DX-2と同時完了（Text.unsafeRaw()として実装、コミット: 3dfb56f）
-
-### [ ] SEC-4: HTMX統合時のCSRFトークン機構（P1）
-- **対象**: 将来のHTMX統合モジュール
-- **現状**: 未実装。HTMX統合時にPOST/PUT/DELETEリクエストにCSRFトークンが必要
-- **改善**: `meta({ name: 'csrf-token', content: token })` の自動挿入、HTMX の `hx-headers` でのトークン送信パターンを提供
-- **工数**: 2時間（HTMX統合時に実装）
-
-### [ ] SEC-5: CSP対応（P2）
-- **対象**: FileExporter, Root
-- **現状**: インラインスタイル・スクリプトに対するCSP対応なし
-- **改善**: nonce生成機能、`<style nonce="...">` / `<script nonce="...">` の自動付与
-- **工数**: 2時間
-
----
-
-## P1: 高優先度 — CSS拡張（supplementCSS解消）
-
-> **出典**: MVP Demo精査（2026-04-10）。supplementCSSの95%がDraftOle未サポート機能
-> **目標**: DraftOle APIのみでMVP Demoが完結する状態にする（生CSS排除）
-
-### [ ] 6.5: CSS変数（:root定義 + var()参照）
-- **対象**: 新規 `src/css/variables/` モジュール
-- **現状**: CSS変数は完全に未サポート。デザイントークンをTS constで定義しているが、CSS出力には反映されない
-- **改善**: `:root { --bg: #0b1220; }` の定義API + `var(--bg)` の参照API
-- **SwiftUIライクDX**: `theme.define({ bg: '#0b1220' })` → `element.background(theme.bg)`
-- **工数**: 4-5時間
-
-### [ ] MVP-2.4: 疑似セレクタ（:hover, :focus, :active）
-- **対象**: CssManager, HtmlTag
-- **現状**: 完全に未サポート。ボタンのhover効果、入力のfocus効果が書けない
-- **改善**: `element.onHover({ background: 'rgba(255,255,255,0.10)' })` のようなAPI
-- **工数**: 4-5時間
-
-### [ ] MVP-2.5: 複合セレクタ（.btn.primary, .item.done .text）
-- **対象**: CssManager, スコープCSS出力
-- **現状**: 完全に未サポート。状態バリアント（done/active）が表現できない
-- **改善**: `element.variant('primary', { borderColor: '...' })` のようなAPI
-- **工数**: 4-5時間
-
-### [ ] 6.6: radial-gradient 実装
-- **対象**: `src/css/style/background/css-background.ts`
-- **現状**: linear-gradient は対応済み。radial-gradient は未対応
-- **改善**: `setRadialGradient()` メソッド追加
-- **工数**: 1-2時間
-
-### [ ] CSS-1: class共有スタイル
-- **対象**: 新規設計
-- **現状**: スコープCSS は要素ごとにユニークなクラスを生成。同じスタイルを複数要素に共有するパターンがない
-- **改善**: `const cardStyle = createStyle({ padding: '16px', borderRadius: '14px' })` → `section({ class: cardStyle }, ...)` で複数要素に適用
-- **SwiftUI対応**: `ViewModifier` 相当
-- **工数**: 3-4時間
-
-### [ ] CSS-2: グローバルCSS注入
-- **対象**: Root or FileExporter
-- **現状**: `* { box-sizing: border-box }` や `html, body { height: 100% }` をDraftOle APIで記述する手段がない
-- **改善**: `root.addGlobalCss('* { box-sizing: border-box; }')` または専用API
-- **工数**: 1時間
-
-### [ ] CSS-3: 子孫セレクタ
-- **対象**: CssManager
-- **現状**: `.item .text { flex: 1 1 auto; }` のような子孫関係のスタイリングが不可
-- **改善**: MVP-2.5（複合セレクタ）に含まれる可能性あり。独立タスクとして切り出し
-- **工数**: 2-3時間（MVP-2.5と統合可能）
-
----
-
-## P1: 高優先度 — JS拡張
-
-> **出典**: MVP Demo精査（2026-04-10）
-> **目標**: JQueryManagerの機能をWebアプリレベルに引き上げる
-
-### [ ] JS-1: 動的DOM生成
-- **対象**: JQueryManager or 新規モジュール
-- **現状**: DraftOleはビルド時にHTML構造を生成するのみ。実行時に`createElement`でDOM要素を動的追加するパターンをサポートしない
-- **改善**: テンプレート関数をJS出力に含める。例: `createTodoItem(text)` のようなファクトリをDraftOle DSLで定義 → JS関数として出力
-- **工数**: 4-5時間（設計が必要）
-
-### [ ] JS-2: イベントハンドラ関数本体
-- **対象**: JQueryManager
-- **現状**: `jqm.click('handlerName')` は関数名の参照のみ。`() => { ... }` のような関数本体を記述・出力できない
-- **改善**: `jqm.on('click', '() => { alert("clicked") }')` またはビルダーパターンでハンドラロジックを記述
-- **工数**: 3-4時間
-
----
-
 ## P1: 高優先度 — CFA構造改善（依存方向修正 + DI導入）
 
 > **出典**: `ai_Docs/cfa-report.md`（2026-02-11 診断）
-> **前提**: P0（MVP Demo）完了後に着手
 > **方針**: 外部APIの後方互換性を維持しつつ内部構造を改善
 > **推奨spec**: `spec/fix-dependency-direction`
 > **目標**: html/ → css/, js/ の逆方向依存を解消し、テスト時のモック注入を可能にする
@@ -335,53 +123,55 @@ P4: 宣言的API / SSG / Webアプリ
 
 ---
 
-## P2: 中優先度 — 機能拡張 + ファイル分割
+## P1: 高優先度 — セキュリティ
 
-### ドッグフーディング由来タスク
+> **目標**: ユーザー入力を含むHTML生成時のXSS・インジェクション対策
 
-#### [ ] DF-6: `<!DOCTYPE html>` 出力オプション
-- **対象**: `src/html/elements/root.ts`
-- **現状**: Root.render() は DOCTYPE 宣言を出力しない
-- **改善**: Root にオプション（例: `doctype: true`）を追加、render() の先頭に `<!DOCTYPE html>\n` を出力
-- **工数**: 30分
+### [ ] SEC-2: CSS値サニタイズ（P1）
+- **対象**: Fluent CSSメソッド全体、CSSプロパティクラスの setter
+- **現状**: `div().background(userInput)` で `url('https://evil.com/steal')` や `expression()` を注入可能
+- **改善**: CSS値に `url()`, `expression()`, `-moz-binding` 等の危険パターンを検出・警告。`background-image` で外部URLを使う場合は明示的API（`backgroundImage.url()`）を要求
+- **工数**: 2-3時間
 
-#### [ ] DF-7: `setFlex()` CSSショートハンド追加
-- **対象**: `src/css/style/flex/css-flex.ts`
-- **現状**: `flex: 1` を設定するには `setFlexGrow('1')` + `setFlexShrink('1')` + `setFlexBasis('0%')` が必要
-- **改善**: `setFlex('1')` で `flex-grow: 1; flex-shrink: 1; flex-basis: 0%` を一括設定
-- **工数**: 30分
+### [ ] SEC-4: HTMX統合時のCSRFトークン機構（P1）
+- **対象**: 将来のHTMX統合モジュール
+- **現状**: 未実装。HTMX統合時にPOST/PUT/DELETEリクエストにCSRFトークンが必要
+- **改善**: `meta({ name: 'csrf-token', content: token })` の自動挿入、HTMX の `hx-headers` でのトークン送信パターンを提供
+- **工数**: 2時間（HTMX統合時に実装）
 
-#### [ ] DF-8: コンポーネントテンプレート/プリセット機能
-- **対象**: 新規設計
-- **現状**: 同一スタイルのボタンやカードを作る際にコード重複が多い（LP で CTAボタン8行×2箇所）
-- **改善**: スタイルプリセット or コンポーネントファクトリの仕組みを検討
-- **工数**: 要設計（spec作成推奨）
+### [ ] SEC-5: CSP対応（P2）
+- **対象**: FileExporter, Root
+- **現状**: インラインスタイル・スクリプトに対するCSP対応なし
+- **改善**: nonce生成機能、`<style nonce="...">` / `<script nonce="...">` の自動付与
+- **工数**: 2時間
 
-### 機能拡張タスク
+---
 
-#### [ ] Task 6.5: CSS変数機能の実装
-- CssManagerに:rootサポート追加
-- 型安全なCSS変数管理
-- 工数: 2-3時間
-- **推奨**: CFA-A（P1）完了後に着手すると設計品質向上
+## P1: 高優先度 — JS拡張
 
-#### [ ] Task 6.6: radial-gradient実装
-- CSSBackground.setRadialGradient()追加
-- 複数グラデーション対応
-- 工数: 1-2時間
+> **出典**: MVP Demo精査（2026-04-10）
+> **目標**: JQueryManagerの機能をWebアプリレベルに引き上げる
 
-#### [ ] Task 6.7: examples/基本例追加
-- basic-html.ts - 基本的なHTML生成
-- styled-component.ts - CSS統合例
-- interactive-page.ts - JS統合例
-- 工数: 3時間
+### [ ] JS-1: 動的DOM生成
+- **対象**: JQueryManager or 新規モジュール
+- **現状**: DraftOleはビルド時にHTML構造を生成するのみ。実行時に`createElement`でDOM要素を動的追加するパターンをサポートしない
+- **改善**: テンプレート関数をJS出力に含める。例: `createTodoItem(text)` のようなファクトリをDraftOle DSLで定義 → JS関数として出力
+- **工数**: 4-5時間（設計が必要）
 
-### CFA Phase B: 巨大ファイル分割
+### [ ] JS-2: イベントハンドラ関数本体
+- **対象**: JQueryManager
+- **現状**: `jqm.click('handlerName')` は関数名の参照のみ。`() => { ... }` のような関数本体を記述・出力できない
+- **改善**: `jqm.on('click', '() => { alert("clicked") }')` またはビルダーパターンでハンドラロジックを記述
+- **工数**: 3-4時間
+
+---
+
+## P2: 中優先度 — ファイル分割
 
 > **推奨spec**: `spec/split-large-files`
 > **目標**: マージ容易性の向上。1ファイル1責務に近づける
 
-#### [ ] CFA-B.1: attribute-builder.ts 分割
+### [ ] CFA-B.1: attribute-builder.ts 分割
 - **対象**: `src/html/attributes/attribute-builder.ts`（966行、6クラス混在）
 - **改善**: ビルダーごとにファイル分割
   - `base-attribute-builder.ts`
@@ -392,7 +182,7 @@ P4: 宣言的API / SSG / Webアプリ
   - `button-attribute-builder.ts`
 - **工数**: 2-3時間
 
-#### [ ] CFA-B.2: factories.ts 分割
+### [ ] CFA-B.2: factories.ts 分割
 - **対象**: `src/html/tags/factories.ts`（805行、56タグファクトリ関数）
 - **改善**: カテゴリ別に分割
   - `structure-tags.ts`（div, section, article, header, footer 等）
@@ -402,58 +192,40 @@ P4: 宣言的API / SSG / Webアプリ
   - `table-tags.ts`（table, tr, td, th 等）
 - **工数**: 2-3時間
 
-#### [ ] CFA-B.3: attribute-keys.ts 分割
+### [ ] CFA-B.3: attribute-keys.ts 分割
 - **対象**: `src/html/attributes/attribute-keys.ts`（613行）
 - **改善**: 属性種別ごとにファイル分割（BooleanAttributeKey, KeyValueAttributeKey, AriaAttributeKey 等）
 - **工数**: 1-2時間
 
-#### [ ] CFA-B.4: index.ts エクスポート分散
+### [ ] CFA-B.4: index.ts エクスポート分散
 - **対象**: `src/index.ts`（218行、全モジュールのエクスポート集約）
 - **改善**: モジュール別の re-export ファイルに分割（例: `index-html.ts`, `index-css.ts`）
 - **注意**: パブリックAPIのため破壊的変更に注意。サブパスエクスポート（`draft-ole/html`, `draft-ole/css`）の検討
 - **工数**: 1-2時間
 
+### [ ] Task 6.7: examples/基本例追加
+- basic-html.ts - 基本的なHTML生成
+- styled-component.ts - CSS統合例
+- interactive-page.ts - JS統合例
+- 工数: 3時間
+
 ---
 
-## P3: 低優先度 — 型定義分散 + CSS拡張 + 改善
+## P3: 低優先度 — 型定義分散
 
-### CFA Phase C: 型定義の分散
+> **着手条件**: P1, P2 完了後
 
-> **着手条件**: P1, P2 完了後。急がない
-
-#### [ ] CFA-C.1: errors.ts のエラーコード分散
+### [ ] CFA-C.1: errors.ts のエラーコード分散
 - **対象**: `src/utils/errors.ts`（165行、全モジュールのエラーコード型が集約）
 - **改善**: エラーコード型をモジュールごとに分散配置
 - **工数**: 1時間
 
-#### [ ] CFA-C.2: style-keys.ts カテゴリ別分割
+### [ ] CFA-C.2: style-keys.ts カテゴリ別分割
 - **対象**: `src/css/style/style-keys.ts`（224行、146 CSSプロパティキー）
 - **改善**: カテゴリ別に分割（現状はconst objectなので衝突リスクは中程度）
 - **工数**: 1時間
 
-### CSS拡張（Swift版移植候補）
-
-> **Note**: デモ動作には不要。output_samplesの完全再現時に実装
-
-#### [ ] MVP-2.3: CSS変数（Custom Properties）サポート
-- `:root { --bg: #0b1220; }` + `var(--name)` 参照
-- Swift版実装済み（`CssVariableStore`, `CssVariableValue`）。TS版への移植が必要
-
-#### [ ] MVP-2.4: 疑似セレクタサポート
-- `:hover`, `:focus`, `:active` 等
-- Swift版・TS版ともに未実装。新規設計が必要
-
-#### [ ] MVP-2.5: 複合セレクタサポート
-- `.row.meta`, `.item.done .text` 等
-- Swift版・TS版ともに未実装。新規設計が必要
-
-#### [ ] MVP-3.3: DOMContentLoadedラッパー
-- `defer`属性で代替可能
-- 優先度: 低
-
-### その他改善
-
-#### [ ] テストフレームワークの統一（Swift版）
+### [ ] テストフレームワークの統一（Swift版）
 - Swift Testing (新): 16ファイル、54テスト → XCTest (旧): 7ファイル、91テスト
 - Swift Testing への統一移行
 
@@ -462,12 +234,8 @@ P4: 宣言的API / SSG / Webアプリ
 ## P4: 将来 — 宣言的API / SSG / Webアプリ
 
 > **着手条件**: P0〜P2 完了後
-> **注意**: Swift版タスクはTypeScript移行により凍結状態。参考資料として保持
 
 ### 宣言的API改善（Post-MVP）
-
-> **目標**: DraftOleを「SwiftUIライクな宣言的DSL」に進化させる
-> **優先度**: MVP完了後、v1.1〜v2.0で段階的に実施
 
 | 順序 | タスクID | 内容 | 依存 |
 |:---:|---------|------|------|
@@ -484,8 +252,6 @@ P4: 宣言的API / SSG / Webアプリ
 
 ### SSG完成タスク（Phase 1-A〜E）
 
-> **目標**: v1.0 SSG版リリース
-
 | Phase | 内容 | 状態 |
 |-------|------|:----:|
 | 1-A | CLI実装（build/serve） | ⚪ 未着手 |
@@ -496,38 +262,16 @@ P4: 宣言的API / SSG / Webアプリ
 
 ### Webアプリフレームワーク（Phase 2）
 
-> **前提**: Phase 1（SSG）完成後
-
 | Phase | 内容 | 状態 |
 |-------|------|:----:|
 | 2-A | Vapor統合 | ⚪ 未着手 |
 | 2-B | HTMX統合（動的UI対応） | ⚪ 未着手 |
 
-### Post-MVP 実行順序
-
-```
-MVP完成（P0完了）
-    ↓
-CFA構造改善（P1）→ 機能拡張+分割（P2）→ 型分散（P3）
-    ↓
-Phase B: 開発体験改善
-    ↓
-Phase E: データとコンテンツの分離
-    ↓
-Phase 2-B: HTMX統合
-    ↓
-Phase C: UIコンポーネント
-    ↓
-Phase D: ドキュメント
-    ↓
-🎉 v1.0 リリース
-```
-
 ### マイルストーン
 
 | バージョン | 達成状態 |
 |-----------|---------|
-| **v0.9** | MVP Demo完成（P0） |
+| **v0.9** | MVP Demo完成（P0） ✅ |
 | **v0.95** | CFA構造改善完了（P1） |
 | **v1.0** | 機能拡張+SSG完成（P2+Phase 1） |
 | **v1.1** | 宣言的API（Phase D-1〜D-2） |
@@ -549,7 +293,6 @@ Phase D: ドキュメント
 
 ## 📝 BuildInPublicコンテンツ改善タスク
 
-> **出典**: `audit_report_20260202_215822.md`
 > **優先度**: 投稿時に対応（開発タスクとは独立）
 
 | ID | 内容 | 優先度 | トリガー |
@@ -559,214 +302,6 @@ Phase D: ドキュメント
 | BIP-3 | DEV.to投稿時：front matter調整 | 低 | DEV.to投稿時 |
 | BIP-4 | 開発期間表記の修正 | 低 | 任意 |
 | BIP-TD-1 | コンテンツ種別の命名規則定義 | 低 | 週次報告再開時 |
-
----
----
-
-# 以下はアーカイブ（参考・参照用）
-
-> **注意**: 以下のセクションはSwift版の参照情報、完了済みタスク、詳細な設計メモを含みます。
-> TypeScript移行により**凍結状態**。新規開発の参考資料として保持しています。
-
----
-
-## Swift版に未実装の機能（TS版で先行実装済み）
-
-### js-publisher: FileExporter（3ファイル統合出力機能）
-- [ ] **FileExporter** — HTML + CSS + JSの3ファイル統合出力とタグ自動挿入
-  - _Note: TypeScript版実装済み（`src/publisher/file-exporter.ts`、2026-02-09）_
-  - _Swift版の現状: `OlePublisher.swift` は単純なcontentラッパーのみ_
-
-### reset.css の扱いの差異
-- [~] **reset.css バンドル方式の違い**
-  - _Swift版: `Resources/uaPlus.css` としてファイルをコピーする方式_
-  - _TypeScript版: 文字列定数として埋め込む方式（`src/publisher/reset-css.ts`）_
-  - _Note: 両方とも有効なアプローチであり、統一は不要（設計判断の違い）_
-
-## Swift版からTS版に移行しなかった項目
-
-### 3.10 CSS拡張（myTask MVP-2.3〜2.5 由来）
-- [~] CSS変数（Custom Properties）サポート — → P3: MVP-2.3 に記載
-- [~] 疑似セレクタサポート — → P3: MVP-2.4 に記載
-- [~] 複合セレクタサポート — → P3: MVP-2.5 に記載
-
-### 3.11 Fluent CSS API（myTask D-3.1〜3.2 由来）
-- [~] スタイルメソッドチェーン — → P4: 宣言的API に記載
-- [~] レイアウトショートカット — → P4: 宣言的API に記載
-
-### 3.12 確認
-- [ ] スコープドCSSが生成できる（3.10〜3.11のFluent API完了後に最終確認）
-
----
-
-## 完了済みPhase詳細
-
-### ✅ Phase 1: HTMLタグの拡充
-> MVP-1.1, MVP-1.2, MVP-1.3 完了（2026-02-01）
-
-### ✅ Phase 2: CSS出力（コア）
-> MVP-2.1 完了（2026-02-02）、MVP-2.2 完了（2026-02-02）、MVP-2.6 完了（2026-02-05）
-
-### ✅ Phase 3: JavaScript出力（コア）
-> MVP-3.1, MVP-3.2, MVP-3.4 完了（2026-02-02）
-
-### ✅ Bug修正
-> Bug 1（root_css_render）✅、Bug 2（OleCalculator未定義）✅、Bug 3（addChild CSS消失）✅
-
-### 完了済みタスク一覧
-
-| 順序 | タスクID | 内容 | 完了日 |
-|:---:|---------|------|--------|
-| 1 | MVP-1.1 | TagType追加 | 2026-02-01 |
-| 2 | MVP-1.2 | 属性サポート | 2026-02-01 |
-| 3 | MVP-1.3 | class API | 2026-02-01 |
-| 4 | MVP-2.2 | CSSプロパティrender() | 2026-02-02 |
-| 5 | MVP-2.1 | HtmlStyle.render()修正 | 2026-02-02 |
-| 6 | MVP-2.6 | CSSファイル生成 | 2026-02-05 |
-| 7 | MVP-3.1 | イベントハンドラ | 2026-02-02 |
-| 8 | MVP-3.2 | DOM操作メソッド | 2026-02-02 |
-| 9 | MVP-3.4 | $()ヘルパー生成 | 2026-02-02 |
-| — | D-1.1 | Bug 3修正（CSS消失） | 2026-02-05 |
-| — | typo | Rendarable → Renderable | 2026-02-05 |
-
----
-
-## Swift版 Phase 1 ゴール（参考）
-
-> **DraftOle = 型安全なHugo/Jekyll**
-> 入力: Markdown / JSON / YAML + DraftOle DSL テンプレート
-> 出力: `dist/` に静的HTML/CSS/JSファイル群
-> 差別化: **HTML + CSS + JS を一括で型安全に生成**できる唯一のSSG
-
-### "使える"の判定基準（受入基準）
-- **Quickstart**: 10分以内にデモ生成〜ブラウザ表示まで到達
-- **品質**: HTML/CSS/JS出力が破綻しない
-- **再現性**: 同じ入力から同じ出力が得られる
-
-### jQuery相当の範囲
-- Selector: `$()`（class/id/tag/階層の基本）
-- Style: `.css(...)`（spacing / flex / border / color 等）
-- Event: `.on(...)` / `.click(...)`
-- DOM: `.text()` / `.html()` / `.addClass()` / `.removeClass()` / `.toggle()`
-
-### 非ゴール
-- SPAフレームワーク互換
-- jQuery APIの網羅
-- 高度な最適化
-- ブラウザ互換性の細部保証
-
----
-
-## Swift版 未完了タスク詳細（凍結）
-
-> **注意**: 以下はSwift版のタスク詳細です。TypeScript移行後は参考資料として保持。
-> 実装する場合はTypeScript版で同等機能をspecとして新規作成してください。
-
-### Phase 4: 統合エクスポート（Swift版）
-
-#### [ ] MVP-4.1. OlePublisherの3ファイル出力対応
-- TS版: `src/publisher/file-exporter.ts` で実装済み
-
-#### [ ] MVP-4.2. ファイル参照の自動設定
-- TS版: FileExporterに含まれる
-
-### Phase 5: デモ統合・ドキュメント（Swift版）
-
-#### [ ] MVP-5.1〜5.4
-- TS版: Task 6.1〜6.4（P0）として再定義済み
-
-### 宣言的API詳細（Phase D）
-
-#### [ ] D-1.2. addChild戻り値の変更（チェーン可能に）
-- `addChild()` を `Void` → `Self` 返却に変更
-- 効果: `.addChild(p()).addChild(span())` のチェーンが可能
-
-#### [ ] D-2.1〜D-2.5: Result Builder導入
-- HTMLBuilder実装 → タグファクトリ拡張 → テキストノード変換 → 条件分岐 → ループサポート
-- SwiftUIライクなネスト構文: `div { p { "Hello" } }`
-
-#### [ ] D-3.1〜D-3.2: Fluent CSS API
-- スタイルメソッドチェーン: `.fontSize(24).color('#333').padding(16)`
-- レイアウトショートカット: `.flex({ direction: 'column' })`
-
-#### [ ] D-4.1: イミュータブル設計（v2.0検討）
-- `class` → `struct` への移行検討
-
-### SSG完成タスク詳細（Phase 1-A〜E）
-
-#### Phase 1-A: CLI実装
-- 1-A.1: ArgumentParserパッケージ追加
-- 1-A.2: buildコマンド実装
-- 1-A.3: serveコマンド実装
-
-#### Phase 1-B: コンテンツ読込
-- 1-B.1〜1-B.5: ContentLoader / JSONLoader / YAMLLoader / MarkdownLoader / Frontmatter
-
-#### Phase 1-C: テンプレート分離
-- 1-C.1: HTMLComponentプロトコル
-- 1-C.2: LayoutTemplate実装
-
-#### Phase 1-D: 開発サーバー
-- 1-D.1: ファイルウォッチャー
-- 1-D.2: ローカルサーバー（SwiftNIO）
-- 1-D.3: ブラウザ自動リロード
-
-#### Phase 1-E: ドキュメント・サンプル
-- 1-E.1: README Quickstart
-- 1-E.2: サンプルサイト
-- 1-E.3: APIリファレンス（DocC）
-
-### Webアプリフレームワーク詳細（Phase 2）
-
-#### Phase 2-A: Vapor統合
-- 2-A.1: Vapor用Response拡張
-- 2-A.2: DraftOle + Vapor統合サンプル
-
-#### Phase 2-B: HTMX統合
-- 2-B.1: HTMX属性サポート
-- 2-B.2: HTMX型安全API
-- 2-B.3: HTMXスクリプト自動挿入
-- 2-B.4: Vapor連携サンプル
-
-### Post-MVP詳細
-
-#### Phase B: 開発体験改善
-- POST-B.1: ファイルウォッチャー
-- POST-B.2: 簡易ローカルサーバー
-- POST-B.3: ブラウザ自動リロード
-- POST-B.4: CLIコマンド整備
-
-#### Phase C: UIコンポーネント集
-- POST-C.1: 基本コンポーネント（Container, Grid, Stack, Card, TextField, Button, Select, Checkbox, Alert, Badge）
-- POST-C.2: テーマシステム
-- POST-C.3: ダークモード対応
-
-#### Phase D: ドキュメント・サンプル
-- POST-D.1: 実用サンプル集
-- POST-D.2: APIリファレンス
-- POST-D.3: チュートリアル
-- POST-D.4: 宣伝コンテンツ
-
-#### Phase E: データとコンテンツの分離
-- POST-E.1〜E.10: ContentLoader → JSON/YAML/Markdown → HTMLComponent → LayoutTemplate → ビルドコマンド
-
----
-
-## 問題点と改善タスク（Swift版・凍結）
-
-### 優先度：低
-- [ ] 5. デバッグprint文の削除（Swift版 Root.swift, LazyLayoutManager）
-- [ ] 6. テスト用publicメソッドの整理（`_testable_` プレフィックス）
-- [ ] 7. 相対パス依存の検討（oleSample_02/Package.swift）
-- [ ] 8. DocCコメントの充実
-- [ ] 9. よくあるパターン集の追加
-- [ ] 10. エラーメッセージの改善
-
-### 将来フェーズ
-- 1.3: 依存関係グラフ生成時に循環参照ノードを明示
-- 3.1, 3.2: HTMLTagProtocol責務分離 → CFA-A に統合
-- 4.1-4.5: モジュール分割
-- JQueryManager eventType型安全性: `String` → `EventType` enum
 
 ---
 
@@ -786,3 +321,62 @@ Phase D: ドキュメント
 | Phase 5 | Publisher | ✅ | 3 | 100 |
 
 **プロジェクト全体テスト**: 56ファイル / 2,371テスト PASS
+
+---
+---
+
+# 以下はアーカイブ（参考・参照用）
+
+> Swift版の参照情報、詳細な設計メモを含みます。TypeScript移行により**凍結状態**。
+
+---
+
+## 完了済みタスク履歴
+
+| タスクID | 内容 | 完了日 | コミット |
+|---------|------|--------|---------|
+| DF-1 | collectCssStyleString() 子再帰修正 | 2026-04-08 | — |
+| DF-2 | スコープCSSクラスのHTML自動付与 | 2026-04-08 | cd372e1 |
+| DF-3 | Text() HTMLエスケープのデフォルト化 | 2026-04-08 | 309e7fa |
+| DF-4 | `<pre>` 内レンダラーインデント抑制 | 2026-04-08 | 20d422c |
+| DF-5 | CSS APIショートハンド（→D-3.1 Fluent CSS） | 2026-04-08 | 7f93512 |
+| DF-6 | `<!DOCTYPE html>` 出力オプション | — | — |
+| DF-7 | `setFlex()` CSSショートハンド追加 | — | — |
+| DF-8 | コンポーネント分割パターン（関数ベース） | 2026-04-10 | 76168f2 |
+| DX-1 | ファクトリ関数の文字列引数でText()不要化 | 2026-04-10 | 11ddf77 |
+| DX-2 | Text.unsafeRaw() 静的メソッド追加 | — | 3dfb56f |
+| DX-3 | コンポーネントProps型定義パターン確立 | — | — |
+| DX-4 | 複数引数コンポーネントのオブジェクト引数化 | — | — |
+| SEC-1 | 属性値サニタイズ（href javascript:検出） | 2026-04-10 | 79be725 |
+| SEC-3 | 危険API命名改善（→DX-2と同時完了） | — | 3dfb56f |
+| 6.1 | examples/mvp-demo.ts 作成 | — | — |
+| 6.2 | 統合テスト追加 | — | — |
+| 6.3 | examples/README.md 作成 | — | — |
+| 6.4 | package.json スクリプト追加 | — | — |
+| 6.5 | CSS変数（:root + var()参照） | — | — |
+| 6.6 | radial-gradient 実装 | — | — |
+| CSS-1 | class共有スタイル | — | — |
+| CSS-2 | グローバルCSS注入 | — | — |
+| CSS-3 | 子孫セレクタ | — | — |
+| MVP-2.4 | 疑似セレクタ（:hover, :focus） | — | — |
+| MVP-2.5 | 複合セレクタ（.btn.primary等） | — | — |
+| MVP-3.3 | DOMContentLoadedラッパー | — | — |
+
+## Swift版 Phase 1 ゴール（参考）
+
+> **DraftOle = 型安全なHugo/Jekyll**
+> 入力: Markdown / JSON / YAML + DraftOle DSL テンプレート
+> 出力: `dist/` に静的HTML/CSS/JSファイル群
+> 差別化: **HTML + CSS + JS を一括で型安全に生成**できる唯一のSSG
+
+## Swift版 未完了タスク詳細（凍結）
+
+> 実装する場合はTypeScript版で同等機能をspecとして新規作成してください。
+
+- D-1.2: addChild戻り値変更（`Void` → `Self` でチェーン可能に）
+- D-2.1〜D-2.5: Result Builder導入（HTMLBuilder → タグファクトリ → 条件分岐 → ループ）
+- D-3.1〜D-3.2: Fluent CSS API（`.fontSize(24).color('#333').padding(16)`）
+- D-4.1: イミュータブル設計（v2.0検討）
+- Phase 1-A〜E: CLI / ContentLoader / LayoutTemplate / 開発サーバー / DocC
+- Phase 2-A〜B: Vapor統合 / HTMX統合
+- POST-B〜E: ファイルウォッチャー / UIコンポーネント集 / ドキュメント / データ分離

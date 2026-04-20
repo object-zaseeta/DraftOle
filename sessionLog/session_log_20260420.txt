@@ -1,0 +1,95 @@
+================================================================
+セッションログ: 2026-04-20
+セッションID : unknown
+開始時刻     : 09:14:06 JST
+作業ディレクトリ: /Volumes/StudioSSD/AcitiveProject_waitnig/Draft_Project/DraftOleProject/DraftOle_TS
+================================================================
+
+================================================================
+作業ログ
+================================================================
+
+---
+[1] DraftOleの存在意義レビュー（対話）
+---
+
+ユーザー: 既存のhtml+css+jsと比べてこのプロジェクトは存在意義があるか検討してほしい
+
+作業:
+素のHTML/CSS/JSおよび既存ライブラリ（JSX/TSX、lit-html、hyperscript、vanilla-extract等）
+との比較評価を対話で実施。「型安全 × scoped CSS × 純TS × ビルド不要」という4点セットなら
+ニッチな空きポジションが存在するという評価に収束。
+
+結果:
+- サーバーサイドHTML生成（メール/帳票/SSG/LLM出力）領域での存在意義を確認
+- Webアプリフレームワーク化（v2.0）路線は過度な競合領域で非推奨と判断
+- 判断材料としてPM/Discovery-DraftOle-significance.md を参照
+
+---
+[2] Discovery文書の追加・訂正
+---
+
+ユーザー: /PM/Discovery-DraftOle-significance.md に追加訂正はありますか？ → yes
+
+作業:
+Discovery文書に6箇所の追加・訂正を実施。
+
+1. Phase 4マトリクス: DraftOleのシンプルさを ✓ → ✓/△ に修正（注釈付き）
+2. Phase 6見出し: 「Web版SwiftUI」→「SwiftUIライクなサーバーサイドHTML DSL」に精密化
+3. Phase 7b総括: 「致命的なブロッカーなし」を「技術的ブロッカーなし」に限定。
+   Phase 2 の失敗と本Phase の楽観の乖離を追記
+4. Phase 8競合分析: Hono JSX / Fresh / Enhance.dev / van.js / lit-html を追記し、
+   「単独占有ポジション」主張の過大性を明記
+5. Phase 8ターゲットA: 「5万人」推定の根拠薄さを訂正注記
+6. Phase 9新規追加: 撤退条件（ゲートA/B/C）を設計。
+   ビジョン検証 → 市場反応 → 持続性の3段階
+
+結果:
+Discovery文書の楽観バイアスを補正し、競合認識・市場規模・撤退条件を明文化。
+次フェーズのタスク優先度組み換え（myTask.md）への入力準備が整った。
+
+---
+[3] タスク進捗更新
+---
+
+ユーザー: （/Commit コマンド実行時の自動更新）
+
+作業:
+git diff から実体を確認し、CFA-B.1 / CFA-B.2 が完了状態であることを検出。
+myTask.md の該当行を [ ] → [x] に更新。
+
+結果:
+- CFA-B.1 attribute-builder.ts 分割（base/form/media + 薄い index）完了
+- CFA-B.2 factories.ts 分割（structure/semantic/inline/form/media/data/utils）完了
+
+================================================================
+使用したスキル・コマンド・ツール
+================================================================
+
+■ ファイル操作ツール
+  Read    : PM/Discovery-DraftOle-significance.md, ai_Docs/myTask.md, README.md
+  Edit    : PM/Discovery-DraftOle-significance.md（6箇所の追加・訂正）
+            ai_Docs/myTask.md（CFA-B.1/B.2 を [x] に更新）
+  Write   : sessionLog/session_log_20260420.txt
+
+■ シェルコマンド (Bash tool)
+  git status / git diff --stat HEAD / git branch --show-current: 変更状況確認
+  wc -l src/html/attributes/*.ts src/html/tags/*.ts: 分割後ファイルサイズ確認
+  grep CFA-B|CFA-A ai_Docs/myTask.md: タスク状態確認
+
+================================================================
+作成・変更ファイル一覧
+================================================================
+
+新規作成:
+  sessionLog/session_log_20260420.txt
+
+変更:
+  PM/Discovery-DraftOle-significance.md  (Phase 4/6/7b/8 訂正 + Phase 9 新規追加)
+  ai_Docs/myTask.md                      (CFA-B.1/B.2 完了マーク更新、日付更新)
+
+参考（本セッション対象外・既存変更）:
+  src/html/attributes/attribute-builder.ts   (CFA-B.1 分割の結果。本セッション外)
+  src/html/tags/factories.ts                 (CFA-B.2 分割の結果。本セッション外)
+  src/html/attributes/attribute-builder-*.ts (新規分割ファイル。本セッション外)
+  src/html/tags/factories-*.ts               (新規分割ファイル。本セッション外)

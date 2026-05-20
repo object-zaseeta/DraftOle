@@ -1,0 +1,195 @@
+/** DraftOle MVP Demo: Todo App（reactive-state 段 + handler-serialization 相当）
+ * css ネームスペース facade を使用し、トークンとクラスを分離して定義。
+ * ハンドラは transformer によってシリアライズされるアロー関数で記述。
+ * 実行: pnpm demo:mvp */
+
+import { app, css, el, hstack, type UnifiedTheme, vstack } from "draft-ole";
+
+type Todo = { text: string; done: boolean };
+
+// ── theme: tokens ──────────────────────────────────────────────────────────
+const themeTokens = {
+	bg: "#0b1220",
+	panel: "rgba(255,255,255,0.06)",
+	border: "rgba(255,255,255,0.12)",
+	text: "rgba(255,255,255,0.92)",
+	muted: "rgba(255,255,255,0.68)",
+	accent: "#7c5cff",
+	danger: "#ef4444",
+	radius: "14px",
+	shadow: "0 18px 60px rgba(0,0,0,0.35)",
+};
+
+// ── theme: tokens のみで構築（class エントリは theme.class() で colocated に定義）──
+// 注: 全エントリが string の場合 css.theme は legacy `Theme<T>` を返すため、
+// `UnifiedTheme<T>` 経路に揃えるため `as const` + UnifiedTheme 型注釈で寄せる。
+const theme: UnifiedTheme<typeof themeTokens> = css.theme(
+	themeTokens,
+) as UnifiedTheme<typeof themeTokens>;
+
+// ── theme.class(): 無名形（colocated-style パイプラインが要素ごとにクラス名を自動導出）──
+const card = theme.class({
+	background: "panel",
+	border: "1px solid rgba(255,255,255,0.12)",
+	borderRadius: "radius",
+	boxShadow: "shadow",
+	padding: "16px",
+	marginTop: "14px",
+});
+
+const btn = theme.class({
+	padding: "10px 12px",
+	borderRadius: "12px",
+	border: "1px solid rgba(255,255,255,0.12)",
+	background: "rgba(255,255,255,0.06)",
+	color: "text",
+	cursor: "pointer",
+});
+
+const list = theme.class({
+	listStyle: "none",
+	padding: "0",
+	margin: "0",
+});
+
+// ── app & state ────────────────────────────────────────────────────────────
+// 無名形は colocated 経路（要素 `{ css: tpl }`）で自動的に最終 CSS に取り込まれるため、
+// `app({ css })` には theme.css のみ渡せばよい。
+const doc = app({
+	title: "DraftOle MVP Demo",
+	lang: "ja",
+	css: [css.reset(), theme.css],
+});
+
+const todos = doc.state<Todo[]>([]);
+const draft = doc.state("");
+const activeCount = todos.map((ts) => ts.filter((t) => !t.done).length);
+
+// ── view: header ───────────────────────────────────────────────────────────
+const titleHeader = el.header(
+	{ css: card },
+	el.h1("DraftOle MVP Demo").font({ size: "28px" }),
+	el.p("TypeScript で宣言的に書いた HTML/CSS/JS").font({ color: theme.muted }),
+);
+
+// ── view: interactive controls（.on(...) は transformer 検出のため top-level に保持）──
+const draftField = el
+	.input({ type: "text", placeholder: "新しい Todo を入力" })
+	.value(draft)
+	.flex("1 1 260px")
+	.padding("11px 12px")
+	.cornerRadius("12px")
+	.border({ width: "1px", style: "solid", color: theme.border })
+	.background("rgba(0,0,0,0.25)")
+	.font({ color: theme.text })
+	.on("input", (e: Event) => {
+		draft.set((e.target as HTMLInputElement).value);
+	})
+	.on("keydown", (e: Event) => {
+		if ((e as KeyboardEvent).key === "Enter") {
+			const txt = draft.get().trim();
+			if (txt) {
+				todos.set([...todos.get(), { text: txt, done: false }]);
+				draft.set("");
+			}
+		}
+	});
+
+const addButton = el
+	.button({ type: "button", css: btn }, "追加")
+	.on("click", () => {
+		const txt = draft.get().trim();
+		if (txt) {
+			todos.set([...todos.get(), { text: txt, done: false }]);
+			draft.set("");
+		}
+	});
+
+const clearDoneButton = el
+	.button({ type: "button", css: btn }, "完了をクリア")
+	.on("click", () => {
+		todos.set(todos.get().filter((t) => !t.done));
+	});
+
+// ── view: input section ────────────────────────────────────────────────────
+const inputSection = el.section(
+	{ css: card },
+	hstack(
+		{ spacing: 10, alignment: "center", wrap: true },
+		el.label("Todo").minWidth("44px").font({ color: theme.muted }),
+		draftField,
+		addButton,
+	),
+	hstack(
+		{ spacing: 10, alignment: "center" },
+		el.span().text(activeCount.map((n) => `${n} items`)),
+		clearDoneButton,
+	),
+);
+
+// ── view: todo list（each scope を保つため inline の arrow を維持）─────────
+const todoListSection = el.section(
+	{ css: card },
+	el
+		.ul({ css: list })
+		.grid({ gap: "10px" })
+		.appendChild(
+			todos.each((item) =>
+				el
+					.li(
+						hstack(
+							{ spacing: 10, alignment: "center" },
+							el
+								.input({ type: "checkbox" })
+								.checked(item.map((t) => t.done))
+								.on("change", (e: Event) => {
+									const checked = (e.target as HTMLInputElement).checked;
+									const cur = item.get();
+									todos.set(
+										todos
+											.get()
+											.map((t) =>
+												t.text === cur.text ? { ...t, done: checked } : t,
+											),
+									);
+								}),
+							el.span().text(item.map((t) => t.text)),
+							el
+								.span()
+								.text(item.map((t) => (t.done ? "done" : "todo")))
+								.font({ size: "12px", color: theme.muted })
+								.padding("2px 8px")
+								.cornerRadius("999px")
+								.border({ width: "1px", style: "solid", color: theme.border }),
+						),
+					)
+					.padding("12px")
+					.cornerRadius("12px")
+					.border({ width: "1px", style: "solid", color: theme.border })
+					.background("rgba(0,0,0,0.22)"),
+			),
+		),
+);
+
+// ── view: footer ───────────────────────────────────────────────────────────
+const footerNode = el
+	.footer(el.small("Generated by DraftOle"))
+	.font({ color: theme.muted })
+	.margin("18px 0 0");
+
+// ── compose ────────────────────────────────────────────────────────────────
+const content = vstack(
+	undefined,
+	titleHeader,
+	inputSection,
+	todoListSection,
+	footerNode,
+)
+	.frame({ maxWidth: 860 })
+	.margin("0 auto")
+	.padding("36px 18px 60px")
+	.background(theme.bg)
+	.font({ family: "ui-sans-serif, system-ui, sans-serif", color: theme.text });
+
+doc.exportTo(content, "./.out/runs/mvp_demo");
+console.log("✓ MVP Demo generated → .out/runs/mvp_demo/");

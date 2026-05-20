@@ -1,0 +1,69 @@
+# Dependencies
+node_modules/
+
+# Build output（npm publish 対象）
+dist/
+build/
+*.tsbuildinfo
+
+# Build artifacts accidentally emitted under src/ (e.g., failed tsc runs that
+# write .js next to .ts due to rootDir violations). Prevents tsup/other bundlers
+# from picking up duplicate .ts/.js entries and creating circular-init bugs.
+# See spec: build-pipeline-recovery (2026-05-10) for context.
+# Intentional generated files use the .gen.ts (TypeScript) extension and are not affected.
+src/**/*.js
+
+# Generated / runtime / coverage / e2e artifacts（npm publish 対象外、すべて .out/ 配下に集約）
+.out/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# Package manager
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Internal: AI workflow / PM artifacts / dogfooding outputs / build-in-public（git 管理外）
+.internal/
+
+# Tool runtime state（ランタイム生成・ログ・pid など）
+.superpowers/
+.agent/
+.claude/
+
+# Local-only: project workflow / docs not for publish
+.kiro/
+CLAUDE.md
+docs/superpowers/
+
+# Backup
+*.backup.*/
+
+# Local-only test runner script
+test-script.sh
+
+# Vitest snapshot artifacts under tests/ (regenerable)
+tests/**/__snapshots__/
+
+# Local-only public-repo sync script
+sync-to-public.sh

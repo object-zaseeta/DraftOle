@@ -1,0 +1,121 @@
+{
+  "name": "draft-ole",
+  "version": "0.9.0",
+  "description": "A View DSL for static pages in TypeScript — page first, App later.",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./page": {
+      "types": "./dist/entries/page.d.ts",
+      "import": "./dist/entries/page.js",
+      "require": "./dist/entries/page.cjs"
+    },
+    "./app": {
+      "types": "./dist/entries/app.d.ts",
+      "import": "./dist/entries/app.js",
+      "require": "./dist/entries/app.cjs"
+    },
+    "./transformer": {
+      "types": "./dist/transformer/index.d.ts",
+      "require": "./dist/transformer/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "postinstall": "node -e \"const fs=require('fs'),p=require('path'),l=p.join('node_modules','draft-ole');try{fs.mkdirSync('node_modules',{recursive:true});if(fs.lstatSync(l).isSymbolicLink())process.exit(0);}catch{}try{fs.symlinkSync('..',l,'dir');}catch(e){if(e.code!=='EEXIST')throw e;}\"",
+    "build": "node --experimental-strip-types scripts/gen-tag-dsl.ts && tsup",
+    "build:runtime": "node --experimental-strip-types scripts/build-runtime.ts",
+    "build:transformer": "node --experimental-strip-types scripts/build-transformer.ts",
+    "test": "vitest run && pnpm test:types",
+    "test:watch": "vitest",
+    "test:types": "tsc -p tests/state-handler-typing/tsconfig.json --noEmit",
+    "lint": "eslint src/ tests/",
+    "typecheck": "tsc --noEmit",
+    "docs:api": "typedoc",
+    "build:examples": "tsx scripts/build-examples.ts examples/interactive/*.ts examples/*.ts",
+    "demo:app-counter": "tsx scripts/build-examples.ts examples/interactive/app-counter.ts --run",
+    "demo:app-form": "tsx scripts/build-examples.ts examples/interactive/app-form.ts --run",
+    "demo:page-landing": "tsx scripts/build-examples.ts examples/page-landing.ts --run",
+    "demo:page-minimal": "tsx scripts/build-examples.ts examples/page-minimal.ts --run",
+    "demo:page-with-app-slot": "tsx scripts/build-examples.ts examples/page-with-app-slot.ts --run",
+    "demo:mvp": "tsx scripts/build-examples.ts examples/interactive/mvp-demo.ts --run",
+    "demo:card-gallery": "tsx scripts/build-examples.ts examples/interactive/card-gallery.ts --run",
+    "demo:priority-tasks": "tsx scripts/build-examples.ts examples/interactive/priority-tasks.ts --run",
+    "demo:shopping-cart": "tsx scripts/build-examples.ts examples/interactive/shopping-cart.ts --run",
+    "demo:showcase-button": "tsx scripts/build-examples.ts examples/showcase-button.ts --run",
+    "demo:showcase-card": "tsx scripts/build-examples.ts examples/showcase-card.ts --run",
+    "demo:showcase-list": "tsx scripts/build-examples.ts examples/showcase-list.ts --run",
+    "demo:apps": "pnpm demo:app-counter && pnpm demo:app-form",
+    "demo:pages": "pnpm demo:page-landing && pnpm demo:page-minimal && pnpm demo:page-with-app-slot",
+    "demo:interactive": "pnpm demo:mvp && pnpm demo:card-gallery && pnpm demo:priority-tasks && pnpm demo:shopping-cart",
+    "demo:showcase": "pnpm demo:showcase-button && pnpm demo:showcase-card && pnpm demo:showcase-list",
+    "demo:new": "pnpm demo:apps && pnpm demo:pages && pnpm demo:interactive && pnpm demo:showcase",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "test:e2e:report": "playwright show-report",
+    "verify": "pnpm lint && pnpm typecheck && pnpm test && pnpm build:runtime && pnpm build && pnpm build:transformer && pnpm build:examples && pnpm test:e2e"
+  },
+  "keywords": [
+    "typescript",
+    "html",
+    "css",
+    "javascript",
+    "dsl",
+    "type-safe",
+    "code-generation",
+    "static-site-generator",
+    "web-development",
+    "ssg",
+    "template-engine",
+    "view-dsl",
+    "static-page",
+    "page-first",
+    "landing-page"
+  ],
+  "author": "Kazuyuki Shimizu <kazuyukishimizu@me.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/object-zaseeta/DraftOle.git"
+  },
+  "bugs": {
+    "url": "https://github.com/object-zaseeta/DraftOle/issues"
+  },
+  "homepage": "https://github.com/object-zaseeta/DraftOle#readme",
+  "engines": {
+    "node": ">=18"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild"
+    ]
+  },
+  "packageManager": "pnpm@10.28.2",
+  "devDependencies": {
+    "@axe-core/playwright": "^4.11.3",
+    "@eslint/js": "^9.39.2",
+    "@playwright/test": "^1.59.1",
+    "@types/jsdom": "^28.0.3",
+    "@types/node": "^25.2.2",
+    "@vitest/coverage-v8": "^4.0.18",
+    "eslint": "^9.39.2",
+    "eslint-config-prettier": "^10.1.8",
+    "jsdom": "^29.1.1",
+    "serve": "^14.2.6",
+    "tsup": "^8.5.1",
+    "tsx": "^4.21.0",
+    "typedoc": "^0.28.16",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.32.1",
+    "vitest": "^4.0.18"
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "target": "ES2019",
+    "module": "none",
+    "lib": ["ES2019", "DOM"],
+    "strict": true,
+    "outDir": "../../dist/runtime",
+    "rootDir": ".",
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "noEmit": false,
+    "ignoreDeprecations": "5.0"
+  },
+  "files": ["./prelude.ts"]
+}

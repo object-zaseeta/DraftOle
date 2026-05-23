@@ -65,5 +65,7 @@ test-script.sh
 # Vitest snapshot artifacts under tests/ (regenerable)
 tests/**/__snapshots__/
 
-# Local-only public-repo sync script
+# Local-only public-repo sync / publish scripts
 sync-to-public.sh
+publish-public.sh
+dry-run.txt

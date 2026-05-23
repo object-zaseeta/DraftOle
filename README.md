@@ -88,6 +88,56 @@ See [`examples/`](examples/) for the curated read-order. Recommended path:
 
 The full read order is documented in [`examples/README.md`](examples/README.md).
 
+## Why DraftOle? (vs Astro / Next.js / Hono JSX)
+
+DraftOle is a deliberately small library that occupies one specific niche.
+It is not a general framework; it is a View DSL for static pages.
+
+| | DraftOle | Astro | Hono JSX (SSG) | Next.js static export |
+|---|:---:|:---:|:---:|:---:|
+| Type-safe HTML attrs (typo = compile error) | ✅ strict | 🟡 props only | 🟡 JSX-loose | 🟡 JSX-loose |
+| SwiftUI-style modifier chain | ✅ | ❌ | ❌ | ❌ |
+| Zero JS runtime in output | ✅ | ✅ if no islands | ✅ | ❌ React ships |
+| Zero production dependencies | ✅ | ❌ | 🟡 light | ❌ |
+| Bundler required | ❌ | ✅ Vite | 🟡 usually | ✅ Webpack/Turbopack |
+| Best for | Static LP / docs / articles | Static + islands sites | TS-first SSG | React-heavy apps |
+
+### When to use DraftOle
+
+- You are TypeScript-fluent and want to write a static LP or doc page as **one function**
+- You do not want a bundler, a framework runtime, or a template language in the loop
+- HTML structural correctness should be enforced by the type checker
+- Output should be plain HTML + scoped CSS — nothing else
+
+### When to use something else
+
+- **You need islands or hydration** → Astro is purpose-built for this
+- **You are already deep in React with shared components** → Next.js static export keeps you in your stack
+- **You want JSX trees instead of modifier chains** → Hono JSX is lighter than Next and gives you that
+- **Markdown is your primary content** → 11ty or Astro have stronger content stories
+
+### Why not Hono JSX?
+
+Hono JSX is the closest cousin to DraftOle in spirit: TypeScript-native, lightweight,
+function-as-page. We genuinely like it. The differences:
+
+1. **API shape**: Hono uses JSX trees (`<Section><Text /></Section>`). DraftOle uses
+   function composition with modifier chains
+   (`Section(Text('...').padding(8)).background('#fff')`). Pick whichever feels more
+   readable to you — both are legitimate.
+2. **Type strictness**: DraftOle's HTML attribute types are intentionally stricter than
+   JSX (where most attributes are `string`). A typo'd `colur` is a compile error.
+3. **Zero production dependencies**: DraftOle ships with literally one entry in
+   `node_modules`. Hono is small but not zero.
+4. **Modifier-first styling**: `.padding(48)` is a method on the view, not a prop on
+   a JSX element. The chained-modifier style scales nicely for nested layout intent.
+5. **Static-page focus**: Hono is primarily an HTTP framework that happens to render
+   JSX. DraftOle is primarily a static-page DSL with an interactive escape hatch
+   (`app()`).
+
+If you prefer JSX and a broader server framework, use Hono. If you prefer modifier
+chains and zero production dependencies, DraftOle is for you.
+
 ## Scripts
 
 ```bash

@@ -17,10 +17,11 @@ DraftOle の `.on(event, fn)` は TypeScript アロー関数ハンドラを受�
 ### 前提条件
 
 ```bash
-npm install draftole
+pnpm add draft-ole
+# または: npm install draft-ole / yarn add draft-ole
 ```
 
-transformer プラグイン本体は `draftole/transformer` からエクスポートされています。
+transformer プラグイン本体は `draft-ole/transformer` からエクスポートされています。
 
 ---
 
@@ -31,8 +32,9 @@ transformer プラグイン本体は `draftole/transformer` からエクスポ�
 #### インストール
 
 ```bash
-npm install --save-dev ts-patch
-npx ts-patch install
+pnpm add -D ts-patch
+# または: npm install --save-dev ts-patch
+pnpm exec ts-patch install
 ```
 
 #### tsconfig.json 設定
@@ -42,7 +44,7 @@ npx ts-patch install
   "compilerOptions": {
     "plugins": [
       {
-        "transform": "draftole/transformer",
+        "transform": "draft-ole/transformer",
         "type": "program"
       }
     ]
@@ -53,7 +55,7 @@ npx ts-patch install
 #### 動作確認
 
 ```bash
-npx tsc --noEmit
+pnpm exec tsc --noEmit
 ```
 
 transformer が正しく適用されると、ホワイトリスト外のクロージャ捕捉がビルドエラーとして報告されます。
@@ -67,7 +69,8 @@ esbuild で DraftOle プロジェクトをバンドルする場合は、`esbuild
 #### インストール
 
 ```bash
-npm install --save-dev esbuild esbuild-plugin-draftole
+pnpm add -D esbuild esbuild-plugin-draftole
+# または: npm install --save-dev esbuild esbuild-plugin-draftole
 ```
 
 #### build.mjs 設定
@@ -98,7 +101,8 @@ vite でフロントエンドプロジェクトをビルドする場合は、`vi
 #### インストール
 
 ```bash
-npm install --save-dev vite vite-plugin-draftole
+pnpm add -D vite vite-plugin-draftole
+# または: npm install --save-dev vite vite-plugin-draftole
 ```
 
 #### vite.config.ts 設定
@@ -115,7 +119,7 @@ export default defineConfig({
 #### 開発サーバーでの確認
 
 ```bash
-npx vite dev
+pnpm exec vite dev
 ```
 
 vite の HMR（Hot Module Replacement）環境でも transformer が適用され、ホワイトリスト違反はコンパイルエラーとして即時フィードバックされます。

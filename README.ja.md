@@ -14,21 +14,15 @@
 
 ## インストール
 
-> ⚠️ まだ npm に公開していません。現時点ではソースから導入してください:
-
 ```bash
-git clone https://github.com/object-zaseeta/DraftOle.git
-cd DraftOle
-pnpm install
-pnpm build
+pnpm add draft-ole
+# または
+npm install draft-ole
+# または
+yarn add draft-ole
 ```
 
-自分のプロジェクトからリンクする場合:
-
-```bash
-# 自分のプロジェクト側で
-pnpm link --global <DraftOleへのパス>
-```
+> 🧪 **0.9.1 (pre-1.0)** — public API はほぼ固まっていますが、1.0 に向けて feedback を集めているフェーズです。Issues / Discussions を歓迎します。
 
 ## クイックスタート
 

@@ -14,6 +14,25 @@
 
 ---
 
+## [0.9.1] - 2026-05-25
+
+ドキュメント整備のみの patch release。コード本体（`dist/`）の挙動変更はなし。
+
+### Fixed — Docs
+
+- `README.ja.md`: 「⚠️ まだ npm に公開していません」の古い案内を、v0.9.0 公開済みに合わせ `pnpm add draft-ole`（`npm install` / `yarn add` 併記）の標準的なインストール手順へ書き換え（`README.md` と整合）
+- `docs/api/handler-serialization.md`: パッケージ名タイポを修正
+  - `npm install draftole` → `pnpm add draft-ole`（npm/yarn 例を併記）
+  - サブパス `draftole/transformer` → `draft-ole/transformer`
+- `docs/api/handler-serialization.md`: 全 install/exec 例を pnpm 主導に統一（`npx` → `pnpm exec`、npm 例は併記）
+
+### Changed — Internal
+
+- `scripts/build-runtime.ts` / `scripts/build-transformer.ts`: ヘッダーコメントの実行例を `npm run` → `pnpm` に変更（package.json publish 対象外）
+- `package.json` の `build` script を統合：`pnpm build` 一発で `build-runtime` → `gen-tag-dsl` → `tsup` → `build-transformer` を順序実行するよう変更。これまで個別に呼ぶ必要があった transformer / runtime ビルドが、`tsup` の `clean: true` で消えるという順序問題を解消
+
+---
+
 ## [0.9.0] - 2026-05-20
 
 DraftOle の最初のパブリックリリース。Page-first View DSL の公開 API がほぼ確定したため、フィードバック収集を目的として 0.9.0 として公開する。

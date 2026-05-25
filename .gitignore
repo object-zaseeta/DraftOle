@@ -69,3 +69,6 @@ tests/**/__snapshots__/
 sync-to-public.sh
 publish-public.sh
 dry-run.txt
+
+# Local-only release notes (passed to gh release via --notes-file)
+release-notes-v*.md

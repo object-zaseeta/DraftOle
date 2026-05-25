@@ -22,7 +22,7 @@ pnpm add draft-ole
 yarn add draft-ole
 ```
 
-> 🧪 **0.9.0 (pre-1.0)** — public API は概ね固まっていますが、1.0 に向けて feedback を集めているフェーズです。Issues / Discussions 歓迎です。
+> 🧪 **0.9.1 (pre-1.0)** — public API は概ね固まっていますが、1.0 に向けて feedback を集めているフェーズです。Issues / Discussions 歓迎です。
 
 ## Quick Start
 

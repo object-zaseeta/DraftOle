@@ -10,7 +10,7 @@
  *
  * 実行方法:
  *   node --experimental-strip-types scripts/build-transformer.ts
- *   npm run build:transformer
+ *   pnpm build:transformer
  */
 
 import { execFileSync } from "node:child_process";

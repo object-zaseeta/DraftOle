@@ -1,6 +1,6 @@
 {
   "name": "draft-ole",
-  "version": "0.9.0",
+  "version": "0.9.1",
   "description": "A View DSL for static pages in TypeScript — page first, App later.",
   "type": "module",
   "main": "./dist/index.cjs",
@@ -32,7 +32,7 @@
   ],
   "scripts": {
     "postinstall": "node -e \"const fs=require('fs'),p=require('path'),l=p.join('node_modules','draft-ole');try{fs.mkdirSync('node_modules',{recursive:true});if(fs.lstatSync(l).isSymbolicLink())process.exit(0);}catch{}try{fs.symlinkSync('..',l,'dir');}catch(e){if(e.code!=='EEXIST')throw e;}\"",
-    "build": "node --experimental-strip-types scripts/gen-tag-dsl.ts && tsup",
+    "build": "node --experimental-strip-types scripts/build-runtime.ts && node --experimental-strip-types scripts/gen-tag-dsl.ts && tsup && node --experimental-strip-types scripts/build-transformer.ts",
     "build:runtime": "node --experimental-strip-types scripts/build-runtime.ts",
     "build:transformer": "node --experimental-strip-types scripts/build-transformer.ts",
     "test": "vitest run && pnpm test:types",

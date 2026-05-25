@@ -8,11 +8,18 @@
  * 検証経路: AppDocument.exportTo と同じ「bodyEl.addChild(view) → root.flushDescendants(view)」
  * のシナリオで、observable な renderVanillaScript() 出力を pin する。
  */
-import { describe, it, expect } from 'vitest';
+import { describe, expect, it } from 'vitest';
+import { HtmlAttribute } from '../../../src/html/attributes/html-attribute.js';
 import { Root } from '../../../src/html/elements/root.js';
-import { html, head, body, section, div, p, Text } from '../../../src/html/tags/factories.js';
 import type { HTMLTagProtocol } from '../../../src/html/protocols/html-tag-protocol.js';
+import { body, div, head, html, p, section, Text } from '../../../src/html/tags/factories.js';
 import type { ScriptScope } from '../../../src/js/vanilla/script-scope.js';
+
+/** id 属性を付与した HtmlTag を返す（_getElementTarget が `sel` を返すために必須） */
+function withId<T extends ReturnType<typeof p>>(el: T, id: string): T {
+  el.addHtmlAttribute(HtmlAttribute.keyValue('id', id));
+  return el;
+}
 
 /**
  * AppDocument.exportTo 相当の最小セットアップ。
@@ -30,7 +37,9 @@ describe('Root.flushDescendants の観測可能挙動 (REFACTOR_PREP pin)', () =
     const { root, bodyEl } = makeFlushTestRoot();
 
     // view 配下に pending を持つ要素を組み立てる（Root.addChild を経由しないので未 flush）
-    const btn = p();
+    // setId() 必須: id が無いと .on() の target が `deferred-self` になり、
+    // FlushOrchestrator は render フェーズの id 解決まで scope に流さない。
+    const btn = withId(p(), 'btn-T7');
     // biome-ignore lint/complexity/useArrowFunction: HandlerCallback は function 式が必要
     btn.on('click', function (s: ScriptScope) {
       s.call('handleClickT7');
@@ -65,7 +74,7 @@ describe('Root.flushDescendants の観測可能挙動 (REFACTOR_PREP pin)', () =
   it('T9: 孫の HtmlTag に対しても DFS 再帰で pending を転送する', () => {
     const { root, bodyEl } = makeFlushTestRoot();
 
-    const grandchild = p();
+    const grandchild = withId(p(), 'grand-T9');
     // biome-ignore lint/complexity/useArrowFunction: HandlerCallback は function 式が必要
     grandchild.on('click', function (s: ScriptScope) {
       s.call('grandT9');
@@ -86,7 +95,7 @@ describe('Root.flushDescendants の観測可能挙動 (REFACTOR_PREP pin)', () =
   it('T10: 既にフラッシュ済みの child に対して呼び出してもコマンドが重複しない', () => {
     const { root, bodyEl } = makeFlushTestRoot();
 
-    const btn = p();
+    const btn = withId(p(), 'btn-T10');
     // biome-ignore lint/complexity/useArrowFunction: HandlerCallback は function 式が必要
     btn.on('click', function (s: ScriptScope) {
       s.call('idemT10');

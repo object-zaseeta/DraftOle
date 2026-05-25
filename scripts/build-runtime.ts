@@ -11,7 +11,7 @@
  *
  * 実行方法:
  *   node --experimental-strip-types scripts/build-runtime.ts
- *   npm run build:runtime
+ *   pnpm build:runtime
  */
 
 import { execFileSync } from "node:child_process";

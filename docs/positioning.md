@@ -1,31 +1,42 @@
 # DraftOle Positioning（対外メッセージの固定点）
 
-> このドキュメントは、現フェーズの DraftOle がどう名乗り、何を主役にし、何をまだ主役にしないかを定義する。  
-> README より詳しく、内部設計書ほど実装事情に踏み込まない、**外向きメッセージの固定点** として扱う。  
+> このドキュメントは、現フェーズの DraftOle がどう名乗り、何を主役にし、何をまだ主役にしないかを定義する。
+> README より詳しく、内部設計書ほど実装事情に踏み込まない、**外向きメッセージの固定点** として扱う。
 > 関連 spec: `docs-positioning-spec`、`page-entry-spec`、`page-primitives-spec`、`page-dogfooding-spec`、`page-runtime-separation-spec`。
+
+> **2026-05-28 改訂**: 旧来の「`static page first` — `page first, App later`」フレームを **撤回** した。実装的には `app()` ファサード・`state()`・`.on()` ハンドラシリアライズが完成しており、interactive 経路を「secondary / advanced」扱いするのは過剰な保守。新フレームは **「TypeScript everywhere, including your HTML.」** — `page()` と `app()` を共に first-class エントリとして並べ、共通の modifier-chain DSL で書き切れることを主訴求にする。
 
 ---
 
 ## What DraftOle is now
 
-DraftOle は **静的ページのための View DSL**（a View DSL for static pages）である。
+DraftOle は **TypeScript-native UI ライブラリ** である。同じ modifier-chain View DSL で、**静的ページ** と **対話型アプリ** の両方を書き出せる。
 
-- 入口は `page()`
-- 構成要素は `Page` / `Section` / `VStack` / `HStack` / `Text` などの最小 View プリミティブ
-- スタイリングは `.padding()` / `.background()` / `.foregroundStyle()` / `.font()` / `.frame()` / `.cornerRadius()` などの View modifier 連鎖
-- 出力は素の HTML + scoped CSS。`page()` 経路では `runtime.js` を生成しない
-
-DraftOle はもはや「HTML/CSS/JS を 1 ソースで書ける DSL」一般ではなく、**静的ページを書くための View DSL** として自分を定義する。
+- 入口は `page()` または `app()` — 用途で選ぶ
+- 構成要素は `Section` / `VStack` / `HStack` / `Text` / `Heading` / `Button` / `Link` 等の View プリミティブ
+- スタイリングは `.padding()` / `.background()` / `.foregroundStyle()` / `.font()` / `.frame()` / `.cornerRadius()` / `.boxShadow()` / `.border()` などの modifier 連鎖
+- 出力は素の HTML + scoped CSS、必要に応じて runtime JS（状態購読・イベントハンドラ）
 
 スローガン:
 
-> **`static page first`. `page first, App later`.**
+> **TypeScript everywhere, including your HTML.**
+
+旧スローガン `page first, App later.` は 2026-05-28 をもって **引退**。理由: `app()` 機能が既に出荷済み（counter/todo/form/cart デモが動く）にもかかわらず、コピーが「page しか出来ない」誤読を招いていたため。
 
 ---
 
-## Primary use cases（現フェーズの主対象）
+## Primary entries（同等の主導線）
 
-`page first` は次のような **静的ページ** を主対象とする。
+| 入口 | 用途 | 出力ランタイム |
+|---|---|---|
+| `page()` | LP / docs / 記事 / レポート / 静的ダッシュボード | HTML + scoped CSS のみ（runtime JS なし） |
+| `app()` | counter / todo / form / shopping cart などの対話型アプリ | HTML + scoped CSS + minimal runtime JS（state engine 同梱） |
+
+両者は同じ View プリミティブと modifier API を使う。学習コストの再投資が不要。
+
+### Primary use cases
+
+#### `page()` の代表的用途
 
 - ランディングページ（LP）
 - ドキュメントページ
@@ -33,38 +44,47 @@ DraftOle はもはや「HTML/CSS/JS を 1 ソースで書ける DSL」一般で�
 - 静的なダッシュボード / ステータスページ
 - マーケティング系の単発ページ
 
-これらは「コンテンツ + 構造 + 装飾」が中心で、サーバー往復やクライアント状態をほぼ持たない。  
-DraftOle の `page()` 経路は、この帯域に対して **TypeScript 1 本だけで型安全に書き切れる** ことを価値として提供する。
+#### `app()` の代表的用途
+
+- カウンタ・フォーム・トグル等の単発インタラクション
+- Todo アプリ・ショッピングカート等の小規模 state アプリ
+- 静的ページの中に埋め込むインタラクティブセクション（island 的活用）
 
 ---
 
 ## Current non-goals（今は主役にしないこと）
 
-次は意図的に二次扱いとする。「禁止」ではなく「この spec フェーズの主導線ではない」という意味である。
+次は意図的に二次扱いとする。「禁止」ではなく「本フェーズの主導線ではない」「実装が未整備」という意味である。
 
-- **`App` / interactive runtime を主役にすること**  
-  jQuery 風スクリプト・埋め込み JS・状態を持つ動的 UI を「DraftOle の代表的な書き味」として打ち出すことは、本フェーズではしない。
-- **SPA / SSR フレームワーク的な競合**  
-  React / Vue / SvelteKit などの代替を名乗ることは、本フェーズの目的ではない。
-- **transformer / runtime 機能を README の最初に出すこと**  
-  既存の transformer・jQueryManager・vanilla script ビルダー等は引き続き存在するが、初見導線の主語ではない。
-- **`Root` + `html/body/div` の生 HTML DSL を first path に置くこと**  
-  これは `page()` 内部実装および互換目的のために残るが、新規ユーザーの入口としては推奨しない。
+- **ルーティング / マルチページアプリ**
+  `page()` / `app()` の戻り値は単一ページ。複数ページのリンク構造はユーザー側で組み立てる。
+- **SSR / ハイドレーション戦略**
+  `app()` の出力は static HTML + 起動時に DOM をマウントする runtime。SSR + hydration の二段モデルは持たない。
+- **大型コンポーネントエコシステム**
+  View primitive と modifier の組み合わせで構成、Material UI / shadcn 級の事前作成済みコンポーネント群は無い。
+- **File-based pages**
+  Astro / Next の `pages/*.tsx` 規約は無い。エントリは `node entry.ts` で TS スクリプトを直接実行。
+- **状態の永続化**
+  localStorage / URL 同期 / hydration cache は持たない（必要なら application 層で実装）。
+- **`Root` + `html/body/div` の生 HTML DSL を first path に置くこと**
+  これは `page()` / `app()` 内部実装および互換目的のために残るが、新規ユーザーの入口としては推奨しない。
+
+これらは将来仕様化される可能性はあるが、**現状のメッセージで匂わせない**。
 
 ---
 
-## Why `page first, App later`
+## Why "TypeScript everywhere, including your HTML."
 
-順序の理由を明示する。
+新スローガンが訴求する 3 つの軸:
 
-1. **静的ページの帯域が一番きれいに型で閉じる**  
-   View ツリー → HTML/CSS の写像は決定論的で、DSL の型安全性が最も素直に効く。
-2. **interactive 部分は別物として後置するほうが API が荒れない**  
-   `page` の入口に runtime API を混ぜると、`page` の「静的ページを書ききる」性格が曖昧になる。`page-runtime-separation-spec` で分離は実装済み。
-3. **dogfooding がすでに `page` 側で成立している**  
-   `examples/page-minimal.ts` / `page-landing.ts` および `.internal/lp/page-lp-builder.ts` で、`page()` のみで LP レベルが書けることが確認済み（`page-dogfooding-spec`）。
-4. **App を主役にする前に、static path の体験を固定したい**  
-   App / interactive を後段で議題にするとしても、その時点の「DraftOle はこういう DSL です」という土台が `static page first` で固まっている必要がある。
+1. **TypeScript の型が HTML 構造まで届く**
+   HTML 属性のタイプミスがコンパイルエラーになる。`strict: true` が end-to-end で効く。
+2. **同じ DSL で `page()` も `app()` も書ける**
+   静的と対話の境界で言語・構文が割れない。modifier 連鎖の知識が両方で活きる。
+3. **JSX / template 言語 / bundler が要らない**
+   tsx / ts-node / `node --experimental-strip-types` で動く。`node_modules` に DraftOle 1 個だけ。
+
+旧来の "Zero runtime / Zero deps / Zero bundler" の Three zeros 訴求は **`page()` 経路の文脈ではそのまま有効**。LP セクションのカードで引き続き使用する。`app()` 経路は state engine を同梱するため "Zero runtime" は当てはまらないが、`page()` 経路では引き続き honest claim として成立する。
 
 ---
 
@@ -84,13 +104,12 @@ DraftOle の `page()` 経路は、この帯域に対して **TypeScript 1 本だ
 | `Root` クラス | **公開面非露出を不変条件として固定**（1.0.0）。`page()` / `app()` の内部実装としては `src/html/elements/root.ts` に存続。物理削除は Phase 2 spec として検討。 |
 | `sel` namespace 自体 | **kept**（policy）。`sel.tag` / `sel.all` / `sel.rule` / `sel.root` / `sel.media` / `sel.keyframes` / `sel.tagA` 〜 `sel.tagWbr` は 1.0.0 でも継続提供。 |
 | `media` / `keyframes` at-rule | **kept**（policy）。`'draft-ole'` から直接 import 可能。推奨経路は `css.media` / `css.keyframes` / `sel.media` / `sel.keyframes`。 |
-| `examples/interactive/mvp-demo.ts` | **interactive / advanced example** として `examples/README.md` の末尾セクションに配置。 |
+| `examples/interactive/mvp-demo.ts` | **interactive showcase** として `examples/README.md` に配置。2026-05-28 positioning 改訂で "advanced" 表記は撤回、`page()` 例と並ぶ第一級用例として扱う。 |
 | `tests/examples/fixtures/mvp-demo0.ts` 〜 `mvp-demo9.ts` ほか MVP 期段階バリエーション | テストフィクスチャ扱い。新規利用の入口でも公開見本でもなく、回帰固定のためにテスト配下に置く。 |
 | `examples/interactive/react-demo.tsx` | 外部ランタイム連携の参考例。advanced 扱い。 |
 | `transformer` / `jsTemplate` / `createVanillaScript` 等の runtime 系 API | 残置。`page()` 経路の説明には混ぜない。 |
 
-新しいコード・新しいドキュメント・新しい examples は、原則として **`page()` を入口に書く**。  
-`app` 経路を出すときは「interactive / advanced」のラベルをつけ、`page` の primary path と競合しないように配置する。
+新しいコード・新しいドキュメント・新しい examples は、原則として **`page()` または `app()` を入口に書く**（`Root` 直接利用は internal 扱い）。`page()` と `app()` の選択は用途で決め、`app` を「advanced」とラベリングする旧運用は 2026-05-28 に撤回した。
 
 詳細な deprecation policy は [`docs/deprecation-policy.md`](deprecation-policy.md) を、`1.0.0` 移行の具体的なコード書き換え手順は [`docs/migration/legacy-low-level-api.md`](migration/legacy-low-level-api.md) を参照。
 

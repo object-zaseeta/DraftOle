@@ -4,8 +4,8 @@ import { doc } from '../../examples/page-landing.js';
 describe('page-landing a11y / セマンティクス構造', () => {
   const html = doc.render();
 
-  it('<html lang="ja"> が存在する', () => {
-    expect(html).toContain('lang="ja"');
+  it('<html lang="en"> が存在する (2026-05-25: JP→EN brand-aligned LP rewrite)', () => {
+    expect(html).toContain('lang="en"');
   });
 
   it('<main> および <title> が存在する', () => {

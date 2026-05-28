@@ -68,6 +68,7 @@ tests/**/__snapshots__/
 # Local-only public-repo sync / publish scripts
 sync-to-public.sh
 publish-public.sh
+update-example-baselines.sh
 dry-run.txt
 
 # Local-only release notes (passed to gh release via --notes-file)

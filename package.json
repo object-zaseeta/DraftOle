@@ -1,7 +1,7 @@
 {
   "name": "draft-ole",
   "version": "0.9.1",
-  "description": "A View DSL for static pages in TypeScript — page first, App later.",
+  "description": "TypeScript everywhere, including your HTML. The same modifier-chain DSL writes your landing pages, your docs, and your apps.",
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",

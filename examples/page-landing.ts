@@ -1,126 +1,275 @@
 import type { PairType } from 'draft-ole';
-import { HStack, Heading, Section, ViewText as Text, VStack, page } from 'draft-ole';
+import { HStack, Heading, Link, page, Section, VStack, ViewText as Text } from 'draft-ole';
 
-// 4 セクション LP: hero / feature / CTA / footer
-// View DSL のみで記述（html()/body()/div() などのロウ HTML ファクトリは未使用）
+// English LP for public assets (README hero / GitHub Pages / X/Zenn screenshots).
+// Structure: hero (dark) / three-zeros / what-it-is / page-first-app-later / install-cta / footer
+// Written using the public View DSL only (page / Section / VStack / HStack / Text / Heading / Link).
 
-// ───────── ヘルパー ─────────
-function featureCard(title: string, desc: string): PairType {
-  const cardTitle = Heading(3, title)
-    .font({ size: '1.125rem', weight: '700' })
-    .foregroundStyle('#111827')
-    .margin('0'); // <h3> default margin reset
+// ───────── Palette ─────────
+const COLOR_INK = '#0f172a';
+const COLOR_INK_SOFT = '#1e293b';
+const COLOR_TEXT = '#475569';
+const COLOR_MUTED = '#94a3b8';
+const COLOR_BG = '#ffffff';
+const COLOR_BG_SOFT = '#f8fafc';
+const COLOR_ACCENT = '#8b5cf6'; // violet-500: use as bg behind LIGHT text only when large (stat numbers)
+const COLOR_ACCENT_ON_DARK = '#a78bfa'; // violet-400: text on #0f172a (6.6:1, passes normal)
+const COLOR_ACCENT_BUTTON = '#6d28d9'; // violet-700: bg behind white CTA button text (7.1:1)
+const COLOR_ACCENT_SOFT = '#ede9fe';
+const COLOR_ON_INK = '#f8fafc';
+const FONT_SANS = '-apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif';
+const FONT_MONO = '"SF Mono", Menlo, Consolas, "JetBrains Mono", monospace';
 
-  const cardDesc = Text(desc)
-    .font({ size: '0.95rem', lineHeight: '1.6' })
-    .foregroundStyle('#4b5563');
+// ───────── Helpers ─────────
+function pillBadge(text: string): PairType {
+  return Text(text)
+    .padding('horizontal' as const, 12)
+    .padding('vertical' as const, 6)
+    .background(COLOR_ACCENT_SOFT)
+    .foregroundStyle('#5b21b6')
+    .cornerRadius('999px')
+    .font({ size: '0.8125rem', weight: '600', family: FONT_SANS });
+}
 
-  return VStack({ spacing: 8 }, cardTitle, cardDesc)
-    .padding(20)
+function statColumn(big: string, label: string, caption: string): PairType {
+  const bigNum = Text(big)
+    .font({ size: '3rem', weight: '800', family: FONT_SANS, lineHeight: '1' })
+    .foregroundStyle(COLOR_ACCENT);
+  const labelText = Heading(3, label)
+    .font({ size: '1.125rem', weight: '700', family: FONT_SANS })
+    .foregroundStyle(COLOR_INK)
+    .margin('0');
+  const captionText = Text(caption)
+    .font({ size: '0.9375rem', lineHeight: '1.55', family: FONT_SANS })
+    .foregroundStyle(COLOR_TEXT);
+  // ADS finding C (2026-05-26): wrap stat columns in subtle cards.
+  // Preset 2: white bg + 16px radius + 32px padding + subtle shadow (Stripe/Notion-like).
+  return VStack({ spacing: 10 }, bigNum, labelText, captionText)
+    .padding(32)
     .background('#ffffff')
-    .cornerRadius('12px')
+    .cornerRadius('16px')
+    .boxShadow('0 1px 3px rgba(15, 23, 42, 0.06), 0 1px 2px rgba(15, 23, 42, 0.04)')
     .frame({ maxWidth: 280 });
 }
 
-// ───────── Hero セクション ─────────
-const heroTitle = Heading(1, 'DraftOle_TS で LP を最速で組む')
-  .font({ size: '2.75rem', weight: '800', family: 'system-ui, sans-serif', lineHeight: '1.2' })
-  .foregroundStyle('#0f172a')
-  .margin('0'); // <h1> default margin reset
+function bullet(text: string): PairType {
+  return Text(`— ${text}`)
+    .font({ size: '1rem', lineHeight: '1.7', family: FONT_SANS })
+    .foregroundStyle(COLOR_TEXT);
+}
 
-const heroSubtitle = Text('SwiftUI ライクな View DSL と modifier 連鎖で、型安全に HTML/CSS を生成。')
-  .font({ size: '1.125rem', lineHeight: '1.6' })
-  .foregroundStyle('#475569');
+// ───────── Hero (dark) ─────────
+const heroBadge = pillBadge('v0.9.0 · pre-1.0 feedback phase');
 
-const heroPrimaryButton = Text('今すぐ試す')
-  .padding(14)
-  .background('#4f46e5')
-  .foregroundStyle('#ffffff')
-  .cornerRadius('8px')
-  .font({ weight: '600', size: '1rem' });
+// 2026-05-28: Positioning re-baseline (grill-with-docs / Variant 1).
+// Old: "A View DSL for static pages in TypeScript." + slogan "page first, App later."
+// New: "TypeScript everywhere, including your HTML." — pages AND apps as first-class.
+const heroTitle = Heading(1, 'TypeScript everywhere, including your HTML.')
+  .font({ size: '3.25rem', weight: '800', family: FONT_SANS, lineHeight: '1.1' })
+  .foregroundStyle(COLOR_ON_INK)
+  .margin('0');
 
-const heroSecondaryButton = Text('GitHub で見る')
-  .padding(14)
-  .background('#e0e7ff')
-  .foregroundStyle('#3730a3')
-  .cornerRadius('8px')
-  .font({ weight: '600', size: '1rem' });
+const heroSubtitle = Text(
+  'The same modifier-chain DSL writes your landing pages, your docs, and your apps. No bundler. No JSX. No template language.',
+)
+  .font({ size: '1.0625rem', lineHeight: '1.7', family: FONT_SANS })
+  .foregroundStyle('#cbd5e1')
+  .frame({ maxWidth: 640 });
 
-const heroButtons = HStack({ spacing: 12 }, heroPrimaryButton, heroSecondaryButton);
-
-const heroContent = VStack({ spacing: 24 }, heroTitle, heroSubtitle, heroButtons)
-  .padding(72)
-  .frame({ maxWidth: 760 });
-
-const heroSection = Section(heroContent)
-  .background('#f8f9ff')
-  .padding('horizontal' as const, 24);
-
-// ───────── Feature セクション ─────────
-const featureHeading = Heading(2, '主な特徴')
-  .font({ size: '1.875rem', weight: '700' })
-  .foregroundStyle('#0f172a')
-  .margin('0'); // <h2> default margin reset
-
-const featureCards = HStack({ spacing: 16 },
-  featureCard('型安全', 'TypeScript の型システムで HTML 構造を保護します。'),
-  featureCard('ゼロ依存', 'ランタイム依存ゼロ。軽量で導入が容易です。'),
-  featureCard('SwiftUI ライク', 'modifier 連鎖で宣言的にスタイルを記述できます。'),
+const heroPrimaryCta = Link(
+  { href: 'https://www.npmjs.com/package/draft-ole' },
+  Text('pnpm add draft-ole')
+    .padding('horizontal' as const, 18)
+    .padding('vertical' as const, 14)
+    .background(COLOR_ACCENT_BUTTON)
+    .foregroundStyle('#ffffff')
+    .cornerRadius('10px')
+    .font({ size: '0.9375rem', weight: '700', family: FONT_MONO }),
 );
 
-const featureContent = VStack({ spacing: 32 }, featureHeading, featureCards)
-  .padding(64)
-  .frame({ maxWidth: 960 });
+const heroSecondaryCta = Link(
+  { href: 'https://github.com/object-zaseeta/DraftOle', target: '_blank', rel: 'noopener' },
+  Text('View on GitHub →')
+    .padding('horizontal' as const, 18)
+    .padding('vertical' as const, 14)
+    .foregroundStyle(COLOR_ON_INK)
+    .font({ size: '0.9375rem', weight: '600', family: FONT_SANS }),
+);
 
-const featureSection = Section(featureContent)
-  .background('#ffffff');
+const heroButtons = HStack({ spacing: 8 }, heroPrimaryCta, heroSecondaryCta);
 
-// ───────── CTA セクション ─────────
-const ctaHeading = Heading(2, 'さあ、はじめよう')
-  .font({ size: '2rem', weight: '800' })
-  .foregroundStyle('#ffffff')
-  .margin('0'); // <h2> default margin reset
+const heroContent = VStack({ spacing: 28 }, heroBadge, heroTitle, heroSubtitle, heroButtons)
+  .padding('vertical' as const, 96)
+  .padding('horizontal' as const, 32)
+  .frame({ maxWidth: 880 });
 
-const ctaBody = Text('npm でインストールして、最初の 1 ページを 5 分で書き上げましょう。')
-  .font({ size: '1.0625rem', lineHeight: '1.6' })
-  .foregroundStyle('#e0e7ff');
+const heroSection = Section(heroContent)
+  .background(COLOR_INK);
 
-const ctaButton = Text('Get Started →')
-  .padding(16)
-  .background('#ffffff')
-  .foregroundStyle('#4338ca')
-  .cornerRadius('999px')
-  .font({ weight: '700', size: '1.0625rem' });
+// ───────── Three Zeros ─────────
+const zerosHeading = Heading(2, 'Three zeros, by design.')
+  .font({ size: '2rem', weight: '800', family: FONT_SANS, lineHeight: '1.2' })
+  .foregroundStyle(COLOR_INK)
+  .margin('0');
 
-const ctaContent = VStack({ spacing: 20 }, ctaHeading, ctaBody, ctaButton)
-  .padding(72)
+const zerosSub = Text(
+  'DraftOle outputs static HTML. Nothing leaks into the visitor browser, nothing balloons your node_modules, nothing forces a bundler step into your toolchain.',
+)
+  .font({ size: '1rem', lineHeight: '1.7', family: FONT_SANS })
+  .foregroundStyle(COLOR_TEXT)
+  .frame({ maxWidth: 640 });
+
+const zeroStats = HStack({ spacing: 32 },
+  statColumn('0', 'JavaScript in output', 'page() emits plain HTML and scoped CSS. Your LP ships zero framework runtime to visitors.'),
+  statColumn('0', 'production deps', 'One entry in node_modules. No transitive web of packages to audit.'),
+  statColumn('0', 'bundler config', 'Runs on tsx, ts-node, or node --experimental-strip-types. Build is one command.'),
+);
+
+const zerosContent = VStack({ spacing: 36 }, zerosHeading, zerosSub, zeroStats)
+  .padding('vertical' as const, 88)
+  .padding('horizontal' as const, 32)
+  .frame({ maxWidth: 1040 });
+
+const zerosSection = Section(zerosContent)
+  .background(COLOR_BG_SOFT);
+
+// ───────── What it is ─────────
+const whatHeading = Heading(2, 'What it is, in one paragraph.')
+  .font({ size: '2rem', weight: '800', family: FONT_SANS, lineHeight: '1.2' })
+  .foregroundStyle(COLOR_INK)
+  .margin('0');
+
+const whatBody = Text(
+  'A function-as-page DSL. You compose views (Section, VStack, HStack, Text, Heading) and apply modifiers (.padding(), .background(), .frame()) the way SwiftUI taught us to. Call doc.export() and you get index.html + style.css. That is the whole library.',
+)
+  .font({ size: '1.0625rem', lineHeight: '1.75', family: FONT_SANS })
+  .foregroundStyle(COLOR_INK_SOFT)
+  .frame({ maxWidth: 720 });
+
+const whatBullets = VStack({ spacing: 12 },
+  bullet('Type-safe end-to-end. HTML attribute typos are compile errors, not silent runtime bugs.'),
+  bullet('SwiftUI-style modifier chains. Layout intent reads top-to-bottom.'),
+  bullet('Scoped CSS per node, generated automatically. No global selector wars.'),
+  bullet('ESM + CJS + .d.ts. Works with tsx, ts-node, and node --experimental-strip-types.'),
+  bullet('Progressive: start static with page(), add interactive surfaces later with app().'),
+);
+
+const whatContent = VStack({ spacing: 28 }, whatHeading, whatBody, whatBullets)
+  .padding('vertical' as const, 88)
+  .padding('horizontal' as const, 32)
+  .frame({ maxWidth: 880 });
+
+const whatSection = Section(whatContent)
+  .background(COLOR_BG);
+
+// ───────── Page first, App later ─────────
+const phaseBadge = pillBadge('Philosophy');
+
+const phaseHeading = Heading(2, 'Page first. App later.')
+  .font({ size: '2rem', weight: '800', family: FONT_SANS, lineHeight: '1.2' })
+  .foregroundStyle(COLOR_INK)
+  .margin('0');
+
+const phaseBody = Text(
+  'Static pages are the cleanest place to enforce type safety end-to-end, so DraftOle starts there. When you need an interactive island — a counter, a form, a small client store — the same DSL extends through app(). You never have to leave TypeScript or change frameworks.',
+)
+  .font({ size: '1.0625rem', lineHeight: '1.75', family: FONT_SANS })
+  .foregroundStyle(COLOR_INK_SOFT)
+  .frame({ maxWidth: 720 });
+
+const phaseContent = VStack({ spacing: 24 }, phaseBadge, phaseHeading, phaseBody)
+  .padding('vertical' as const, 88)
+  .padding('horizontal' as const, 32)
+  .frame({ maxWidth: 880 });
+
+const phaseSection = Section(phaseContent)
+  .background(COLOR_BG_SOFT);
+
+// ───────── Install CTA ─────────
+const ctaHeading = Heading(2, 'Try it. One file, sixty seconds.')
+  // ADS finding B (2026-05-26): unify all h2 to 2rem; CTA emphasis is carried by dark bg + padding instead.
+  .font({ size: '2rem', weight: '800', family: FONT_SANS, lineHeight: '1.2' })
+  .foregroundStyle(COLOR_ON_INK)
+  .margin('0');
+
+const ctaBody = Text('Install with your favorite package manager. Then write a page() and run it.')
+  .font({ size: '1.0625rem', lineHeight: '1.7', family: FONT_SANS })
+  .foregroundStyle('#cbd5e1');
+
+// ADS finding A (2026-05-26): wrap install pill in Link to match hero pattern.
+// Semantic: <a><p> instead of orphan <p>; click goes to npm package page.
+const ctaInstall = Link(
+  { href: 'https://www.npmjs.com/package/draft-ole', target: '_blank', rel: 'noopener' },
+  Text('$ pnpm add draft-ole')
+    .padding('horizontal' as const, 20)
+    .padding('vertical' as const, 16)
+    .background('#020617')
+    .foregroundStyle('#a5b4fc')
+    .cornerRadius('10px')
+    .font({ size: '0.9375rem', weight: '500', family: FONT_MONO }),
+);
+
+const ctaGetStarted = Link(
+  { href: 'https://github.com/object-zaseeta/DraftOle#quick-start', target: '_blank', rel: 'noopener' },
+  Text('Read the Quick Start →')
+    .foregroundStyle(COLOR_ACCENT_ON_DARK)
+    .font({ size: '1rem', weight: '600', family: FONT_SANS }),
+);
+
+const ctaContent = VStack({ spacing: 24 }, ctaHeading, ctaBody, ctaInstall, ctaGetStarted)
+  .padding('vertical' as const, 96)
+  .padding('horizontal' as const, 32)
   .frame({ maxWidth: 720 });
 
 const ctaSection = Section(ctaContent)
-  .background('#4f46e5');
+  .background(COLOR_INK);
 
-// ───────── Footer セクション ─────────
-const footerText = Text('© 2026 DraftOle_TS — MIT License')
-  .font({ size: '0.875rem' })
-  .foregroundStyle('#94a3b8');
+// ───────── Footer ─────────
+const footerBrand = Text('DraftOle')
+  .font({ size: '0.9375rem', weight: '700', family: FONT_SANS })
+  .foregroundStyle('#cbd5e1');
 
-const footerContent = VStack({ spacing: 8 }, footerText)
-  .padding(32)
-  .frame({ maxWidth: 960 });
+const footerTagline = Text('TypeScript everywhere, including your HTML.')
+  .font({ size: '0.8125rem', family: FONT_SANS })
+  .foregroundStyle(COLOR_MUTED);
+
+const footerGitHub = Link(
+  { href: 'https://github.com/object-zaseeta/DraftOle', target: '_blank', rel: 'noopener' },
+  Text('GitHub').foregroundStyle('#cbd5e1').font({ size: '0.8125rem', weight: '500', family: FONT_SANS }),
+);
+
+const footerNpm = Link(
+  { href: 'https://www.npmjs.com/package/draft-ole', target: '_blank', rel: 'noopener' },
+  Text('npm').foregroundStyle('#cbd5e1').font({ size: '0.8125rem', weight: '500', family: FONT_SANS }),
+);
+
+const footerLinks = HStack({ spacing: 16 }, footerGitHub, footerNpm);
+
+const footerLicense = Text('© 2026 DraftOle · MIT License')
+  .font({ size: '0.75rem', family: FONT_SANS })
+  .foregroundStyle(COLOR_MUTED);
+
+const footerContent = VStack({ spacing: 12 }, footerBrand, footerTagline, footerLinks, footerLicense)
+  .padding('vertical' as const, 40)
+  .padding('horizontal' as const, 32)
+  .frame({ maxWidth: 880 });
 
 const footerSection = Section(footerContent)
-  .background('#0f172a');
+  .background('#020617');
 
-// ───────── Page 全体 ─────────
+// ───────── Page ─────────
 const doc = page(
   heroSection,
-  featureSection,
+  zerosSection,
+  whatSection,
+  phaseSection,
   ctaSection,
   footerSection,
   {
-    lang: 'ja',
-    title: 'DraftOle_TS — 型安全な LP ジェネレーター',
-    description: '4 セクション構成 (hero / feature / CTA / footer) のドッグフーディング LP 例',
+    lang: 'en',
+    title: 'DraftOle — TypeScript everywhere, including your HTML',
+    description:
+      'The same modifier-chain DSL writes your landing pages, your docs, and your apps. No bundler, no JSX, no template language.',
     charset: 'UTF-8',
     viewport: 'width=device-width, initial-scale=1',
   },

@@ -62,8 +62,10 @@ docs/superpowers/
 # Local-only test runner script
 test-script.sh
 
-# Vitest snapshot artifacts under tests/ (regenerable)
-tests/**/__snapshots__/
+# Vitest snapshot artifacts under tests/ are baselines that should be tracked
+# (regression detection requires the .snap file in git). 個別の untracked snapshot
+# を除外したい場合はピンポイントで .gitignore に追加すること。
+# 例: tests/examples/__snapshots__/mvp-demo-final.snapshot.test.ts.snap
 
 # Local-only public-repo sync / publish scripts
 sync-to-public.sh

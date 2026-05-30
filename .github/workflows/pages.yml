@@ -1,0 +1,79 @@
+name: Deploy LP to GitHub Pages
+
+# DraftOle の page-landing example をビルドして GitHub Pages にデプロイする。
+# - Trigger: main への push、または手動 (workflow_dispatch)
+# - URL: https://object-zaseeta.github.io/DraftOle/
+# - 必要な repo 設定: Settings → Pages → Source: "GitHub Actions"
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'src/**'
+      - 'examples/page-landing.ts'
+      - 'scripts/**'
+      - 'package.json'
+      - 'tsconfig.json'
+      - 'tsup.config.ts'
+      - '.github/workflows/pages.yml'
+  workflow_dispatch:
+
+# Pages デプロイに必要な最小権限
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# 同時実行を抑制（古い deploy を新しいもので置き換える）
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Build landing page
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        # 公開リポは pnpm-lock.yaml を含めないため --no-frozen-lockfile
+        run: pnpm install --no-frozen-lockfile
+
+      - name: Build library (runtime + transformer + dist)
+        run: pnpm build
+
+      - name: Render landing page
+        run: node --experimental-strip-types examples/page-landing.ts
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: .out/runs/page_landing
+
+  deploy:
+    name: Deploy to GitHub Pages
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v4

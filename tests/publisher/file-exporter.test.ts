@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { existsSync, mkdirSync, readFileSync, rmSync } from 'node:fs';
+import { existsSync, readFileSync, rmSync } from 'node:fs';
 import { join } from 'node:path';
 import { FileExporter } from '../../src/publisher/file-exporter.js';
 import { ExportableError } from '../../src/publisher/exportable-error.js';
@@ -253,17 +253,13 @@ describe('FileExporter', () => {
       const exporter = new FileExporter();
       const htmlContent = '<html><head></head><body></body></html>';
 
-      expect(() => {
-        exporter.export(htmlContent, '', '', '');
-      }).toThrow(ExportableError);
-
-      try {
-        exporter.export(htmlContent, '', '', '');
-      } catch (error) {
-        expect(error).toBeInstanceOf(ExportableError);
-        const exportError = error as ExportableError;
-        expect(exportError.code).toBe('invalidPath');
-      }
+      expect(
+        () => exporter.export(htmlContent, '', '', '')
+      ).toThrow(
+        expect.objectContaining({
+          code: "invalidPath"
+        })
+      );
     });
 
     it('書き込み失敗時にExportableErrorをスローする', () => {

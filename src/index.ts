@@ -1,11 +1,10 @@
-// Phase 1: Utils
 export type { Renderable, Exportable } from './utils/renderable.js';
 
-// Phase 1: Utils - CSS Unit Types
+
 export type { UnitStyle, RelationShip, HlUnit } from './utils/unit-style.js';
 export { hlUnitToCssString } from './utils/unit-style.js';
 
-// Phase 1: Utils - Error Types
+
 export {
   // ── Base Error ──
   DraftOleError,
@@ -13,19 +12,10 @@ export {
   DuplicateCssPropertyError,
 } from './utils/errors.js';
 
-// Phase 1: Utils - Dev Guard
+
 export { guardDuplicateCssProperty } from './utils/dev-guard.js';
 
-export type {
-  // ── Error Codes ──
-  DraftOleErrorCode,
-  HtmlErrorCode,
-  CssErrorCode,
-  JsErrorCode,
-  ExportableErrorCode,
-} from './utils/errors.js';
 
-// Phase 2: HTML Module
 export {
   // ── Elements ──
   HtmlTag,
@@ -245,7 +235,7 @@ export type {
 export {
   // ── Error ──
   ExportableError,
-} from './publisher/exportable-error.js';
+} from './publisher/errors/ExportableError.js';
 
 // Note: ExportableErrorCode は utils/errors.ts から既にエクスポート済み
 // タスク3.3で ExportableError を DraftOleError 継承に変更する際に、

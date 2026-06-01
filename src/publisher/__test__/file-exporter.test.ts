@@ -1,8 +1,9 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { existsSync, readFileSync, rmSync } from 'node:fs';
 import { join } from 'node:path';
-import { FileExporter } from '../../src/publisher/file-exporter.js';
-import { ExportableError } from '../../src/publisher/exportable-error.js';
+import { FileExporter } from '../file-exporter';
+import { ExportableError } from '../errors/ExportableError';
+
 
 describe('FileExporter', () => {
   const testOutputDir = join(process.cwd(), 'tmp-test-output');

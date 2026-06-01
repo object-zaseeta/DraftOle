@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { RESET_CSS } from '../../src/publisher/reset-css.js';
+import { RESET_CSS } from '../reset-css';
 
 describe('reset.css', () => {
   describe('定数の存在', () => {

@@ -1,13 +1,7 @@
-/**
- * MVP-3.3: DOMContentLoaded ラッパー
- *
- * FileExporter が JS 出力時に自動で DOMContentLoaded でラップする。
- */
 import { describe, it, expect } from 'vitest';
-import { wrapDOMReady } from '../../src/publisher/dom-ready.js';
+import { wrapDOMReady } from '../dom-ready';
 
 describe('MVP-3.3: wrapDOMReady', () => {
-
   it('JSコードをDOMContentLoadedでラップする', () => {
     const js = 'console.log("hello");';
     const result = wrapDOMReady(js);
